@@ -11,7 +11,7 @@ public interface OrderDAO {
     // CREATE ORDER
     // =========================================================
 
-    boolean createOrder(Order order);
+    int createOrder(Order order);
 
 
     // =========================================================

@@ -1,6 +1,8 @@
 package com.gentlux.dao;
 
 import com.gentlux.model.CartItem;
+import com.gentlux.model.CartItemView;
+
 import java.util.List;
 
 public interface CartItemDAO {
@@ -12,6 +14,9 @@ public interface CartItemDAO {
     CartItem getCartItemByCartAndVariant(int cartId, int variantId);
 
     List<CartItem> getCartItemsByCartId(int cartId);
+
+    // Get complete cart information for UI
+    List<CartItemView> getCartItemViewsByCartId(int cartId);
 
     boolean updateQuantity(int cartItemId, int quantity);
 

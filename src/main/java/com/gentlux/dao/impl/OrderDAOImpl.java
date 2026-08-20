@@ -7,48 +7,129 @@ import com.gentlux.util.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.sql.Timestamp;
+
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class OrderDAOImpl implements OrderDAO {
+
 
     // =========================================================
     // 1. CREATE ORDER
     // =========================================================
 
     @Override
-    public boolean createOrder(Order order) {
+    public int createOrder(Order order) {
 
-        String sql = "INSERT INTO orders "
-                   + "(user_id, total_amount, payment_method, "
-                   + "payment_status, order_status, shipping_name, "
-                   + "shipping_phone, shipping_address, shipping_city, "
-                   + "shipping_state, shipping_pincode) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql =
+                "INSERT INTO orders "
+              + "(user_id, total_amount, payment_method, "
+              + "payment_status, order_status, shipping_name, "
+              + "shipping_phone, shipping_address, shipping_city, "
+              + "shipping_state, shipping_pincode) "
+              + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
 
-            statement.setInt(1, order.getUserId());
-            statement.setDouble(2, order.getTotalAmount());
-            statement.setString(3, order.getPaymentMethod());
-            statement.setString(4, order.getPaymentStatus());
-            statement.setString(5, order.getOrderStatus());
-            statement.setString(6, order.getShippingName());
-            statement.setString(7, order.getShippingPhone());
-            statement.setString(8, order.getShippingAddress());
-            statement.setString(9, order.getShippingCity());
-            statement.setString(10, order.getShippingState());
-            statement.setString(11, order.getShippingPincode());
+            PreparedStatement statement =
+                    connection.prepareStatement(
+                            sql,
+                            Statement.RETURN_GENERATED_KEYS
+                    )
+        ) {
 
-            return statement.executeUpdate() > 0;
+            statement.setInt(
+                    1,
+                    order.getUserId()
+            );
+
+            statement.setDouble(
+                    2,
+                    order.getTotalAmount()
+            );
+
+            statement.setString(
+                    3,
+                    order.getPaymentMethod()
+            );
+
+            statement.setString(
+                    4,
+                    order.getPaymentStatus()
+            );
+
+            statement.setString(
+                    5,
+                    order.getOrderStatus()
+            );
+
+            statement.setString(
+                    6,
+                    order.getShippingName()
+            );
+
+            statement.setString(
+                    7,
+                    order.getShippingPhone()
+            );
+
+            statement.setString(
+                    8,
+                    order.getShippingAddress()
+            );
+
+            statement.setString(
+                    9,
+                    order.getShippingCity()
+            );
+
+            statement.setString(
+                    10,
+                    order.getShippingState()
+            );
+
+            statement.setString(
+                    11,
+                    order.getShippingPincode()
+            );
+
+
+            int rowsAffected =
+                    statement.executeUpdate();
+
+
+            if (rowsAffected > 0) {
+
+                try (
+                    ResultSet generatedKeys =
+                            statement.getGeneratedKeys()
+                ) {
+
+                    if (generatedKeys.next()) {
+
+                        int orderId =
+                                generatedKeys.getInt(1);
+
+                        order.setOrderId(
+                                orderId
+                        );
+
+                        return orderId;
+                    }
+                }
+            }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
-        return false;
+        return -1;
     }
 
 
@@ -57,23 +138,41 @@ public class OrderDAOImpl implements OrderDAO {
     // =========================================================
 
     @Override
-    public Order getOrderById(int orderId) {
+    public Order getOrderById(
+            int orderId) {
 
-        String sql = "SELECT * FROM orders WHERE order_id = ?";
+        String sql =
+                "SELECT * FROM orders "
+              + "WHERE order_id = ?";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
 
-            statement.setInt(1, orderId);
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            statement.setInt(
+                    1,
+                    orderId
+            );
+
+            try (
+                ResultSet resultSet =
+                        statement.executeQuery()
+            ) {
 
                 if (resultSet.next()) {
-                    return mapOrder(resultSet);
+
+                    return mapOrder(
+                            resultSet
+                    );
                 }
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -88,20 +187,33 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public List<Order> getAllOrders() {
 
-        List<Order> orders = new ArrayList<>();
+        List<Order> orders =
+                new ArrayList<>();
 
-        String sql = "SELECT * FROM orders "
-                   + "ORDER BY order_date DESC";
+        String sql =
+                "SELECT * FROM orders "
+              + "ORDER BY order_date DESC";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
+
+            PreparedStatement statement =
+                    connection.prepareStatement(sql);
+
+            ResultSet resultSet =
+                    statement.executeQuery()
+        ) {
 
             while (resultSet.next()) {
-                orders.add(mapOrder(resultSet));
+
+                orders.add(
+                        mapOrder(resultSet)
+                );
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -114,27 +226,45 @@ public class OrderDAOImpl implements OrderDAO {
     // =========================================================
 
     @Override
-    public List<Order> getOrdersByUserId(int userId) {
+    public List<Order> getOrdersByUserId(
+            int userId) {
 
-        List<Order> orders = new ArrayList<>();
+        List<Order> orders =
+                new ArrayList<>();
 
-        String sql = "SELECT * FROM orders "
-                   + "WHERE user_id = ? "
-                   + "ORDER BY order_date DESC";
+        String sql =
+                "SELECT * FROM orders "
+              + "WHERE user_id = ? "
+              + "ORDER BY order_date DESC";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
 
-            statement.setInt(1, userId);
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            statement.setInt(
+                    1,
+                    userId
+            );
+
+            try (
+                ResultSet resultSet =
+                        statement.executeQuery()
+            ) {
 
                 while (resultSet.next()) {
-                    orders.add(mapOrder(resultSet));
+
+                    orders.add(
+                            mapOrder(resultSet)
+                    );
                 }
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -143,31 +273,49 @@ public class OrderDAOImpl implements OrderDAO {
 
 
     // =========================================================
-    // 5. GET ORDERS BY ORDER STATUS
+    // 5. GET ORDERS BY STATUS
     // =========================================================
 
     @Override
-    public List<Order> getOrdersByStatus(String orderStatus) {
+    public List<Order> getOrdersByStatus(
+            String orderStatus) {
 
-        List<Order> orders = new ArrayList<>();
+        List<Order> orders =
+                new ArrayList<>();
 
-        String sql = "SELECT * FROM orders "
-                   + "WHERE order_status = ? "
-                   + "ORDER BY order_date DESC";
+        String sql =
+                "SELECT * FROM orders "
+              + "WHERE order_status = ? "
+              + "ORDER BY order_date DESC";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
 
-            statement.setString(1, orderStatus);
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            statement.setString(
+                    1,
+                    orderStatus
+            );
+
+            try (
+                ResultSet resultSet =
+                        statement.executeQuery()
+            ) {
 
                 while (resultSet.next()) {
-                    orders.add(mapOrder(resultSet));
+
+                    orders.add(
+                            mapOrder(resultSet)
+                    );
                 }
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -180,27 +328,45 @@ public class OrderDAOImpl implements OrderDAO {
     // =========================================================
 
     @Override
-    public List<Order> getOrdersByPaymentStatus(String paymentStatus) {
+    public List<Order> getOrdersByPaymentStatus(
+            String paymentStatus) {
 
-        List<Order> orders = new ArrayList<>();
+        List<Order> orders =
+                new ArrayList<>();
 
-        String sql = "SELECT * FROM orders "
-                   + "WHERE payment_status = ? "
-                   + "ORDER BY order_date DESC";
+        String sql =
+                "SELECT * FROM orders "
+              + "WHERE payment_status = ? "
+              + "ORDER BY order_date DESC";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
 
-            statement.setString(1, paymentStatus);
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            statement.setString(
+                    1,
+                    paymentStatus
+            );
+
+            try (
+                ResultSet resultSet =
+                        statement.executeQuery()
+            ) {
 
                 while (resultSet.next()) {
-                    orders.add(mapOrder(resultSet));
+
+                    orders.add(
+                            mapOrder(resultSet)
+                    );
                 }
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -213,27 +379,45 @@ public class OrderDAOImpl implements OrderDAO {
     // =========================================================
 
     @Override
-    public List<Order> getOrdersByPaymentMethod(String paymentMethod) {
+    public List<Order> getOrdersByPaymentMethod(
+            String paymentMethod) {
 
-        List<Order> orders = new ArrayList<>();
+        List<Order> orders =
+                new ArrayList<>();
 
-        String sql = "SELECT * FROM orders "
-                   + "WHERE payment_method = ? "
-                   + "ORDER BY order_date DESC";
+        String sql =
+                "SELECT * FROM orders "
+              + "WHERE payment_method = ? "
+              + "ORDER BY order_date DESC";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
 
-            statement.setString(1, paymentMethod);
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            statement.setString(
+                    1,
+                    paymentMethod
+            );
+
+            try (
+                ResultSet resultSet =
+                        statement.executeQuery()
+            ) {
 
                 while (resultSet.next()) {
-                    orders.add(mapOrder(resultSet));
+
+                    orders.add(
+                            mapOrder(resultSet)
+                    );
                 }
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -250,27 +434,48 @@ public class OrderDAOImpl implements OrderDAO {
             int userId,
             String orderStatus) {
 
-        List<Order> orders = new ArrayList<>();
+        List<Order> orders =
+                new ArrayList<>();
 
-        String sql = "SELECT * FROM orders "
-                   + "WHERE user_id = ? "
-                   + "AND order_status = ? "
-                   + "ORDER BY order_date DESC";
+        String sql =
+                "SELECT * FROM orders "
+              + "WHERE user_id = ? "
+              + "AND order_status = ? "
+              + "ORDER BY order_date DESC";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
 
-            statement.setInt(1, userId);
-            statement.setString(2, orderStatus);
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            statement.setInt(
+                    1,
+                    userId
+            );
+
+            statement.setString(
+                    2,
+                    orderStatus
+            );
+
+            try (
+                ResultSet resultSet =
+                        statement.executeQuery()
+            ) {
 
                 while (resultSet.next()) {
-                    orders.add(mapOrder(resultSet));
+
+                    orders.add(
+                            mapOrder(resultSet)
+                    );
                 }
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -287,26 +492,47 @@ public class OrderDAOImpl implements OrderDAO {
             Timestamp startDate,
             Timestamp endDate) {
 
-        List<Order> orders = new ArrayList<>();
+        List<Order> orders =
+                new ArrayList<>();
 
-        String sql = "SELECT * FROM orders "
-                   + "WHERE order_date BETWEEN ? AND ? "
-                   + "ORDER BY order_date DESC";
+        String sql =
+                "SELECT * FROM orders "
+              + "WHERE order_date BETWEEN ? AND ? "
+              + "ORDER BY order_date DESC";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
 
-            statement.setTimestamp(1, startDate);
-            statement.setTimestamp(2, endDate);
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            statement.setTimestamp(
+                    1,
+                    startDate
+            );
+
+            statement.setTimestamp(
+                    2,
+                    endDate
+            );
+
+            try (
+                ResultSet resultSet =
+                        statement.executeQuery()
+            ) {
 
                 while (resultSet.next()) {
-                    orders.add(mapOrder(resultSet));
+
+                    orders.add(
+                            mapOrder(resultSet)
+                    );
                 }
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -319,39 +545,90 @@ public class OrderDAOImpl implements OrderDAO {
     // =========================================================
 
     @Override
-    public boolean updateOrder(Order order) {
+    public boolean updateOrder(
+            Order order) {
 
-        String sql = "UPDATE orders SET "
-                   + "total_amount = ?, "
-                   + "payment_method = ?, "
-                   + "payment_status = ?, "
-                   + "order_status = ?, "
-                   + "shipping_name = ?, "
-                   + "shipping_phone = ?, "
-                   + "shipping_address = ?, "
-                   + "shipping_city = ?, "
-                   + "shipping_state = ?, "
-                   + "shipping_pincode = ? "
-                   + "WHERE order_id = ?";
+        String sql =
+                "UPDATE orders SET "
+              + "total_amount = ?, "
+              + "payment_method = ?, "
+              + "payment_status = ?, "
+              + "order_status = ?, "
+              + "shipping_name = ?, "
+              + "shipping_phone = ?, "
+              + "shipping_address = ?, "
+              + "shipping_city = ?, "
+              + "shipping_state = ?, "
+              + "shipping_pincode = ? "
+              + "WHERE order_id = ?";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
 
-            statement.setDouble(1, order.getTotalAmount());
-            statement.setString(2, order.getPaymentMethod());
-            statement.setString(3, order.getPaymentStatus());
-            statement.setString(4, order.getOrderStatus());
-            statement.setString(5, order.getShippingName());
-            statement.setString(6, order.getShippingPhone());
-            statement.setString(7, order.getShippingAddress());
-            statement.setString(8, order.getShippingCity());
-            statement.setString(9, order.getShippingState());
-            statement.setString(10, order.getShippingPincode());
-            statement.setInt(11, order.getOrderId());
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
+
+            statement.setDouble(
+                    1,
+                    order.getTotalAmount()
+            );
+
+            statement.setString(
+                    2,
+                    order.getPaymentMethod()
+            );
+
+            statement.setString(
+                    3,
+                    order.getPaymentStatus()
+            );
+
+            statement.setString(
+                    4,
+                    order.getOrderStatus()
+            );
+
+            statement.setString(
+                    5,
+                    order.getShippingName()
+            );
+
+            statement.setString(
+                    6,
+                    order.getShippingPhone()
+            );
+
+            statement.setString(
+                    7,
+                    order.getShippingAddress()
+            );
+
+            statement.setString(
+                    8,
+                    order.getShippingCity()
+            );
+
+            statement.setString(
+                    9,
+                    order.getShippingState()
+            );
+
+            statement.setString(
+                    10,
+                    order.getShippingPincode()
+            );
+
+            statement.setInt(
+                    11,
+                    order.getOrderId()
+            );
 
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -368,19 +645,33 @@ public class OrderDAOImpl implements OrderDAO {
             int orderId,
             String orderStatus) {
 
-        String sql = "UPDATE orders SET "
-                   + "order_status = ? "
-                   + "WHERE order_id = ?";
+        String sql =
+                "UPDATE orders SET "
+              + "order_status = ? "
+              + "WHERE order_id = ?";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
 
-            statement.setString(1, orderStatus);
-            statement.setInt(2, orderId);
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
+
+            statement.setString(
+                    1,
+                    orderStatus
+            );
+
+            statement.setInt(
+                    2,
+                    orderId
+            );
 
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -397,19 +688,33 @@ public class OrderDAOImpl implements OrderDAO {
             int orderId,
             String paymentStatus) {
 
-        String sql = "UPDATE orders SET "
-                   + "payment_status = ? "
-                   + "WHERE order_id = ?";
+        String sql =
+                "UPDATE orders SET "
+              + "payment_status = ? "
+              + "WHERE order_id = ?";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
 
-            statement.setString(1, paymentStatus);
-            statement.setInt(2, orderId);
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
+
+            statement.setString(
+                    1,
+                    paymentStatus
+            );
+
+            statement.setInt(
+                    2,
+                    orderId
+            );
 
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -422,18 +727,30 @@ public class OrderDAOImpl implements OrderDAO {
     // =========================================================
 
     @Override
-    public boolean deleteOrder(int orderId) {
+    public boolean deleteOrder(
+            int orderId) {
 
-        String sql = "DELETE FROM orders WHERE order_id = ?";
+        String sql =
+                "DELETE FROM orders "
+              + "WHERE order_id = ?";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
 
-            statement.setInt(1, orderId);
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
+
+            statement.setInt(
+                    1,
+                    orderId
+            );
 
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -446,21 +763,36 @@ public class OrderDAOImpl implements OrderDAO {
     // =========================================================
 
     @Override
-    public boolean orderExists(int orderId) {
+    public boolean orderExists(
+            int orderId) {
 
-        String sql = "SELECT 1 FROM orders WHERE order_id = ?";
+        String sql =
+                "SELECT 1 FROM orders "
+              + "WHERE order_id = ?";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
 
-            statement.setInt(1, orderId);
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            statement.setInt(
+                    1,
+                    orderId
+            );
+
+            try (
+                ResultSet resultSet =
+                        statement.executeQuery()
+            ) {
 
                 return resultSet.next();
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -473,24 +805,40 @@ public class OrderDAOImpl implements OrderDAO {
     // =========================================================
 
     @Override
-    public int getOrderCountByUser(int userId) {
+    public int getOrderCountByUser(
+            int userId) {
 
-        String sql = "SELECT COUNT(*) FROM orders "
-                   + "WHERE user_id = ?";
+        String sql =
+                "SELECT COUNT(*) "
+              + "FROM orders "
+              + "WHERE user_id = ?";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
 
-            statement.setInt(1, userId);
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            statement.setInt(
+                    1,
+                    userId
+            );
+
+            try (
+                ResultSet resultSet =
+                        statement.executeQuery()
+            ) {
 
                 if (resultSet.next()) {
+
                     return resultSet.getInt(1);
                 }
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -503,24 +851,40 @@ public class OrderDAOImpl implements OrderDAO {
     // =========================================================
 
     @Override
-    public int getOrderCountByStatus(String orderStatus) {
+    public int getOrderCountByStatus(
+            String orderStatus) {
 
-        String sql = "SELECT COUNT(*) FROM orders "
-                   + "WHERE order_status = ?";
+        String sql =
+                "SELECT COUNT(*) "
+              + "FROM orders "
+              + "WHERE order_status = ?";
 
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
 
-            statement.setString(1, orderStatus);
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            statement.setString(
+                    1,
+                    orderStatus
+            );
+
+            try (
+                ResultSet resultSet =
+                        statement.executeQuery()
+            ) {
 
                 if (resultSet.next()) {
+
                     return resultSet.getInt(1);
                 }
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -529,63 +893,92 @@ public class OrderDAOImpl implements OrderDAO {
 
 
     // =========================================================
-    // RESULTSET → ORDER OBJECT
+    // RESULTSET TO ORDER OBJECT
     // =========================================================
 
-    private Order mapOrder(ResultSet resultSet) throws Exception {
+    private Order mapOrder(
+            ResultSet resultSet)
+            throws Exception {
 
-        Order order = new Order();
+        Order order =
+                new Order();
 
         order.setOrderId(
-                resultSet.getInt("order_id")
+                resultSet.getInt(
+                        "order_id"
+                )
         );
 
         order.setUserId(
-                resultSet.getInt("user_id")
+                resultSet.getInt(
+                        "user_id"
+                )
         );
 
         order.setTotalAmount(
-                resultSet.getDouble("total_amount")
+                resultSet.getDouble(
+                        "total_amount"
+                )
         );
 
         order.setPaymentMethod(
-                resultSet.getString("payment_method")
+                resultSet.getString(
+                        "payment_method"
+                )
         );
 
         order.setPaymentStatus(
-                resultSet.getString("payment_status")
+                resultSet.getString(
+                        "payment_status"
+                )
         );
 
         order.setOrderStatus(
-                resultSet.getString("order_status")
+                resultSet.getString(
+                        "order_status"
+                )
         );
 
         order.setShippingName(
-                resultSet.getString("shipping_name")
+                resultSet.getString(
+                        "shipping_name"
+                )
         );
 
         order.setShippingPhone(
-                resultSet.getString("shipping_phone")
+                resultSet.getString(
+                        "shipping_phone"
+                )
         );
 
         order.setShippingAddress(
-                resultSet.getString("shipping_address")
+                resultSet.getString(
+                        "shipping_address"
+                )
         );
 
         order.setShippingCity(
-                resultSet.getString("shipping_city")
+                resultSet.getString(
+                        "shipping_city"
+                )
         );
 
         order.setShippingState(
-                resultSet.getString("shipping_state")
+                resultSet.getString(
+                        "shipping_state"
+                )
         );
 
         order.setShippingPincode(
-                resultSet.getString("shipping_pincode")
+                resultSet.getString(
+                        "shipping_pincode"
+                )
         );
 
         order.setOrderDate(
-                resultSet.getTimestamp("order_date")
+                resultSet.getTimestamp(
+                        "order_date"
+                )
         );
 
         return order;

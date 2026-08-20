@@ -1,6 +1,7 @@
 package com.gentlux.dao.impl;
 
 import com.gentlux.dao.OrderItemDAO;
+import com.gentlux.model.OrderItemView;
 import com.gentlux.model.OrderItem;
 import com.gentlux.util.DBConnection;
 
@@ -102,6 +103,149 @@ public class OrderItemDAOImpl implements OrderItemDAO {
 
         return orderItems;
     }
+    
+ // =========================================================
+ // GET ORDER ITEM VIEWS BY ORDER ID
+ // =========================================================
+
+ @Override
+ public List<OrderItemView> getOrderItemViewsByOrderId(
+         int orderId) {
+
+     List<OrderItemView> orderItems =
+             new ArrayList<>();
+
+
+     String sql =
+             "SELECT "
+           + "oi.order_item_id, "
+           + "oi.order_id, "
+           + "oi.variant_id, "
+           + "oi.quantity, "
+           + "oi.price, "
+           + "pv.product_id, "
+           + "pv.size, "
+           + "p.product_name, "
+           + "p.brand, "
+           + "p.image_url "
+           + "FROM order_items oi "
+           + "INNER JOIN product_variants pv "
+           + "ON oi.variant_id = pv.variant_id "
+           + "INNER JOIN products p "
+           + "ON pv.product_id = p.product_id "
+           + "WHERE oi.order_id = ? "
+           + "ORDER BY oi.order_item_id ASC";
+
+
+     try (
+         Connection connection =
+                 DBConnection.getConnection();
+
+         PreparedStatement statement =
+                 connection.prepareStatement(sql)
+     ) {
+
+         statement.setInt(
+                 1,
+                 orderId
+         );
+
+
+         try (
+             ResultSet resultSet =
+                     statement.executeQuery()
+         ) {
+
+             while (resultSet.next()) {
+
+                 OrderItemView item =
+                         new OrderItemView();
+
+
+                 item.setOrderItemId(
+                         resultSet.getInt(
+                                 "order_item_id"
+                         )
+                 );
+
+
+                 item.setOrderId(
+                         resultSet.getInt(
+                                 "order_id"
+                         )
+                 );
+
+
+                 item.setVariantId(
+                         resultSet.getInt(
+                                 "variant_id"
+                         )
+                 );
+
+
+                 item.setQuantity(
+                         resultSet.getInt(
+                                 "quantity"
+                         )
+                 );
+
+
+                 item.setPrice(
+                         resultSet.getDouble(
+                                 "price"
+                         )
+                 );
+
+
+                 item.setProductId(
+                         resultSet.getInt(
+                                 "product_id"
+                         )
+                 );
+
+
+                 item.setSize(
+                         resultSet.getString(
+                                 "size"
+                         )
+                 );
+
+
+                 item.setProductName(
+                         resultSet.getString(
+                                 "product_name"
+                         )
+                 );
+
+
+                 item.setBrand(
+                         resultSet.getString(
+                                 "brand"
+                         )
+                 );
+
+
+                 item.setImageUrl(
+                         resultSet.getString(
+                                 "image_url"
+                         )
+                 );
+
+
+                 orderItems.add(
+                         item
+                 );
+             }
+         }
+
+     } catch (Exception e) {
+
+         e.printStackTrace();
+     }
+
+
+     return orderItems;
+ }
 
 
     // =========================================================

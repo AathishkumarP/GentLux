@@ -2,6 +2,7 @@ package com.gentlux.dao.impl;
 
 import com.gentlux.dao.CartItemDAO;
 import com.gentlux.model.CartItem;
+import com.gentlux.model.CartItemView;
 import com.gentlux.util.DBConnection;
 
 import java.sql.Connection;
@@ -12,6 +13,7 @@ import java.util.List;
 
 public class CartItemDAOImpl implements CartItemDAO {
 
+
     // =========================================================
     // ADD CART ITEM
     // =========================================================
@@ -19,20 +21,34 @@ public class CartItemDAOImpl implements CartItemDAO {
     @Override
     public boolean addCartItem(CartItem cartItem) {
 
-        String sql = "INSERT INTO cart_item "
-                   + "(cart_id, variant_id, quantity) "
-                   + "VALUES (?, ?, ?)";
+        String sql =
+                "INSERT INTO cart_items "
+              + "(cart_id, variant_id, quantity) "
+              + "VALUES (?, ?, ?)";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
-            statement.setInt(1, cartItem.getCartId());
-            statement.setInt(2, cartItem.getVariantId());
-            statement.setInt(3, cartItem.getQuantity());
+            statement.setInt(
+                    1,
+                    cartItem.getCartId()
+            );
+
+            statement.setInt(
+                    2,
+                    cartItem.getVariantId()
+            );
+
+            statement.setInt(
+                    3,
+                    cartItem.getQuantity()
+            );
 
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -47,22 +63,30 @@ public class CartItemDAOImpl implements CartItemDAO {
     @Override
     public CartItem getCartItemById(int cartItemId) {
 
-        String sql = "SELECT * FROM cart_item "
-                   + "WHERE cart_item_id = ?";
+        String sql =
+                "SELECT * FROM cart_items "
+              + "WHERE cart_item_id = ?";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
-            statement.setInt(1, cartItemId);
+            statement.setInt(
+                    1,
+                    cartItemId
+            );
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            try (ResultSet resultSet =
+                         statement.executeQuery()) {
 
                 if (resultSet.next()) {
+
                     return mapCartItem(resultSet);
                 }
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -71,29 +95,44 @@ public class CartItemDAOImpl implements CartItemDAO {
 
 
     // =========================================================
-    // GET CART ITEM BY CART ID AND VARIANT ID
+    // GET CART ITEM BY CART ID + VARIANT ID
     // =========================================================
 
     @Override
-    public CartItem getCartItemByCartAndVariant(int cartId, int variantId) {
+    public CartItem getCartItemByCartAndVariant(
+            int cartId,
+            int variantId) {
 
-        String sql = "SELECT * FROM cart_item "
-                   + "WHERE cart_id = ? AND variant_id = ?";
+        String sql =
+                "SELECT * FROM cart_items "
+              + "WHERE cart_id = ? "
+              + "AND variant_id = ?";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
-            statement.setInt(1, cartId);
-            statement.setInt(2, variantId);
+            statement.setInt(
+                    1,
+                    cartId
+            );
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            statement.setInt(
+                    2,
+                    variantId
+            );
+
+            try (ResultSet resultSet =
+                         statement.executeQuery()) {
 
                 if (resultSet.next()) {
+
                     return mapCartItem(resultSet);
                 }
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -102,31 +141,170 @@ public class CartItemDAOImpl implements CartItemDAO {
 
 
     // =========================================================
-    // GET ALL CART ITEMS BY CART ID
+    // GET BASIC CART ITEMS BY CART ID
     // =========================================================
 
     @Override
     public List<CartItem> getCartItemsByCartId(int cartId) {
 
-        List<CartItem> cartItems = new ArrayList<>();
+        List<CartItem> cartItems =
+                new ArrayList<>();
 
-        String sql = "SELECT * FROM cart_item "
-                   + "WHERE cart_id = ? "
-                   + "ORDER BY cart_item_id DESC";
+        String sql =
+                "SELECT * FROM cart_items "
+              + "WHERE cart_id = ? "
+              + "ORDER BY cart_item_id DESC";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
-            statement.setInt(1, cartId);
+            statement.setInt(
+                    1,
+                    cartId
+            );
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            try (ResultSet resultSet =
+                         statement.executeQuery()) {
 
                 while (resultSet.next()) {
-                    cartItems.add(mapCartItem(resultSet));
+
+                    cartItems.add(
+                            mapCartItem(resultSet)
+                    );
                 }
             }
 
         } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return cartItems;
+    }
+
+
+    // =========================================================
+    // GET COMPLETE CART DETAILS FOR UI
+    // =========================================================
+
+    @Override
+    public List<CartItemView> getCartItemViewsByCartId(
+            int cartId) {
+
+        List<CartItemView> cartItems =
+                new ArrayList<>();
+
+        String sql =
+                "SELECT "
+              + "ci.cart_item_id, "
+              + "ci.cart_id, "
+              + "ci.variant_id, "
+              + "ci.quantity, "
+              + "pv.product_id, "
+              + "pv.size, "
+              + "pv.stock, "
+              + "p.product_name, "
+              + "p.brand, "
+              + "p.price, "
+              + "p.image_url "
+              + "FROM cart_items ci "
+              + "INNER JOIN product_variants pv "
+              + "ON ci.variant_id = pv.variant_id "
+              + "INNER JOIN products p "
+              + "ON pv.product_id = p.product_id "
+              + "WHERE ci.cart_id = ? "
+              + "ORDER BY ci.cart_item_id DESC";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
+
+            statement.setInt(
+                    1,
+                    cartId
+            );
+
+            try (ResultSet resultSet =
+                         statement.executeQuery()) {
+
+                while (resultSet.next()) {
+
+                    CartItemView item =
+                            new CartItemView();
+
+                    item.setCartItemId(
+                            resultSet.getInt(
+                                    "cart_item_id"
+                            )
+                    );
+
+                    item.setCartId(
+                            resultSet.getInt(
+                                    "cart_id"
+                            )
+                    );
+
+                    item.setVariantId(
+                            resultSet.getInt(
+                                    "variant_id"
+                            )
+                    );
+
+                    item.setQuantity(
+                            resultSet.getInt(
+                                    "quantity"
+                            )
+                    );
+
+                    item.setProductId(
+                            resultSet.getInt(
+                                    "product_id"
+                            )
+                    );
+
+                    item.setSize(
+                            resultSet.getString(
+                                    "size"
+                            )
+                    );
+                    
+                    item.setStock(
+                            resultSet.getInt(
+                                    "stock"
+                            )
+                    );
+
+                    item.setProductName(
+                            resultSet.getString(
+                                    "product_name"
+                            )
+                    );
+
+                    item.setBrand(
+                            resultSet.getString(
+                                    "brand"
+                            )
+                    );
+
+                    item.setPrice(
+                            resultSet.getDouble(
+                                    "price"
+                            )
+                    );
+
+                    item.setImageUrl(
+                            resultSet.getString(
+                                    "image_url"
+                            )
+                    );
+
+                    cartItems.add(item);
+                }
+            }
+
+        } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -139,21 +317,33 @@ public class CartItemDAOImpl implements CartItemDAO {
     // =========================================================
 
     @Override
-    public boolean updateQuantity(int cartItemId, int quantity) {
+    public boolean updateQuantity(
+            int cartItemId,
+            int quantity) {
 
-        String sql = "UPDATE cart_item "
-                   + "SET quantity = ? "
-                   + "WHERE cart_item_id = ?";
+        String sql =
+                "UPDATE cart_items "
+              + "SET quantity = ? "
+              + "WHERE cart_item_id = ?";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
-            statement.setInt(1, quantity);
-            statement.setInt(2, cartItemId);
+            statement.setInt(
+                    1,
+                    quantity
+            );
+
+            statement.setInt(
+                    2,
+                    cartItemId
+            );
 
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -168,17 +358,23 @@ public class CartItemDAOImpl implements CartItemDAO {
     @Override
     public boolean removeCartItem(int cartItemId) {
 
-        String sql = "DELETE FROM cart_item "
-                   + "WHERE cart_item_id = ?";
+        String sql =
+                "DELETE FROM cart_items "
+              + "WHERE cart_item_id = ?";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
-            statement.setInt(1, cartItemId);
+            statement.setInt(
+                    1,
+                    cartItemId
+            );
 
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -187,24 +383,37 @@ public class CartItemDAOImpl implements CartItemDAO {
 
 
     // =========================================================
-    // REMOVE CART ITEM BY CART ID AND VARIANT ID
+    // REMOVE CART ITEM BY CART + VARIANT
     // =========================================================
 
     @Override
-    public boolean removeCartItemByCartAndVariant(int cartId, int variantId) {
+    public boolean removeCartItemByCartAndVariant(
+            int cartId,
+            int variantId) {
 
-        String sql = "DELETE FROM cart_item "
-                   + "WHERE cart_id = ? AND variant_id = ?";
+        String sql =
+                "DELETE FROM cart_items "
+              + "WHERE cart_id = ? "
+              + "AND variant_id = ?";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
-            statement.setInt(1, cartId);
-            statement.setInt(2, variantId);
+            statement.setInt(
+                    1,
+                    cartId
+            );
+
+            statement.setInt(
+                    2,
+                    variantId
+            );
 
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -219,17 +428,23 @@ public class CartItemDAOImpl implements CartItemDAO {
     @Override
     public boolean clearCart(int cartId) {
 
-        String sql = "DELETE FROM cart_item "
-                   + "WHERE cart_id = ?";
+        String sql =
+                "DELETE FROM cart_items "
+              + "WHERE cart_id = ?";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
-            statement.setInt(1, cartId);
+            statement.setInt(
+                    1,
+                    cartId
+            );
 
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -242,23 +457,37 @@ public class CartItemDAOImpl implements CartItemDAO {
     // =========================================================
 
     @Override
-    public boolean isVariantInCart(int cartId, int variantId) {
+    public boolean isVariantInCart(
+            int cartId,
+            int variantId) {
 
-        String sql = "SELECT 1 FROM cart_item "
-                   + "WHERE cart_id = ? AND variant_id = ?";
+        String sql =
+                "SELECT 1 FROM cart_items "
+              + "WHERE cart_id = ? "
+              + "AND variant_id = ?";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
-            statement.setInt(1, cartId);
-            statement.setInt(2, variantId);
+            statement.setInt(
+                    1,
+                    cartId
+            );
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            statement.setInt(
+                    2,
+                    variantId
+            );
+
+            try (ResultSet resultSet =
+                         statement.executeQuery()) {
 
                 return resultSet.next();
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -273,23 +502,31 @@ public class CartItemDAOImpl implements CartItemDAO {
     @Override
     public int getCartItemCount(int cartId) {
 
-        String sql = "SELECT COUNT(*) "
-                   + "FROM cart_item "
-                   + "WHERE cart_id = ?";
+        String sql =
+                "SELECT COUNT(*) "
+              + "FROM cart_items "
+              + "WHERE cart_id = ?";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
-            statement.setInt(1, cartId);
+            statement.setInt(
+                    1,
+                    cartId
+            );
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            try (ResultSet resultSet =
+                         statement.executeQuery()) {
 
                 if (resultSet.next()) {
+
                     return resultSet.getInt(1);
                 }
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -302,26 +539,43 @@ public class CartItemDAOImpl implements CartItemDAO {
     // =========================================================
 
     @Override
-    public int getCartItemQuantity(int cartId, int variantId) {
+    public int getCartItemQuantity(
+            int cartId,
+            int variantId) {
 
-        String sql = "SELECT quantity "
-                   + "FROM cart_item "
-                   + "WHERE cart_id = ? AND variant_id = ?";
+        String sql =
+                "SELECT quantity "
+              + "FROM cart_items "
+              + "WHERE cart_id = ? "
+              + "AND variant_id = ?";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
-            statement.setInt(1, cartId);
-            statement.setInt(2, variantId);
+            statement.setInt(
+                    1,
+                    cartId
+            );
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            statement.setInt(
+                    2,
+                    variantId
+            );
+
+            try (ResultSet resultSet =
+                         statement.executeQuery()) {
 
                 if (resultSet.next()) {
-                    return resultSet.getInt("quantity");
+
+                    return resultSet.getInt(
+                            "quantity"
+                    );
                 }
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
 
@@ -330,27 +584,38 @@ public class CartItemDAOImpl implements CartItemDAO {
 
 
     // =========================================================
-    // MAP RESULTSET TO CARTITEM OBJECT
+    // MAP RESULTSET TO CART ITEM
     // =========================================================
 
-    private CartItem mapCartItem(ResultSet resultSet) throws Exception {
+    private CartItem mapCartItem(
+            ResultSet resultSet)
+            throws Exception {
 
-        CartItem cartItem = new CartItem();
+        CartItem cartItem =
+                new CartItem();
 
         cartItem.setCartItemId(
-                resultSet.getInt("cart_item_id")
+                resultSet.getInt(
+                        "cart_item_id"
+                )
         );
 
         cartItem.setCartId(
-                resultSet.getInt("cart_id")
+                resultSet.getInt(
+                        "cart_id"
+                )
         );
 
         cartItem.setVariantId(
-                resultSet.getInt("variant_id")
+                resultSet.getInt(
+                        "variant_id"
+                )
         );
 
         cartItem.setQuantity(
-                resultSet.getInt("quantity")
+                resultSet.getInt(
+                        "quantity"
+                )
         );
 
         return cartItem;

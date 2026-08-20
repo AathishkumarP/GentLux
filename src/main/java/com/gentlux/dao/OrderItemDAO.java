@@ -1,8 +1,9 @@
 package com.gentlux.dao;
 
-import com.gentlux.model.OrderItem;
-
 import java.util.List;
+
+import com.gentlux.model.OrderItem;
+import com.gentlux.model.OrderItemView;
 
 public interface OrderItemDAO {
 
@@ -13,18 +14,20 @@ public interface OrderItemDAO {
     boolean addOrderItem(OrderItem orderItem);
 
 
-    // =========================================================
-    // READ / FETCH
-    // =========================================================
+ // =========================================================
+ // READ / FETCH
+ // =========================================================
 
-    OrderItem getOrderItemById(int orderItemId);
+ OrderItem getOrderItemById(int orderItemId);
 
-    List<OrderItem> getOrderItemsByOrderId(int orderId);
+ List<OrderItem> getOrderItemsByOrderId(int orderId);
 
-    OrderItem getOrderItemByOrderAndVariant(
-            int orderId,
-            int variantId
-    );
+ List<OrderItemView> getOrderItemViewsByOrderId(int orderId);
+
+ OrderItem getOrderItemByOrderAndVariant(
+         int orderId,
+         int variantId
+ );
 
 
     // =========================================================
