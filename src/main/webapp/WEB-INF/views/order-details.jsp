@@ -136,19 +136,37 @@
 
                                 <div class="order-product-image">
 
-                                    <%
-                                        if (imagePath != null
-                                                && !imagePath.isEmpty()) {
-                                    %>
-
-                                    <img
-                                        src="<%= request.getContextPath()
-                                                + imagePath %>"
-                                        alt="<%= item.getProductName() %>">
-
-                                    <%
-                                        }
-                                    %>
+					<%
+					    if (imagePath != null
+					            && !imagePath.isEmpty()) {
+					
+					        String finalImagePath;
+					
+					        if (imagePath.startsWith("http://")
+					                || imagePath.startsWith("https://")) {
+					
+					            finalImagePath = imagePath;
+					
+					        } else {
+					
+					            if (!imagePath.startsWith("/")) {
+					                imagePath = "/" + imagePath;
+					            }
+					
+					            finalImagePath =
+					                    request.getContextPath()
+					                    + imagePath;
+					        }
+					%>
+					
+					<img
+					    src="<%= finalImagePath %>"
+					    alt="<%= item.getProductName() %>"
+					    onerror="this.src='<%= request.getContextPath() %>/assets/images/products/default-product.jpg';">
+					
+					<%
+					    }
+					%>
 
                                 </div>
 

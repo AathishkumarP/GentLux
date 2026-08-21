@@ -5029,3 +5029,275 @@
         padding: 27px 22px;
     }
 }
+
+
+/* =========================================================
+   PROFILE PAGE
+========================================================= */
+
+.profile-section {
+    min-height: 75vh;
+    padding: 80px 7%;
+    background: #f7f3ee;
+}
+
+.profile-container {
+    max-width: 1200px;
+    margin: 45px auto 0;
+
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 30px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   PROFILE SIDEBAR
+========================================================= */
+
+.profile-sidebar {
+    background: #43291e;
+    color: #ffffff;
+
+    padding: 35px 28px;
+
+    text-align: center;
+}
+
+.profile-avatar {
+    width: 76px;
+    height: 76px;
+
+    margin: 0 auto 18px;
+
+    border-radius: 50%;
+
+    background: #f5efe9;
+    color: #43291e;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.profile-sidebar h3 {
+    margin: 0 0 8px;
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.profile-sidebar > p {
+    margin: 0;
+
+    color: #cdbcb3;
+
+    font-size: 12px;
+}
+
+.profile-sidebar-divider {
+    height: 1px;
+
+    margin: 28px 0;
+
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.profile-menu-link {
+    display: block;
+
+    padding: 13px 15px;
+
+    margin-bottom: 8px;
+
+    text-align: left;
+
+    color: #d8c9c1;
+
+    text-decoration: none;
+
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.3px;
+
+    transition: 0.25s ease;
+}
+
+.profile-menu-link:hover,
+.profile-menu-link.active {
+    background: #f5efe9;
+    color: #43291e;
+}
+
+
+/* =========================================================
+   PROFILE CONTENT
+========================================================= */
+
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.profile-card {
+    background: #ffffff;
+
+    border: 1px solid #e1d8d1;
+
+    padding: 32px;
+}
+
+
+/* =========================================================
+   PROFILE CARD HEADER
+========================================================= */
+
+.profile-card-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding-bottom: 22px;
+    margin-bottom: 28px;
+
+    border-bottom: 1px solid #ece4de;
+}
+
+.profile-card-header p {
+    margin: 0 0 6px;
+
+    color: #9b7967;
+
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.profile-card-header h3 {
+    margin: 0;
+
+    color: #38251e;
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 23px;
+    font-weight: 500;
+}
+
+.profile-edit-button {
+    display: inline-block;
+
+    padding: 10px 18px;
+
+    border: 1px solid #43291e;
+
+    color: #43291e;
+    background: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+
+    transition: 0.25s ease;
+}
+
+.profile-edit-button:hover {
+    background: #43291e;
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   PROFILE INFORMATION
+========================================================= */
+
+.profile-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px 40px;
+}
+
+.profile-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.profile-info-item span {
+    color: #98877d;
+
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.6px;
+}
+
+.profile-info-item strong {
+    color: #38251e;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   ADDRESS
+========================================================= */
+
+.profile-address {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.profile-address-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+
+/* =========================================================
+   RESPONSIVE PROFILE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .profile-container {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-sidebar {
+        position: static;
+    }
+}
+
+@media (max-width: 650px) {
+
+    .profile-section {
+        padding: 60px 18px;
+    }
+
+    .profile-card {
+        padding: 24px 20px;
+    }
+
+    .profile-info-grid,
+    .profile-address-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-card-header {
+        align-items: flex-start;
+    }
+}

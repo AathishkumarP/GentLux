@@ -1,0 +1,360 @@
+<%@ page language="java"
+    contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<%@ page import="com.gentlux.model.User" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile | GENTLUX</title>
+
+    <link rel="stylesheet"
+      href="${pageContext.request.contextPath}/assets/css/style.css">
+
+</head>
+
+<body>
+
+    <jsp:include page="partials/nav.jsp" />
+
+
+    <%
+        User user =
+                (User)
+                request.getAttribute("user");
+    %>
+
+
+    <main>
+
+        <section class="profile-section">
+
+
+            <!-- ==========================================
+                 PAGE HEADING
+            =========================================== -->
+
+            <div class="section-heading">
+
+                <p class="section-subtitle">
+                    YOUR ACCOUNT
+                </p>
+
+                <h2>
+                    MY PROFILE
+                </h2>
+
+                <p class="section-description">
+                    Manage your personal and delivery information.
+                </p>
+
+            </div>
+
+
+            <!-- ==========================================
+                 PROFILE CONTAINER
+            =========================================== -->
+
+            <div class="profile-container">
+
+
+                <!-- ======================================
+                     PROFILE SIDEBAR
+                ======================================= -->
+
+                <aside class="profile-sidebar">
+
+
+                    <div class="profile-avatar">
+
+                        <span>
+                            <%= user.getFullName() != null
+                                    && !user.getFullName().isEmpty()
+                                    ? user.getFullName()
+                                          .substring(0, 1)
+                                          .toUpperCase()
+                                    : "G" %>
+                        </span>
+
+                    </div>
+
+
+                    <h3>
+                        <%= user.getFullName() %>
+                    </h3>
+
+
+                    <p>
+                        <%= user.getEmail() %>
+                    </p>
+
+
+                    <div class="profile-sidebar-divider">
+                    </div>
+
+
+                    <a href="${pageContext.request.contextPath}/profile"
+                       class="profile-menu-link active">
+
+                        PROFILE
+
+                    </a>
+
+
+                    <a href="${pageContext.request.contextPath}/my-orders"
+                       class="profile-menu-link">
+
+                        MY ORDERS
+
+                    </a>
+
+
+                    <a href="#"
+                       class="profile-menu-link">
+
+                        CHANGE PASSWORD
+
+                    </a>
+
+
+                </aside>
+
+
+                <!-- ======================================
+                     PROFILE CONTENT
+                ======================================= -->
+
+                <div class="profile-content">
+
+
+                    <!-- ==================================
+                         PERSONAL INFORMATION
+                    =================================== -->
+
+                    <div class="profile-card">
+
+
+                        <div class="profile-card-header">
+
+                            <div>
+
+                                <p>
+                                    PERSONAL
+                                </p>
+
+                                <h3>
+                                    PERSONAL INFORMATION
+                                </h3>
+
+                            </div>
+
+
+                            <a href="${pageContext.request.contextPath}/edit-profile"
+                               class="profile-edit-button">
+
+                                EDIT
+
+                            </a>
+
+                        </div>
+
+
+                        <div class="profile-info-grid">
+
+
+                            <div class="profile-info-item">
+
+                                <span>
+                                    FULL NAME
+                                </span>
+
+                                <strong>
+                                    <%= user.getFullName() %>
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-info-item">
+
+                                <span>
+                                    EMAIL ADDRESS
+                                </span>
+
+                                <strong>
+                                    <%= user.getEmail() %>
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-info-item">
+
+                                <span>
+                                    PHONE NUMBER
+                                </span>
+
+                                <strong>
+                                    <%= user.getPhone() != null
+                                            && !user.getPhone().isEmpty()
+                                            ? user.getPhone()
+                                            : "-" %>
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-info-item">
+
+                                <span>
+                                    MEMBER SINCE
+                                </span>
+
+                                <strong>
+                                    <%= user.getCreatedAt() != null
+                                            ? user.getCreatedAt()
+                                            : "-" %>
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ==================================
+                         ADDRESS INFORMATION
+                    =================================== -->
+
+                    <div class="profile-card">
+
+
+                        <div class="profile-card-header">
+
+                            <div>
+
+                                <p>
+                                    DELIVERY
+                                </p>
+
+                                <h3>
+                                    ADDRESS INFORMATION
+                                </h3>
+
+                            </div>
+
+
+                            <a href="${pageContext.request.contextPath}/edit-profile"
+                               class="profile-edit-button">
+
+                                EDIT
+
+                            </a>
+
+                        </div>
+
+
+                        <div class="profile-address">
+
+
+                            <div class="profile-info-item">
+
+                                <span>
+                                    ADDRESS
+                                </span>
+
+                                <strong>
+                                    <%= user.getAddress() != null
+                                            && !user.getAddress().isEmpty()
+                                            ? user.getAddress()
+                                            : "Not added" %>
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-info-grid profile-address-grid">
+
+
+                                <div class="profile-info-item">
+
+                                    <span>
+                                        CITY
+                                    </span>
+
+                                    <strong>
+                                        <%= user.getCity() != null
+                                                && !user.getCity().isEmpty()
+                                                ? user.getCity()
+                                                : "-" %>
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="profile-info-item">
+
+                                    <span>
+                                        STATE
+                                    </span>
+
+                                    <strong>
+                                        <%= user.getState() != null
+                                                && !user.getState().isEmpty()
+                                                ? user.getState()
+                                                : "-" %>
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="profile-info-item">
+
+                                    <span>
+                                        PINCODE
+                                    </span>
+
+                                    <strong>
+                                        <%= user.getPincode() != null
+                                                && !user.getPincode().isEmpty()
+                                                ? user.getPincode()
+                                                : "-" %>
+                                    </strong>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <jsp:include page="partials/footer.jsp" />
+
+
+</body>
+
+</html>
