@@ -1,0 +1,336 @@
+/* =========================================================
+   GENTLUX PROFILE PAGE
+========================================================= */
+
+.profile-section {
+    min-height: 80vh;
+    padding: 80px 7% 100px;
+    background: #f7f3ee;
+}
+
+
+/* =========================================================
+   PROFILE LAYOUT
+========================================================= */
+
+.profile-container {
+    width: 100%;
+    max-width: 1200px;
+
+    margin: 45px auto 0;
+
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+
+    gap: 30px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   LEFT SIDEBAR
+========================================================= */
+
+.profile-sidebar {
+    background: #43291e;
+    color: #ffffff;
+
+    padding: 38px 28px;
+
+    text-align: center;
+}
+
+
+.profile-avatar {
+    width: 78px;
+    height: 78px;
+
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #f5efe9;
+    color: #43291e;
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+
+.profile-sidebar h3 {
+    margin: 0 0 8px;
+
+    color: #ffffff;
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 22px;
+    font-weight: 500;
+}
+
+
+.profile-sidebar > p {
+    margin: 0;
+
+    color: #cfbeb5;
+
+    font-size: 12px;
+
+    word-break: break-word;
+}
+
+
+.profile-sidebar-divider {
+    height: 1px;
+
+    margin: 28px 0;
+
+    background: rgba(255, 255, 255, 0.16);
+}
+
+
+/* =========================================================
+   SIDEBAR MENU
+========================================================= */
+
+.profile-menu-link {
+    display: block;
+
+    margin-bottom: 8px;
+    padding: 13px 16px;
+
+    color: #d9cac2;
+
+    text-align: left;
+
+    text-decoration: none;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    letter-spacing: 1.4px;
+
+    transition:
+        background 0.25s ease,
+        color 0.25s ease;
+}
+
+
+.profile-menu-link:hover,
+.profile-menu-link.active {
+    background: #f5efe9;
+    color: #43291e;
+}
+
+
+/* =========================================================
+   RIGHT SIDE
+========================================================= */
+
+.profile-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: 25px;
+}
+
+
+/* =========================================================
+   PROFILE CARDS
+========================================================= */
+
+.profile-card {
+    background: #ffffff;
+
+    border: 1px solid #ded5ce;
+
+    padding: 32px;
+}
+
+
+.profile-card-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 28px;
+    padding-bottom: 22px;
+
+    border-bottom: 1px solid #ebe3dd;
+}
+
+
+.profile-card-header p {
+    margin: 0 0 6px;
+
+    color: #9b7867;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+}
+
+
+.profile-card-header h3 {
+    margin: 0;
+
+    color: #38251e;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 23px;
+
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   EDIT BUTTON
+========================================================= */
+
+.profile-edit-button {
+    display: inline-block;
+
+    padding: 10px 19px;
+
+    border: 1px solid #43291e;
+
+    background: #ffffff;
+
+    color: #43291e;
+
+    text-decoration: none;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+
+    transition:
+        background 0.25s ease,
+        color 0.25s ease;
+}
+
+
+.profile-edit-button:hover {
+    background: #43291e;
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   INFORMATION GRID
+========================================================= */
+
+.profile-info-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 32px 45px;
+}
+
+
+.profile-info-item {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+.profile-info-item span {
+    color: #97867c;
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    letter-spacing: 1.6px;
+}
+
+
+.profile-info-item strong {
+    color: #38251e;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    line-height: 1.5;
+
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   ADDRESS
+========================================================= */
+
+.profile-address {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 30px;
+}
+
+
+.profile-address-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .profile-container {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-sidebar {
+        width: auto;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+    .profile-section {
+        padding: 60px 18px 80px;
+    }
+
+    .profile-container {
+        margin-top: 35px;
+    }
+
+    .profile-card {
+        padding: 24px 20px;
+    }
+
+    .profile-info-grid,
+    .profile-address-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-card-header {
+        align-items: flex-start;
+    }
+}

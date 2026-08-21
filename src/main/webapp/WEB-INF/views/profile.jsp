@@ -17,8 +17,17 @@
 
     <title>My Profile | GENTLUX</title>
 
+
+    <!-- MAIN WEBSITE CSS -->
     <link rel="stylesheet"
-      href="${pageContext.request.contextPath}/assets/css/style.css">
+          type="text/css"
+          href="<%= request.getContextPath() %>/assets/css/style.css">
+
+
+    <!-- PROFILE PAGE CSS -->
+    <link rel="stylesheet"
+          type="text/css"
+          href="<%= request.getContextPath() %>/assets/css/profile.css">
 
 </head>
 
@@ -39,9 +48,7 @@
         <section class="profile-section">
 
 
-            <!-- ==========================================
-                 PAGE HEADING
-            =========================================== -->
+            <!-- PAGE HEADING -->
 
             <div class="section-heading">
 
@@ -60,16 +67,12 @@
             </div>
 
 
-            <!-- ==========================================
-                 PROFILE CONTAINER
-            =========================================== -->
+            <!-- PROFILE CONTAINER -->
 
             <div class="profile-container">
 
 
-                <!-- ======================================
-                     PROFILE SIDEBAR
-                ======================================= -->
+                <!-- PROFILE SIDEBAR -->
 
                 <aside class="profile-sidebar">
 
@@ -102,7 +105,7 @@
                     </div>
 
 
-                    <a href="${pageContext.request.contextPath}/profile"
+                    <a href="<%= request.getContextPath() %>/profile"
                        class="profile-menu-link active">
 
                         PROFILE
@@ -110,7 +113,7 @@
                     </a>
 
 
-                    <a href="${pageContext.request.contextPath}/my-orders"
+                    <a href="<%= request.getContextPath() %>/my-orders"
                        class="profile-menu-link">
 
                         MY ORDERS
@@ -129,16 +132,12 @@
                 </aside>
 
 
-                <!-- ======================================
-                     PROFILE CONTENT
-                ======================================= -->
+                <!-- PROFILE CONTENT -->
 
                 <div class="profile-content">
 
 
-                    <!-- ==================================
-                         PERSONAL INFORMATION
-                    =================================== -->
+                    <!-- PERSONAL INFORMATION -->
 
                     <div class="profile-card">
 
@@ -158,7 +157,7 @@
                             </div>
 
 
-                            <a href="${pageContext.request.contextPath}/edit-profile"
+                            <a href="<%= request.getContextPath() %>/edit-profile"
                                class="profile-edit-button">
 
                                 EDIT
@@ -233,9 +232,7 @@
                     </div>
 
 
-                    <!-- ==================================
-                         ADDRESS INFORMATION
-                    =================================== -->
+                    <!-- ADDRESS INFORMATION -->
 
                     <div class="profile-card">
 
@@ -255,7 +252,7 @@
                             </div>
 
 
-                            <a href="${pageContext.request.contextPath}/edit-profile"
+                            <a href="<%= request.getContextPath() %>/edit-profile"
                                class="profile-edit-button">
 
                                 EDIT

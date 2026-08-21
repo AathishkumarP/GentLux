@@ -1,52 +1,52 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
-<link rel="stylesheet"
-      href="${pageContext.request.contextPath}/css/style.css">
+<%@ page language="java"
+    contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 
 <nav class="navbar">
 
-    <!-- Brand -->
     <div class="navbar-brand">
-        <a href="${pageContext.request.contextPath}/home">
+
+        <a href="<%= request.getContextPath() %>/home">
             GENTLUX
         </a>
+
     </div>
 
-    <!-- Navigation Links -->
+
     <div class="navbar-links">
 
-        <a href="${pageContext.request.contextPath}/home">
+        <a href="<%= request.getContextPath() %>/home">
             Home
         </a>
 
-        <a href="${pageContext.request.contextPath}/products">
+        <a href="<%= request.getContextPath() %>/products">
             Shop
         </a>
 
-        <a href="${pageContext.request.contextPath}/categories">
+        <a href="<%= request.getContextPath() %>/categories">
             Categories
         </a>
 
-        <a href="${pageContext.request.contextPath}/about">
+        <a href="<%= request.getContextPath() %>/about">
             About
         </a>
 
     </div>
 
-    <!-- Right Side -->
+
     <div class="navbar-actions">
 
-        <a href="${pageContext.request.contextPath}/search"
+        <a href="<%= request.getContextPath() %>/search"
            aria-label="Search">
             🔍
         </a>
 
-        <a href="${pageContext.request.contextPath}/cart"
+        <a href="<%= request.getContextPath() %>/cart"
            aria-label="Cart">
             🛍
         </a>
 
-        <a href="${pageContext.request.contextPath}/profile"
+        <a href="<%= request.getContextPath() %>/profile"
            aria-label="Profile">
             👤
         </a>
