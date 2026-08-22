@@ -334,3 +334,254 @@
         align-items: flex-start;
     }
 }
+
+/* =========================================================
+   GENTLUX - CATEGORIES PAGE
+========================================================= */
+
+.categories-page-section {
+    padding: 70px 6% 100px;
+    background: #f7f3ee;
+    min-height: 70vh;
+}
+
+.categories-page-section .section-heading {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+
+/* CATEGORY GRID */
+
+.categories-page-grid {
+    max-width: 1300px;
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+
+/* CATEGORY CARD */
+
+.categories-page-card {
+    display: block;
+    background: #ffffff;
+
+    border: 1px solid #ded5ce;
+
+    text-decoration: none !important;
+    color: #38251e !important;
+
+    overflow: hidden;
+
+    transition: 0.3s ease;
+}
+
+.categories-page-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 12px 30px
+        rgba(50, 30, 20, 0.12);
+}
+
+
+/* CATEGORY IMAGE AREA */
+
+.categories-page-image {
+    position: relative;
+
+    display: block;
+
+    width: 100%;
+    height: 300px;
+
+    background-image: none !important;
+    background-color: #d6c8bd;
+
+    background-size: cover;
+    background-position: center;
+
+    overflow: hidden;
+}
+
+
+/* Different temporary category colors */
+
+.categories-page-image.category-tshirts {
+    background-color: #cbbcaf !important;
+}
+
+.categories-page-image.category-shirts {
+    background-color: #b7a69a !important;
+}
+
+.categories-page-image.category-jeans {
+    background-color: #918982 !important;
+}
+
+.categories-page-image.category-trousers {
+    background-color: #afa198 !important;
+}
+
+.categories-page-image.category-jackets {
+    background-color: #806c60 !important;
+}
+
+.categories-page-image.category-hoodies {
+    background-color: #927e72 !important;
+}
+
+.categories-page-image.category-sweatshirts {
+    background-color: #a9988c !important;
+}
+
+.categories-page-image.category-shorts {
+    background-color: #c4b5aa !important;
+}
+
+.categories-page-image.category-ethnic {
+    background-color: #a08776 !important;
+}
+
+.categories-page-image.category-footwear {
+    background-color: #756258 !important;
+}
+
+.categories-page-image.category-default {
+    background-color: #c9bbb1 !important;
+}
+
+
+/* HOVER OVERLAY */
+
+.categories-page-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        rgba(55, 35, 27, 0.35);
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease;
+}
+
+.categories-page-card:hover
+.categories-page-overlay {
+    opacity: 1;
+}
+
+.categories-page-overlay span {
+    color: white;
+
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 600;
+}
+
+
+/* CATEGORY TEXT */
+
+.categories-page-info {
+    display: block;
+
+    padding: 22px 15px 25px;
+
+    text-align: center;
+
+    background: #ffffff;
+}
+
+.categories-page-info p {
+    margin: 0 0 7px;
+
+    color: #9b7a68;
+
+    font-size: 9px;
+
+    letter-spacing: 2px;
+}
+
+.categories-page-info h3 {
+    margin: 0 0 14px;
+
+    color: #38251e;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 20px;
+    font-weight: normal;
+
+    text-transform: uppercase;
+}
+
+.categories-page-info span {
+    color: #765747;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    letter-spacing: 1.5px;
+}
+
+
+/* EMPTY CATEGORIES */
+
+.categories-empty {
+    grid-column: 1 / -1;
+
+    padding: 70px 30px;
+
+    background: white;
+
+    border: 1px solid #ded5ce;
+
+    text-align: center;
+}
+
+
+/* TABLET */
+
+@media (max-width: 1000px) {
+
+    .categories-page-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+
+/* SMALL TABLET */
+
+@media (max-width: 750px) {
+
+    .categories-page-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+/* MOBILE */
+
+@media (max-width: 500px) {
+
+    .categories-page-section {
+        padding: 50px 18px 70px;
+    }
+
+    .categories-page-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .categories-page-image {
+        height: 350px;
+    }
+}
