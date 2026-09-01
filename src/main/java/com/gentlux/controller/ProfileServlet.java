@@ -11,7 +11,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
@@ -41,11 +41,43 @@ public class ProfileServlet extends HttpServlet {
 
         try {
 
-            // Temporary user ID.
-            // Later we will replace this with session user ID.
+            // =====================================================
+            // GET EXISTING SESSION
+            // =====================================================
 
-            int userId = 1;
+            HttpSession session =
+                    request.getSession(false);
 
+
+            // =====================================================
+            // CHECK USER LOGIN
+            // =====================================================
+
+            if (session == null
+                    || session.getAttribute("userId") == null) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/login"
+                );
+
+                return;
+            }
+
+
+            // =====================================================
+            // GET LOGGED-IN USER ID
+            // =====================================================
+
+            int userId =
+                    (Integer) session.getAttribute(
+                            "userId"
+                    );
+
+
+            // =====================================================
+            // GET USER FROM DATABASE
+            // =====================================================
 
             User user =
                     userDAO.getUserById(
@@ -55,14 +87,21 @@ public class ProfileServlet extends HttpServlet {
 
             if (user == null) {
 
-                response.sendError(
-                        HttpServletResponse.SC_NOT_FOUND,
-                        "User not found."
+                // Session has an invalid/deleted user.
+                session.invalidate();
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/login"
                 );
 
                 return;
             }
 
+
+            // =====================================================
+            // SEND USER TO JSP
+            // =====================================================
 
             request.setAttribute(
                     "user",

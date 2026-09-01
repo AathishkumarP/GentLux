@@ -2,12 +2,15 @@ package com.gentlux.controller;
 
 import java.io.IOException;
 
+import com.gentlux.dao.CartDAO;
 import com.gentlux.dao.CartItemDAO;
 import com.gentlux.dao.ProductVariantDAO;
 
+import com.gentlux.dao.impl.CartDAOImpl;
 import com.gentlux.dao.impl.CartItemDAOImpl;
 import com.gentlux.dao.impl.ProductVariantDAOImpl;
 
+import com.gentlux.model.Cart;
 import com.gentlux.model.CartItem;
 import com.gentlux.model.ProductVariant;
 
@@ -17,6 +20,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 
 @WebServlet("/add-to-cart")
@@ -24,6 +28,7 @@ public class AddToCartServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    private CartDAO cartDAO;
     private CartItemDAO cartItemDAO;
     private ProductVariantDAO productVariantDAO;
 
@@ -31,11 +36,18 @@ public class AddToCartServlet extends HttpServlet {
     @Override
     public void init() {
 
+        cartDAO =
+                new CartDAOImpl();
+
         cartItemDAO =
                 new CartItemDAOImpl();
 
         productVariantDAO =
                 new ProductVariantDAOImpl();
+
+        System.out.println(
+                "AddToCartServlet initialized"
+        );
     }
 
 
@@ -45,57 +57,97 @@ public class AddToCartServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
-
-        // =====================================================
-        // DEBUG REQUEST VALUES
-        // =====================================================
-
-        String cartIdParam =
-                request.getParameter("cartId");
-
-        String variantIdParam =
-                request.getParameter("variantId");
-
-        String quantityParam =
-                request.getParameter("quantity");
-
-
-        System.out.println(
-                "========== ADD TO CART =========="
-        );
-
-        System.out.println(
-                "cartId = " + cartIdParam
-        );
-
-        System.out.println(
-                "variantId = " + variantIdParam
-        );
-
-        System.out.println(
-                "quantity = " + quantityParam
-        );
-
-        System.out.println(
-                "================================="
-        );
-
-
         try {
 
-            // =================================================
-            // READ REQUEST DATA
-            // =================================================
+            // =====================================================
+            // CHECK LOGIN SESSION
+            // =====================================================
+
+            HttpSession session =
+                    request.getSession(false);
+
+
+            if (session == null
+                    || session.getAttribute("userId") == null) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/login"
+                );
+
+                return;
+            }
+
+
+            // =====================================================
+            // GET LOGGED-IN USER ID
+            // =====================================================
+
+            int userId =
+                    (Integer) session.getAttribute(
+                            "userId"
+                    );
+
+
+            // =====================================================
+            // GET USER CART
+            // =====================================================
+
+            Cart cart =
+                    cartDAO.getOrCreateCart(
+                            userId
+                    );
+
+
+            if (cart == null) {
+
+                response.sendError(
+                        HttpServletResponse
+                                .SC_INTERNAL_SERVER_ERROR,
+                        "Unable to load cart."
+                );
+
+                return;
+            }
+
 
             int cartId =
-                    Integer.parseInt(
-                            cartIdParam
+                    cart.getCartId();
+
+
+            // =====================================================
+            // READ PRODUCT DATA
+            // =====================================================
+
+            String variantIdParam =
+                    request.getParameter(
+                            "variantId"
                     );
+
+
+            String quantityParam =
+                    request.getParameter(
+                            "quantity"
+                    );
+
+
+            if (variantIdParam == null
+                    || quantityParam == null) {
+
+                response.sendError(
+                        HttpServletResponse.SC_BAD_REQUEST,
+                        "Invalid product information."
+                );
+
+                return;
+            }
+
 
             int variantId =
                     Integer.parseInt(
                             variantIdParam
                     );
+
 
             int quantity =
                     Integer.parseInt(
@@ -103,24 +155,57 @@ public class AddToCartServlet extends HttpServlet {
                     );
 
 
-            // =================================================
+            // =====================================================
+            // DEBUG
+            // =====================================================
+
+            System.out.println(
+                    "========== ADD TO CART =========="
+            );
+
+            System.out.println(
+                    "User ID = "
+                    + userId
+            );
+
+            System.out.println(
+                    "Cart ID = "
+                    + cartId
+            );
+
+            System.out.println(
+                    "Variant ID = "
+                    + variantId
+            );
+
+            System.out.println(
+                    "Quantity = "
+                    + quantity
+            );
+
+            System.out.println(
+                    "================================="
+            );
+
+
+            // =====================================================
             // VALIDATE QUANTITY
-            // =================================================
+            // =====================================================
 
             if (quantity < 1) {
 
                 response.sendError(
                         HttpServletResponse.SC_BAD_REQUEST,
-                        "Quantity must be at least 1"
+                        "Quantity must be at least 1."
                 );
 
                 return;
             }
 
 
-            // =================================================
+            // =====================================================
             // GET SELECTED VARIANT
-            // =================================================
+            // =====================================================
 
             ProductVariant variant =
                     productVariantDAO.getVariantById(
@@ -132,7 +217,7 @@ public class AddToCartServlet extends HttpServlet {
 
                 response.sendError(
                         HttpServletResponse.SC_NOT_FOUND,
-                        "Product variant not found"
+                        "Product variant not found."
                 );
 
                 return;
@@ -143,9 +228,9 @@ public class AddToCartServlet extends HttpServlet {
                     variant.getStockQuantity();
 
 
-            // =================================================
+            // =====================================================
             // CHECK STOCK
-            // =================================================
+            // =====================================================
 
             if (availableStock <= 0) {
 
@@ -160,40 +245,29 @@ public class AddToCartServlet extends HttpServlet {
             }
 
 
-            // =================================================
-            // CHECK IF VARIANT ALREADY EXISTS IN CART
-            // =================================================
+            // =====================================================
+            // CHECK IF ITEM ALREADY EXISTS
+            // =====================================================
 
             CartItem existingItem =
                     cartItemDAO
-                    .getCartItemByCartAndVariant(
-                            cartId,
-                            variantId
-                    );
+                            .getCartItemByCartAndVariant(
+                                    cartId,
+                                    variantId
+                            );
 
 
-            // =================================================
-            // EXISTING CART ITEM
-            // =================================================
+            // =====================================================
+            // ITEM ALREADY EXISTS
+            // =====================================================
 
             if (existingItem != null) {
-
-                System.out.println(
-                        "Variant already exists in cart."
-                );
-
-                System.out.println(
-                        "Current quantity = "
-                        + existingItem.getQuantity()
-                );
-
 
                 int newQuantity =
                         existingItem.getQuantity()
                         + quantity;
 
 
-                // Don't exceed available stock
                 if (newQuantity > availableStock) {
 
                     newQuantity =
@@ -208,43 +282,25 @@ public class AddToCartServlet extends HttpServlet {
                         );
 
 
-                System.out.println(
-                        "Cart quantity updated = "
-                        + updated
-                );
-
-                System.out.println(
-                        "New quantity = "
-                        + newQuantity
-                );
-
-
                 if (!updated) {
 
                     response.sendError(
                             HttpServletResponse
                                     .SC_INTERNAL_SERVER_ERROR,
-                            "Unable to update cart"
+                            "Unable to update cart."
                     );
 
                     return;
                 }
-
             }
 
 
-            // =================================================
+            // =====================================================
             // NEW CART ITEM
-            // =================================================
+            // =====================================================
 
             else {
 
-                System.out.println(
-                        "Variant does not exist in cart."
-                );
-
-
-                // Don't add more than available stock
                 if (quantity > availableStock) {
 
                     quantity =
@@ -255,13 +311,16 @@ public class AddToCartServlet extends HttpServlet {
                 CartItem cartItem =
                         new CartItem();
 
+
                 cartItem.setCartId(
                         cartId
                 );
 
+
                 cartItem.setVariantId(
                         variantId
                 );
+
 
                 cartItem.setQuantity(
                         quantity
@@ -274,23 +333,12 @@ public class AddToCartServlet extends HttpServlet {
                         );
 
 
-                System.out.println(
-                        "New cart item added = "
-                        + added
-                );
-
-                System.out.println(
-                        "Quantity added = "
-                        + quantity
-                );
-
-
                 if (!added) {
 
                     response.sendError(
                             HttpServletResponse
                                     .SC_INTERNAL_SERVER_ERROR,
-                            "Unable to add item to cart"
+                            "Unable to add item to cart."
                     );
 
                     return;
@@ -298,9 +346,9 @@ public class AddToCartServlet extends HttpServlet {
             }
 
 
-            // =================================================
-            // RETURN TO PRODUCT DETAILS
-            // =================================================
+            // =====================================================
+            // SUCCESS
+            // =====================================================
 
             response.sendRedirect(
                     request.getContextPath()
@@ -316,7 +364,18 @@ public class AddToCartServlet extends HttpServlet {
 
             response.sendError(
                     HttpServletResponse.SC_BAD_REQUEST,
-                    "Invalid cart data"
+                    "Invalid product information."
+            );
+
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            response.sendError(
+                    HttpServletResponse
+                            .SC_INTERNAL_SERVER_ERROR,
+                    "Unable to add item to cart."
             );
         }
     }

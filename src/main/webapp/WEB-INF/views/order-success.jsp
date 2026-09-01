@@ -17,8 +17,11 @@
 
     <title>Order Confirmed | GENTLUX</title>
 
-    <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/assets/css/style.css">
+	<link rel="stylesheet"
+	      href="${pageContext.request.contextPath}/assets/css/style.css">
+	
+	<link rel="stylesheet"
+	      href="${pageContext.request.contextPath}/assets/css/order-success.css">
 
 </head>
 

@@ -1,0 +1,1036 @@
+/* =========================================================
+   GENTLUX CHECKOUT
+   ISOLATED CHECKOUT PAGE STYLES
+========================================================= */
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.gl-checkout-page {
+    width: 100%;
+    min-height: 100vh;
+
+    margin: 0;
+    padding: 70px 5% 100px;
+
+    box-sizing: border-box;
+
+    background-color: #f7f3ee;
+}
+
+
+.gl-checkout-container {
+    width: 100%;
+    max-width: 1250px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.gl-checkout-heading {
+    width: 100%;
+
+    margin-bottom: 45px;
+
+    text-align: center;
+}
+
+
+.gl-checkout-heading p {
+    margin: 0 0 10px;
+
+    color: #9b7a68;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: 4px;
+}
+
+
+.gl-checkout-heading h1 {
+    margin: 0;
+
+    color: #38251e;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 46px;
+    font-weight: 400;
+}
+
+
+/* =========================================================
+   MAIN GRID
+========================================================= */
+
+.gl-checkout-grid {
+    width: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.45fr)
+        minmax(360px, 0.8fr);
+
+    gap: 35px;
+
+    align-items: start;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   LEFT SIDE
+========================================================= */
+
+.gl-checkout-form-side {
+    width: 100%;
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 25px;
+}
+
+
+/* =========================================================
+   PANELS
+========================================================= */
+
+.gl-checkout-panel {
+    width: 100%;
+
+    margin: 0;
+
+    padding: 32px;
+
+    box-sizing: border-box;
+
+    display: block;
+
+    background-color: #ffffff;
+
+    border: 1px solid #e4d9d1;
+}
+
+
+/* =========================================================
+   PANEL HEADING
+========================================================= */
+
+.gl-checkout-panel-heading {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    margin-bottom: 30px;
+
+    padding-bottom: 20px;
+
+    box-sizing: border-box;
+
+    border-bottom: 1px solid #eee5df;
+}
+
+
+.gl-checkout-step {
+    width: 40px;
+    height: 40px;
+
+    min-width: 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background-color: #3b261d;
+
+    color: #ffffff;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+
+.gl-checkout-panel-heading p {
+    margin: 0 0 4px;
+
+    color: #9b7a68;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    letter-spacing: 2px;
+}
+
+
+.gl-checkout-panel-heading h2 {
+    margin: 0;
+
+    color: #38251e;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 24px;
+
+    font-weight: 400;
+}
+
+
+/* =========================================================
+   FORM FIELD
+========================================================= */
+
+.gl-checkout-field {
+    width: 100%;
+
+    margin: 0 0 20px;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+    display: block;
+}
+
+
+.gl-checkout-field label {
+    width: auto;
+
+    display: block;
+
+    margin: 0 0 8px;
+
+    padding: 0;
+
+    color: #4b3931;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.gl-checkout-field input,
+.gl-checkout-field textarea {
+    width: 100%;
+
+    max-width: none;
+
+    margin: 0;
+
+    padding: 13px 15px;
+
+    box-sizing: border-box;
+
+    display: block;
+
+    border: 1px solid #d9cec7;
+
+    border-radius: 0;
+
+    outline: none;
+
+    background-color: #ffffff;
+
+    color: #38251e;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 14px;
+
+    box-shadow: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.gl-checkout-field input {
+    height: 48px;
+}
+
+
+.gl-checkout-field textarea {
+    min-height: 110px;
+
+    resize: vertical;
+}
+
+
+.gl-checkout-field input:focus,
+.gl-checkout-field textarea:focus {
+    border-color: #765747;
+
+    box-shadow:
+        0 0 0 2px
+        rgba(118, 87, 71, 0.08);
+}
+
+
+.gl-checkout-field input::placeholder,
+.gl-checkout-field textarea::placeholder {
+    color: #aaa09a;
+}
+
+
+/* =========================================================
+   CITY + STATE
+========================================================= */
+
+.gl-checkout-two-column {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    gap: 18px;
+
+    box-sizing: border-box;
+}
+
+
+.gl-checkout-two-column .gl-checkout-field {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   ADDRESS NOTE
+========================================================= */
+
+.gl-checkout-address-note {
+    width: 100%;
+
+    margin: 5px 0 0;
+
+    padding: 14px 16px;
+
+    box-sizing: border-box;
+
+    background-color: #f7f3ee;
+
+    border-left: 3px solid #9b7a68;
+}
+
+
+.gl-checkout-address-note p {
+    margin: 0;
+
+    color: #74655d;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 11px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   PAYMENT
+========================================================= */
+
+.gl-checkout-payment-option {
+    width: 100%;
+
+    margin: 0;
+
+    padding: 18px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    border: 1px solid #765747;
+
+    background-color: #faf7f4;
+
+    cursor: pointer;
+}
+
+
+.gl-checkout-payment-option input[type="radio"] {
+    width: 18px;
+
+    height: 18px;
+
+    margin: 0;
+
+    flex-shrink: 0;
+
+    accent-color: #3b261d;
+
+    cursor: pointer;
+}
+
+
+.gl-checkout-payment-text {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.gl-checkout-payment-text strong {
+    color: #38251e;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.gl-checkout-payment-text span {
+    color: #8a7b73;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 11px;
+}
+
+
+.gl-checkout-payment-coming {
+    margin: 13px 0 0;
+
+    color: #a2938a;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 10px;
+
+    letter-spacing: 0.5px;
+}
+
+
+/* =========================================================
+   RIGHT SIDE
+========================================================= */
+
+.gl-checkout-summary-side {
+    width: 100%;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   SUMMARY CARD
+========================================================= */
+
+.gl-checkout-summary-card {
+    position: sticky;
+
+    top: 25px;
+
+    width: 100%;
+
+    margin: 0;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+    background-color: #ffffff;
+
+    border: 1px solid #e4d9d1;
+}
+
+
+/* =========================================================
+   SUMMARY HEADING
+========================================================= */
+
+.gl-checkout-summary-heading {
+    width: 100%;
+
+    padding-bottom: 20px;
+
+    box-sizing: border-box;
+
+    border-bottom: 1px solid #eee5df;
+}
+
+
+.gl-checkout-summary-heading p {
+    margin: 0 0 5px;
+
+    color: #9b7a68;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    letter-spacing: 2px;
+}
+
+
+.gl-checkout-summary-heading h2 {
+    margin: 0;
+
+    color: #38251e;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 27px;
+
+    font-weight: 400;
+}
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+.gl-checkout-products {
+    width: 100%;
+
+    padding: 10px 0;
+
+    box-sizing: border-box;
+}
+
+
+.gl-checkout-product {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        72px
+        minmax(0, 1fr)
+        auto;
+
+    gap: 14px;
+
+    align-items: center;
+
+    padding: 17px 0;
+
+    box-sizing: border-box;
+
+    border-bottom: 1px solid #eee5df;
+}
+
+
+/* =========================================================
+   PRODUCT IMAGE
+========================================================= */
+
+.gl-checkout-product-image {
+    width: 72px;
+
+    height: 88px;
+
+    overflow: hidden;
+
+    background-color: #f0e9e4;
+}
+
+
+.gl-checkout-product-image img {
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+.gl-checkout-image-placeholder {
+    width: 100%;
+
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #8c776b;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   PRODUCT INFO
+========================================================= */
+
+.gl-checkout-product-info {
+    min-width: 0;
+}
+
+
+.gl-checkout-product-brand {
+    margin: 0 0 5px;
+
+    color: #9b7a68;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+}
+
+
+.gl-checkout-product-info h3 {
+    margin: 0 0 8px;
+
+    color: #38251e;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 14px;
+
+    font-weight: 400;
+
+    line-height: 1.3;
+}
+
+
+.gl-checkout-product-meta {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 13px;
+}
+
+
+.gl-checkout-product-meta span {
+    color: #8a7b73;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 10px;
+}
+
+
+.gl-checkout-product-meta strong {
+    color: #4b3931;
+}
+
+
+/* =========================================================
+   PRODUCT PRICE
+========================================================= */
+
+.gl-checkout-product-price {
+    color: #38251e;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   EMPTY PRODUCTS
+========================================================= */
+
+.gl-checkout-empty {
+    width: 100%;
+
+    padding: 30px 0;
+
+    text-align: center;
+}
+
+
+.gl-checkout-empty p {
+    margin: 0;
+
+    color: #8a7b73;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   PRICE DETAILS
+========================================================= */
+
+.gl-checkout-price-details {
+    width: 100%;
+
+    padding-top: 15px;
+
+    box-sizing: border-box;
+}
+
+
+.gl-checkout-price-row {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 14px;
+
+    color: #74655d;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 12px;
+}
+
+
+.gl-checkout-free {
+    color: #5f7657;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.gl-checkout-divider {
+    width: 100%;
+
+    height: 1px;
+
+    margin: 20px 0;
+
+    background-color: #ded5ce;
+}
+
+
+/* =========================================================
+   TOTAL
+========================================================= */
+
+.gl-checkout-total-row {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+}
+
+
+.gl-checkout-total-row > div {
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.gl-checkout-total-row span {
+    color: #38251e;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 20px;
+}
+
+
+.gl-checkout-total-row small {
+    margin-top: 4px;
+
+    color: #9b8e87;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 9px;
+}
+
+
+.gl-checkout-total-row strong {
+    color: #38251e;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 22px;
+
+    font-weight: 500;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   PLACE ORDER
+========================================================= */
+
+.gl-checkout-place-order {
+    width: 100%;
+
+    min-height: 50px;
+
+    margin: 0;
+
+    padding: 15px 20px;
+
+    box-sizing: border-box;
+
+    display: block;
+
+    border: 1px solid #38251e;
+
+    border-radius: 0;
+
+    background-color: #38251e;
+
+    color: #ffffff;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.25s ease,
+        color 0.25s ease;
+}
+
+
+.gl-checkout-place-order:hover {
+    background-color: #ffffff;
+
+    color: #38251e;
+}
+
+
+/* =========================================================
+   SECURITY
+========================================================= */
+
+.gl-checkout-security {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-top: 17px;
+}
+
+
+.gl-checkout-security span {
+    color: #65785f;
+
+    font-size: 12px;
+}
+
+
+.gl-checkout-security p {
+    margin: 0;
+
+    color: #91857e;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 950px) {
+
+    .gl-checkout-page {
+        padding:
+            60px
+            30px
+            80px;
+    }
+
+
+    .gl-checkout-grid {
+        grid-template-columns: 1fr;
+
+        gap: 30px;
+    }
+
+
+    .gl-checkout-summary-card {
+        position: static;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+    .gl-checkout-page {
+        padding:
+            45px
+            18px
+            65px;
+    }
+
+
+    .gl-checkout-heading {
+        margin-bottom: 35px;
+    }
+
+
+    .gl-checkout-heading h1 {
+        font-size: 36px;
+    }
+
+
+    .gl-checkout-panel {
+        padding: 22px 18px;
+    }
+
+
+    .gl-checkout-summary-card {
+        padding: 22px 18px;
+    }
+
+
+    .gl-checkout-two-column {
+        grid-template-columns: 1fr;
+
+        gap: 0;
+    }
+
+
+    .gl-checkout-product {
+        grid-template-columns:
+            62px
+            minmax(0, 1fr);
+    }
+
+
+    .gl-checkout-product-image {
+        width: 62px;
+
+        height: 76px;
+    }
+
+
+    .gl-checkout-product-price {
+        grid-column: 2;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+    .gl-checkout-page {
+        padding:
+            40px
+            12px
+            60px;
+    }
+
+
+    .gl-checkout-panel {
+        padding: 20px 15px;
+    }
+
+
+    .gl-checkout-summary-card {
+        padding: 20px 15px;
+    }
+
+
+    .gl-checkout-panel-heading h2 {
+        font-size: 21px;
+    }
+
+
+    .gl-checkout-summary-heading h2 {
+        font-size: 24px;
+    }
+
+}

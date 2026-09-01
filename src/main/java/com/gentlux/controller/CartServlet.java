@@ -3,8 +3,11 @@ package com.gentlux.controller;
 import java.io.IOException;
 import java.util.List;
 
+import com.gentlux.dao.CartDAO;
 import com.gentlux.dao.CartItemDAO;
+import com.gentlux.dao.impl.CartDAOImpl;
 import com.gentlux.dao.impl.CartItemDAOImpl;
+import com.gentlux.model.Cart;
 import com.gentlux.model.CartItemView;
 
 import jakarta.servlet.ServletException;
@@ -12,16 +15,21 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/cart")
 public class CartServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    private CartDAO cartDAO;
     private CartItemDAO cartItemDAO;
+
 
     @Override
     public void init() {
+
+        cartDAO = new CartDAOImpl();
 
         cartItemDAO = new CartItemDAOImpl();
 
@@ -35,44 +43,133 @@ public class CartServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Temporary cart ID for testing
-        int cartId = 1;
+        try {
+
+            // =====================================================
+            // GET EXISTING SESSION
+            // =====================================================
+
+            HttpSession session =
+                    request.getSession(false);
 
 
-        // Get complete cart item details
-        List<CartItemView> cartItems =
-                cartItemDAO.getCartItemViewsByCartId(cartId);
+            // =====================================================
+            // CHECK LOGIN
+            // =====================================================
+
+            if (session == null
+                    || session.getAttribute("userId") == null) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/login"
+                );
+
+                return;
+            }
 
 
-        // Calculate cart total
-        double cartTotal = 0.0;
+            // =====================================================
+            // GET LOGGED-IN USER ID
+            // =====================================================
 
-        for (CartItemView item : cartItems) {
+            int userId =
+                    (Integer) session.getAttribute(
+                            "userId"
+                    );
 
-            cartTotal += item.getSubtotal();
+
+            // =====================================================
+            // GET OR CREATE USER CART
+            // =====================================================
+
+            Cart cart =
+                    cartDAO.getOrCreateCart(
+                            userId
+                    );
+
+
+            if (cart == null) {
+
+                response.sendError(
+                        HttpServletResponse
+                                .SC_INTERNAL_SERVER_ERROR,
+                        "Unable to create or load cart."
+                );
+
+                return;
+            }
+
+
+            int cartId =
+                    cart.getCartId();
+
+
+            // =====================================================
+            // GET CART ITEMS
+            // =====================================================
+
+            List<CartItemView> cartItems =
+                    cartItemDAO
+                            .getCartItemViewsByCartId(
+                                    cartId
+                            );
+
+
+            // =====================================================
+            // CALCULATE CART TOTAL
+            // =====================================================
+
+            double cartTotal = 0.0;
+
+            for (CartItemView item : cartItems) {
+
+                cartTotal +=
+                        item.getSubtotal();
+            }
+
+
+            // =====================================================
+            // SEND DATA TO JSP
+            // =====================================================
+
+            request.setAttribute(
+                    "cartItems",
+                    cartItems
+            );
+
+            request.setAttribute(
+                    "cartId",
+                    cartId
+            );
+
+            request.setAttribute(
+                    "cartTotal",
+                    cartTotal
+            );
+
+
+            // =====================================================
+            // OPEN CART PAGE
+            // =====================================================
+
+            request.getRequestDispatcher(
+                    "/WEB-INF/views/cart.jsp"
+            ).forward(
+                    request,
+                    response
+            );
+
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            response.sendError(
+                    HttpServletResponse
+                            .SC_INTERNAL_SERVER_ERROR,
+                    "Unable to load cart."
+            );
         }
-
-
-        // Send data to JSP
-        request.setAttribute(
-                "cartItems",
-                cartItems
-        );
-
-        request.setAttribute(
-                "cartId",
-                cartId
-        );
-
-        request.setAttribute(
-                "cartTotal",
-                cartTotal
-        );
-
-
-        // Open cart page
-        request.getRequestDispatcher(
-                "/WEB-INF/views/cart.jsp"
-        ).forward(request, response);
     }
 }

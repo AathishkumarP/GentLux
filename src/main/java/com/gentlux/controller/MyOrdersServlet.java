@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 
 @WebServlet("/my-orders")
@@ -42,15 +43,53 @@ public class MyOrdersServlet extends HttpServlet {
 
         try {
 
-            // Temporary until authentication is connected
-            int userId = 1;
+            // =====================================================
+            // GET EXISTING SESSION
+            // =====================================================
 
+            HttpSession session =
+                    request.getSession(false);
+
+
+            // =====================================================
+            // CHECK LOGIN
+            // =====================================================
+
+            if (session == null
+                    || session.getAttribute("userId") == null) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/login"
+                );
+
+                return;
+            }
+
+
+            // =====================================================
+            // GET LOGGED-IN USER ID
+            // =====================================================
+
+            int userId =
+                    (Integer) session.getAttribute(
+                            "userId"
+                    );
+
+
+            // =====================================================
+            // GET ONLY THIS USER'S ORDERS
+            // =====================================================
 
             List<Order> orders =
                     orderDAO.getOrdersByUserId(
                             userId
                     );
 
+
+            // =====================================================
+            // SEND TO JSP
+            // =====================================================
 
             request.setAttribute(
                     "orders",

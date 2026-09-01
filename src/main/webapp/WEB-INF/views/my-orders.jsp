@@ -19,7 +19,10 @@
     <title>My Orders | GENTLUX</title>
 
     <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/assets/css/style.css">
+      href="${pageContext.request.contextPath}/assets/css/style.css">
+	
+	<link rel="stylesheet"
+	      href="${pageContext.request.contextPath}/assets/css/my-orders.css">
 
 </head>
 

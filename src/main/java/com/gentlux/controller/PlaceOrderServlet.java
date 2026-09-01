@@ -4,18 +4,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gentlux.dao.CartDAO;
 import com.gentlux.dao.CartItemDAO;
 import com.gentlux.dao.OrderDAO;
 import com.gentlux.dao.OrderItemDAO;
 import com.gentlux.dao.ProductDAO;
 import com.gentlux.dao.ProductVariantDAO;
 
+import com.gentlux.dao.impl.CartDAOImpl;
 import com.gentlux.dao.impl.CartItemDAOImpl;
 import com.gentlux.dao.impl.OrderDAOImpl;
 import com.gentlux.dao.impl.OrderItemDAOImpl;
 import com.gentlux.dao.impl.ProductDAOImpl;
 import com.gentlux.dao.impl.ProductVariantDAOImpl;
 
+import com.gentlux.model.Cart;
 import com.gentlux.model.CartItemView;
 import com.gentlux.model.Order;
 import com.gentlux.model.OrderItem;
@@ -24,10 +27,10 @@ import com.gentlux.model.ProductVariant;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 
 @WebServlet("/place-order")
@@ -35,6 +38,7 @@ public class PlaceOrderServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    private CartDAO cartDAO;
     private CartItemDAO cartItemDAO;
     private OrderDAO orderDAO;
     private OrderItemDAO orderItemDAO;
@@ -44,6 +48,9 @@ public class PlaceOrderServlet extends HttpServlet {
 
     @Override
     public void init() {
+
+        cartDAO =
+                new CartDAOImpl();
 
         cartItemDAO =
                 new CartItemDAOImpl();
@@ -75,10 +82,33 @@ public class PlaceOrderServlet extends HttpServlet {
         try {
 
             // =================================================
-            // TEMPORARY USER
+            // CHECK LOGIN SESSION
             // =================================================
 
-            int userId = 1;
+            HttpSession session =
+                    request.getSession(false);
+
+
+            if (session == null
+                    || session.getAttribute("userId") == null) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/login"
+                );
+
+                return;
+            }
+
+
+            // =================================================
+            // GET LOGGED-IN USER ID
+            // =================================================
+
+            int userId =
+                    (Integer) session.getAttribute(
+                            "userId"
+                    );
 
 
             // =================================================
@@ -91,8 +121,11 @@ public class PlaceOrderServlet extends HttpServlet {
                             "checkoutType"
                     );
 
+
             if (checkoutType.isEmpty()) {
-                checkoutType = "CART";
+
+                checkoutType =
+                        "CART";
             }
 
 
@@ -106,11 +139,13 @@ public class PlaceOrderServlet extends HttpServlet {
                             "shippingName"
                     );
 
+
             String shippingPhone =
                     getCleanParameter(
                             request,
                             "shippingPhone"
                     );
+
 
             String shippingAddress =
                     getCleanParameter(
@@ -118,11 +153,13 @@ public class PlaceOrderServlet extends HttpServlet {
                             "shippingAddress"
                     );
 
+
             String shippingCity =
                     getCleanParameter(
                             request,
                             "shippingCity"
                     );
+
 
             String shippingState =
                     getCleanParameter(
@@ -130,11 +167,13 @@ public class PlaceOrderServlet extends HttpServlet {
                             "shippingState"
                     );
 
+
             String shippingPincode =
                     getCleanParameter(
                             request,
                             "shippingPincode"
                     );
+
 
             String paymentMethod =
                     getCleanParameter(
@@ -164,6 +203,10 @@ public class PlaceOrderServlet extends HttpServlet {
             }
 
 
+            // =================================================
+            // PHONE VALIDATION
+            // =================================================
+
             if (!shippingPhone.matches("\\d{10}")) {
 
                 response.sendError(
@@ -175,6 +218,10 @@ public class PlaceOrderServlet extends HttpServlet {
             }
 
 
+            // =================================================
+            // PINCODE VALIDATION
+            // =================================================
+
             if (!shippingPincode.matches("\\d{6}")) {
 
                 response.sendError(
@@ -185,6 +232,10 @@ public class PlaceOrderServlet extends HttpServlet {
                 return;
             }
 
+
+            // =================================================
+            // PAYMENT METHOD VALIDATION
+            // =================================================
 
             if (!"COD".equals(paymentMethod)
                     && !"ONLINE".equals(paymentMethod)) {
@@ -205,29 +256,55 @@ public class PlaceOrderServlet extends HttpServlet {
             List<CartItemView> checkoutItems =
                     new ArrayList<>();
 
+
             int cartId = 0;
 
 
             // =================================================
-            // BUY NOW
+            // BUY NOW CHECKOUT
             // =================================================
 
             if ("BUY_NOW".equals(checkoutType)) {
 
+                String variantIdValue =
+                        request.getParameter(
+                                "buyNowVariantId"
+                        );
+
+
+                String quantityValue =
+                        request.getParameter(
+                                "buyNowQuantity"
+                        );
+
+
+                if (variantIdValue == null
+                        || quantityValue == null) {
+
+                    response.sendError(
+                            HttpServletResponse.SC_BAD_REQUEST,
+                            "Invalid Buy Now information."
+                    );
+
+                    return;
+                }
+
+
                 int variantId =
                         Integer.parseInt(
-                                request.getParameter(
-                                        "buyNowVariantId"
-                                )
+                                variantIdValue
                         );
+
 
                 int quantity =
                         Integer.parseInt(
-                                request.getParameter(
-                                        "buyNowQuantity"
-                                )
+                                quantityValue
                         );
 
+
+                // =================================================
+                // QUANTITY CHECK
+                // =================================================
 
                 if (quantity < 1) {
 
@@ -240,11 +317,15 @@ public class PlaceOrderServlet extends HttpServlet {
                 }
 
 
+                // =================================================
+                // GET VARIANT
+                // =================================================
+
                 ProductVariant variant =
                         productVariantDAO
-                        .getVariantById(
-                                variantId
-                        );
+                                .getVariantById(
+                                        variantId
+                                );
 
 
                 if (variant == null) {
@@ -258,6 +339,10 @@ public class PlaceOrderServlet extends HttpServlet {
                 }
 
 
+                // =================================================
+                // CHECK STOCK
+                // =================================================
+
                 if (variant.getStockQuantity()
                         < quantity) {
 
@@ -270,10 +355,15 @@ public class PlaceOrderServlet extends HttpServlet {
                 }
 
 
+                // =================================================
+                // GET PRODUCT
+                // =================================================
+
                 Product product =
-                        productDAO.getProductById(
-                                variant.getProductId()
-                        );
+                        productDAO
+                                .getProductById(
+                                        variant.getProductId()
+                                );
 
 
                 if (product == null) {
@@ -287,45 +377,57 @@ public class PlaceOrderServlet extends HttpServlet {
                 }
 
 
+                // =================================================
+                // BUILD BUY NOW ITEM
+                // =================================================
+
                 CartItemView buyNowItem =
                         new CartItemView();
+
 
                 buyNowItem.setVariantId(
                         variant.getVariantId()
                 );
 
+
                 buyNowItem.setQuantity(
                         quantity
                 );
+
 
                 buyNowItem.setProductId(
                         product.getProductId()
                 );
 
+
                 buyNowItem.setProductName(
                         product.getProductName()
                 );
+
 
                 buyNowItem.setBrand(
                         product.getBrand()
                 );
 
+
                 buyNowItem.setSize(
                         variant.getSize()
                 );
+
 
                 buyNowItem.setPrice(
                         product.getPrice()
                 );
 
+
                 buyNowItem.setImageUrl(
                         product.getImageUrl()
                 );
 
+
                 checkoutItems.add(
                         buyNowItem
                 );
-
             }
 
 
@@ -335,20 +437,45 @@ public class PlaceOrderServlet extends HttpServlet {
 
             else {
 
-                cartId =
-                        Integer.parseInt(
-                                request.getParameter(
-                                        "cartId"
-                                )
+                // =================================================
+                // GET LOGGED-IN USER'S CART
+                // =================================================
+
+                Cart cart =
+                        cartDAO.getCartByUserId(
+                                userId
                         );
 
+
+                if (cart == null) {
+
+                    response.sendRedirect(
+                            request.getContextPath()
+                            + "/cart"
+                    );
+
+                    return;
+                }
+
+
+                cartId =
+                        cart.getCartId();
+
+
+                // =================================================
+                // GET CART ITEMS
+                // =================================================
 
                 checkoutItems =
                         cartItemDAO
-                        .getCartItemViewsByCartId(
-                                cartId
-                        );
+                                .getCartItemViewsByCartId(
+                                        cartId
+                                );
 
+
+                // =================================================
+                // EMPTY CART CHECK
+                // =================================================
 
                 if (checkoutItems == null
                         || checkoutItems.isEmpty()) {
@@ -371,9 +498,9 @@ public class PlaceOrderServlet extends HttpServlet {
 
                 ProductVariant variant =
                         productVariantDAO
-                        .getVariantById(
-                                item.getVariantId()
-                        );
+                                .getVariantById(
+                                        item.getVariantId()
+                                );
 
 
                 if (variant == null) {
@@ -404,10 +531,11 @@ public class PlaceOrderServlet extends HttpServlet {
 
 
             // =================================================
-            // CALCULATE TOTAL
+            // CALCULATE ORDER TOTAL
             // =================================================
 
             double orderTotal = 0.0;
+
 
             for (CartItemView item : checkoutItems) {
 
@@ -423,50 +551,65 @@ public class PlaceOrderServlet extends HttpServlet {
             Order order =
                     new Order();
 
+
             order.setUserId(
                     userId
             );
+
 
             order.setTotalAmount(
                     orderTotal
             );
 
+
             order.setPaymentMethod(
                     paymentMethod
             );
+
 
             order.setPaymentStatus(
                     "PENDING"
             );
 
+
             order.setOrderStatus(
                     "PLACED"
             );
+
 
             order.setShippingName(
                     shippingName
             );
 
+
             order.setShippingPhone(
                     shippingPhone
             );
+
 
             order.setShippingAddress(
                     shippingAddress
             );
 
+
             order.setShippingCity(
                     shippingCity
             );
+
 
             order.setShippingState(
                     shippingState
             );
 
+
             order.setShippingPincode(
                     shippingPincode
             );
 
+
+            // =================================================
+            // SAVE ORDER
+            // =================================================
 
             int orderId =
                     orderDAO.createOrder(
@@ -493,6 +636,7 @@ public class PlaceOrderServlet extends HttpServlet {
             List<CartItemView> reducedStockItems =
                     new ArrayList<>();
 
+
             boolean orderProcessingSuccess =
                     true;
 
@@ -502,22 +646,30 @@ public class PlaceOrderServlet extends HttpServlet {
                 OrderItem orderItem =
                         new OrderItem();
 
+
                 orderItem.setOrderId(
                         orderId
                 );
+
 
                 orderItem.setVariantId(
                         item.getVariantId()
                 );
 
+
                 orderItem.setQuantity(
                         item.getQuantity()
                 );
+
 
                 orderItem.setPrice(
                         item.getPrice()
                 );
 
+
+                // =================================================
+                // ADD ORDER ITEM
+                // =================================================
 
                 boolean itemAdded =
                         orderItemDAO.addOrderItem(
@@ -534,12 +686,16 @@ public class PlaceOrderServlet extends HttpServlet {
                 }
 
 
+                // =================================================
+                // REDUCE STOCK
+                // =================================================
+
                 boolean stockReduced =
                         productVariantDAO
-                        .decreaseStock(
-                                item.getVariantId(),
-                                item.getQuantity()
-                        );
+                                .decreaseStock(
+                                        item.getVariantId(),
+                                        item.getQuantity()
+                                );
 
 
                 if (!stockReduced) {
@@ -563,22 +719,25 @@ public class PlaceOrderServlet extends HttpServlet {
 
             if (!orderProcessingSuccess) {
 
+                // Return stock that was already reduced
                 for (CartItemView item
                         : reducedStockItems) {
 
                     productVariantDAO
-                    .increaseStock(
-                            item.getVariantId(),
-                            item.getQuantity()
-                    );
+                            .increaseStock(
+                                    item.getVariantId(),
+                                    item.getQuantity()
+                            );
                 }
 
 
+                // Remove created order items
                 orderItemDAO.clearOrderItems(
                         orderId
                 );
 
 
+                // Remove created order
                 orderDAO.deleteOrder(
                         orderId
                 );
@@ -595,7 +754,7 @@ public class PlaceOrderServlet extends HttpServlet {
 
 
             // =================================================
-            // CLEAR CART ONLY FOR CART CHECKOUT
+            // CLEAR CART ONLY FOR NORMAL CART CHECKOUT
             // =================================================
 
             if ("CART".equals(checkoutType)) {
@@ -614,35 +773,48 @@ public class PlaceOrderServlet extends HttpServlet {
                     "========== ORDER PLACED =========="
             );
 
+
             System.out.println(
                     "Checkout Type = "
                     + checkoutType
             );
+
 
             System.out.println(
                     "Order ID = "
                     + orderId
             );
 
+
             System.out.println(
                     "User ID = "
                     + userId
             );
+
+
+            System.out.println(
+                    "Cart ID = "
+                    + cartId
+            );
+
 
             System.out.println(
                     "Total = "
                     + orderTotal
             );
 
+
             System.out.println(
                     "Payment = "
                     + paymentMethod
             );
 
+
             System.out.println(
                     "Items = "
                     + checkoutItems.size()
             );
+
 
             System.out.println(
                     "=================================="
@@ -696,9 +868,12 @@ public class PlaceOrderServlet extends HttpServlet {
                         parameterName
                 );
 
+
         if (value == null) {
+
             return "";
         }
+
 
         return value.trim();
     }
