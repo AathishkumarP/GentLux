@@ -3,6 +3,7 @@
     pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -27,6 +28,47 @@
 <jsp:include page="partials/nav.jsp" />
 
 
+<%
+    String error =
+            (String) request.getAttribute("error");
+
+    String fullName =
+            request.getAttribute("fullName") != null
+                    ? (String) request.getAttribute("fullName")
+                    : "";
+
+    String email =
+            request.getAttribute("email") != null
+                    ? (String) request.getAttribute("email")
+                    : "";
+
+    String phone =
+            request.getAttribute("phone") != null
+                    ? (String) request.getAttribute("phone")
+                    : "";
+
+    String address =
+            request.getAttribute("address") != null
+                    ? (String) request.getAttribute("address")
+                    : "";
+
+    String city =
+            request.getAttribute("city") != null
+                    ? (String) request.getAttribute("city")
+                    : "";
+
+    String state =
+            request.getAttribute("state") != null
+                    ? (String) request.getAttribute("state")
+                    : "";
+
+    String pincode =
+            request.getAttribute("pincode") != null
+                    ? (String) request.getAttribute("pincode")
+                    : "";
+%>
+
+
 <section style="
     min-height: 80vh;
     display: flex;
@@ -47,6 +89,8 @@
     ">
 
 
+        <!-- HEADING -->
+
         <div style="
             text-align: center;
             margin-bottom: 30px;
@@ -58,8 +102,11 @@
                 font-size: 10px;
                 letter-spacing: 3px;
             ">
+
                 CREATE ACCOUNT
+
             </p>
+
 
             <h1 style="
                 margin: 0;
@@ -67,13 +114,15 @@
                 font-family: Georgia, serif;
                 font-weight: 400;
             ">
+
                 Register
+
             </h1>
 
         </div>
 
 
-        <% String error = (String) request.getAttribute("error"); %>
+        <!-- ERROR MESSAGE -->
 
         <% if (error != null) { %>
 
@@ -84,17 +133,23 @@
                 color: #a33b3b;
                 font-size: 13px;
             ">
+
                 <%= error %>
+
             </div>
 
         <% } %>
 
 
-<form
-    action="<%= request.getContextPath() %>/register"
-    method="post"
-    autocomplete="off">
+        <!-- REGISTER FORM -->
 
+        <form
+            action="<%= request.getContextPath() %>/register"
+            method="post"
+            autocomplete="off">
+
+
+            <!-- FULL NAME -->
 
             <div style="margin-bottom: 18px;">
 
@@ -102,9 +157,11 @@
                     Full Name
                 </label>
 
+
                 <input
                     type="text"
                     name="fullName"
+                    value="<%= fullName %>"
                     required
                     style="
                         width: 100%;
@@ -117,15 +174,19 @@
             </div>
 
 
+            <!-- EMAIL -->
+
             <div style="margin-bottom: 18px;">
 
                 <label>
                     Email
                 </label>
 
+
                 <input
                     type="email"
                     name="email"
+                    value="<%= email %>"
                     autocomplete="off"
                     required
                     style="
@@ -139,15 +200,21 @@
             </div>
 
 
+            <!-- PHONE -->
+
             <div style="margin-bottom: 18px;">
 
                 <label>
                     Phone Number
                 </label>
 
+
                 <input
                     type="text"
                     name="phone"
+                    value="<%= phone %>"
+                    maxlength="10"
+                    inputmode="numeric"
                     required
                     style="
                         width: 100%;
@@ -159,6 +226,8 @@
 
             </div>
 
+
+            <!-- PASSWORD -->
 
             <div style="margin-bottom: 18px;">
 
@@ -166,10 +235,12 @@
                     Password
                 </label>
 
+
                 <input
                     type="password"
                     name="password"
                     autocomplete="new-password"
+                    minlength="6"
                     required
                     style="
                         width: 100%;
@@ -182,11 +253,14 @@
             </div>
 
 
+            <!-- ADDRESS -->
+
             <div style="margin-bottom: 18px;">
 
                 <label>
                     Address
                 </label>
+
 
                 <textarea
                     name="address"
@@ -197,10 +271,12 @@
                         margin-top: 7px;
                         padding: 12px;
                         box-sizing: border-box;
-                    "></textarea>
+                    "><%= address %></textarea>
 
             </div>
 
+
+            <!-- CITY AND STATE -->
 
             <div style="
                 display: grid;
@@ -209,15 +285,20 @@
                 margin-bottom: 18px;
             ">
 
+
+                <!-- CITY -->
+
                 <div>
 
                     <label>
                         City
                     </label>
 
+
                     <input
                         type="text"
                         name="city"
+                        value="<%= city %>"
                         required
                         style="
                             width: 100%;
@@ -230,15 +311,19 @@
                 </div>
 
 
+                <!-- STATE -->
+
                 <div>
 
                     <label>
                         State
                     </label>
 
+
                     <input
                         type="text"
                         name="state"
+                        value="<%= state %>"
                         required
                         style="
                             width: 100%;
@@ -253,15 +338,21 @@
             </div>
 
 
+            <!-- PINCODE -->
+
             <div style="margin-bottom: 25px;">
 
                 <label>
                     Pincode
                 </label>
 
+
                 <input
                     type="text"
                     name="pincode"
+                    value="<%= pincode %>"
+                    maxlength="6"
+                    inputmode="numeric"
                     required
                     style="
                         width: 100%;
@@ -273,6 +364,8 @@
 
             </div>
 
+
+            <!-- CREATE ACCOUNT BUTTON -->
 
             <button
                 type="submit"
@@ -304,7 +397,9 @@
             Already have an account?
 
             <a href="<%= request.getContextPath() %>/login">
+
                 Login
+
             </a>
 
         </p>

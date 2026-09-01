@@ -284,10 +284,7 @@
 				           name="quantity"
 				           id="selectedQuantity"
 				           value="1">
-				
-				    <input type="hidden"
-				           name="cartId"
-				           value="1">
+
 				
 				    <button type="submit"
 				            class="add-to-cart-button">

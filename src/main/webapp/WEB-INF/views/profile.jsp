@@ -154,12 +154,12 @@
 
 
 
-                    <a href="#"
-                       class="profile-menu-link">
-
-                        CHANGE PASSWORD
-
-                    </a>
+				<a href="<%= request.getContextPath() %>/change-password"
+				   class="profile-menu-link">
+				
+				    CHANGE PASSWORD
+				
+				</a>
 
 
                 </aside>

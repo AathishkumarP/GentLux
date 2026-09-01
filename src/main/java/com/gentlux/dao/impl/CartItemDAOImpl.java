@@ -498,16 +498,17 @@ public class CartItemDAOImpl implements CartItemDAO {
     // =========================================================
     // GET CART ITEM COUNT
     // =========================================================
-
     @Override
     public int getCartItemCount(int cartId) {
 
         String sql =
-                "SELECT COUNT(*) "
+                "SELECT COALESCE(SUM(quantity), 0) "
               + "FROM cart_items "
               + "WHERE cart_id = ?";
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection =
+                     DBConnection.getConnection();
+
              PreparedStatement statement =
                      connection.prepareStatement(sql)) {
 
@@ -532,8 +533,6 @@ public class CartItemDAOImpl implements CartItemDAO {
 
         return 0;
     }
-
-
     // =========================================================
     // GET QUANTITY OF PARTICULAR VARIANT
     // =========================================================

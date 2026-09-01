@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 
@@ -19,42 +20,52 @@ public class RegisterServlet extends HttpServlet {
 
     private UserDAO userDAO;
 
+
     @Override
     public void init() {
+
         userDAO = new UserDAOImpl();
-        System.out.println("RegisterServlet initialized");
+
+        System.out.println(
+                "RegisterServlet initialized"
+        );
     }
 
 
-    /*
-     * =========================================================
-     * SHOW REGISTER PAGE
-     * =========================================================
-     */
+    // =========================================================
+    // SHOW REGISTER PAGE
+    // =========================================================
+
     @Override
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
+    protected void doGet(
+            HttpServletRequest request,
+            HttpServletResponse response)
             throws ServletException, IOException {
 
         request.getRequestDispatcher(
                 "/WEB-INF/views/register.jsp"
-        ).forward(request, response);
+        ).forward(
+                request,
+                response
+        );
     }
 
 
-    /*
-     * =========================================================
-     * REGISTER USER
-     * =========================================================
-     */
+    // =========================================================
+    // REGISTER USER
+    // =========================================================
+
     @Override
-    protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response)
+    protected void doPost(
+            HttpServletRequest request,
+            HttpServletResponse response)
             throws ServletException, IOException {
 
         try {
 
-            request.setCharacterEncoding("UTF-8");
+            request.setCharacterEncoding(
+                    "UTF-8"
+            );
 
 
             // =====================================================
@@ -62,28 +73,44 @@ public class RegisterServlet extends HttpServlet {
             // =====================================================
 
             String fullName =
-                    request.getParameter("fullName");
+                    request.getParameter(
+                            "fullName"
+                    );
 
             String email =
-                    request.getParameter("email");
+                    request.getParameter(
+                            "email"
+                    );
 
             String phone =
-                    request.getParameter("phone");
+                    request.getParameter(
+                            "phone"
+                    );
 
             String password =
-                    request.getParameter("password");
+                    request.getParameter(
+                            "password"
+                    );
 
             String address =
-                    request.getParameter("address");
+                    request.getParameter(
+                            "address"
+                    );
 
             String city =
-                    request.getParameter("city");
+                    request.getParameter(
+                            "city"
+                    );
 
             String state =
-                    request.getParameter("state");
+                    request.getParameter(
+                            "state"
+                    );
 
             String pincode =
-                    request.getParameter("pincode");
+                    request.getParameter(
+                            "pincode"
+                    );
 
 
             // =====================================================
@@ -91,31 +118,52 @@ public class RegisterServlet extends HttpServlet {
             // =====================================================
 
             if (fullName != null) {
-                fullName = fullName.trim();
+
+                fullName =
+                        fullName.trim();
             }
+
 
             if (email != null) {
-                email = email.trim().toLowerCase();
+
+                email =
+                        email.trim()
+                                .toLowerCase();
             }
+
 
             if (phone != null) {
-                phone = phone.trim();
+
+                phone =
+                        phone.trim();
             }
+
 
             if (address != null) {
-                address = address.trim();
+
+                address =
+                        address.trim();
             }
+
 
             if (city != null) {
-                city = city.trim();
+
+                city =
+                        city.trim();
             }
+
 
             if (state != null) {
-                state = state.trim();
+
+                state =
+                        state.trim();
             }
 
+
             if (pincode != null) {
-                pincode = pincode.trim();
+
+                pincode =
+                        pincode.trim();
             }
 
 
@@ -123,23 +171,35 @@ public class RegisterServlet extends HttpServlet {
             // BASIC EMPTY VALIDATION
             // =====================================================
 
-            if (fullName == null || fullName.isEmpty()
-                    || email == null || email.isEmpty()
-                    || phone == null || phone.isEmpty()
-                    || password == null || password.isEmpty()
-                    || address == null || address.isEmpty()
-                    || city == null || city.isEmpty()
-                    || state == null || state.isEmpty()
-                    || pincode == null || pincode.isEmpty()) {
+            if (fullName == null
+                    || fullName.isEmpty()
+                    || email == null
+                    || email.isEmpty()
+                    || phone == null
+                    || phone.isEmpty()
+                    || password == null
+                    || password.isEmpty()
+                    || address == null
+                    || address.isEmpty()
+                    || city == null
+                    || city.isEmpty()
+                    || state == null
+                    || state.isEmpty()
+                    || pincode == null
+                    || pincode.isEmpty()) {
 
-                request.setAttribute(
-                        "error",
-                        "Please fill in all fields."
+                showRegisterError(
+                        request,
+                        response,
+                        "Please fill in all fields.",
+                        fullName,
+                        email,
+                        phone,
+                        address,
+                        city,
+                        state,
+                        pincode
                 );
-
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/register.jsp"
-                ).forward(request, response);
 
                 return;
             }
@@ -152,14 +212,18 @@ public class RegisterServlet extends HttpServlet {
             if (!email.matches(
                     "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
 
-                request.setAttribute(
-                        "error",
-                        "Please enter a valid email address."
+                showRegisterError(
+                        request,
+                        response,
+                        "Please enter a valid email address.",
+                        fullName,
+                        email,
+                        phone,
+                        address,
+                        city,
+                        state,
+                        pincode
                 );
-
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/register.jsp"
-                ).forward(request, response);
 
                 return;
             }
@@ -169,16 +233,21 @@ public class RegisterServlet extends HttpServlet {
             // PHONE VALIDATION
             // =====================================================
 
-            if (!phone.matches("[0-9]{10}")) {
+            if (!phone.matches(
+                    "[0-9]{10}")) {
 
-                request.setAttribute(
-                        "error",
-                        "Phone number must contain exactly 10 digits."
+                showRegisterError(
+                        request,
+                        response,
+                        "Phone number must contain exactly 10 digits.",
+                        fullName,
+                        email,
+                        phone,
+                        address,
+                        city,
+                        state,
+                        pincode
                 );
-
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/register.jsp"
-                ).forward(request, response);
 
                 return;
             }
@@ -188,16 +257,21 @@ public class RegisterServlet extends HttpServlet {
             // PINCODE VALIDATION
             // =====================================================
 
-            if (!pincode.matches("[0-9]{6}")) {
+            if (!pincode.matches(
+                    "[0-9]{6}")) {
 
-                request.setAttribute(
-                        "error",
-                        "Pincode must contain exactly 6 digits."
+                showRegisterError(
+                        request,
+                        response,
+                        "Pincode must contain exactly 6 digits.",
+                        fullName,
+                        email,
+                        phone,
+                        address,
+                        city,
+                        state,
+                        pincode
                 );
-
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/register.jsp"
-                ).forward(request, response);
 
                 return;
             }
@@ -209,14 +283,18 @@ public class RegisterServlet extends HttpServlet {
 
             if (password.length() < 6) {
 
-                request.setAttribute(
-                        "error",
-                        "Password must contain at least 6 characters."
+                showRegisterError(
+                        request,
+                        response,
+                        "Password must contain at least 6 characters.",
+                        fullName,
+                        email,
+                        phone,
+                        address,
+                        city,
+                        state,
+                        pincode
                 );
-
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/register.jsp"
-                ).forward(request, response);
 
                 return;
             }
@@ -226,16 +304,21 @@ public class RegisterServlet extends HttpServlet {
             // CHECK EMAIL ALREADY EXISTS
             // =====================================================
 
-            if (userDAO.isEmailExists(email)) {
+            if (userDAO.isEmailExists(
+                    email)) {
 
-                request.setAttribute(
-                        "error",
-                        "An account already exists with this email."
+                showRegisterError(
+                        request,
+                        response,
+                        "An account already exists with this email.",
+                        fullName,
+                        email,
+                        phone,
+                        address,
+                        city,
+                        state,
+                        pincode
                 );
-
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/register.jsp"
-                ).forward(request, response);
 
                 return;
             }
@@ -245,16 +328,21 @@ public class RegisterServlet extends HttpServlet {
             // CHECK PHONE ALREADY EXISTS
             // =====================================================
 
-            if (userDAO.isPhoneExists(phone)) {
+            if (userDAO.isPhoneExists(
+                    phone)) {
 
-                request.setAttribute(
-                        "error",
-                        "An account already exists with this phone number."
+                showRegisterError(
+                        request,
+                        response,
+                        "An account already exists with this phone number.",
+                        fullName,
+                        email,
+                        phone,
+                        address,
+                        city,
+                        state,
+                        pincode
                 );
-
-                request.getRequestDispatcher(
-                        "/WEB-INF/views/register.jsp"
-                ).forward(request, response);
 
                 return;
             }
@@ -264,17 +352,41 @@ public class RegisterServlet extends HttpServlet {
             // CREATE USER OBJECT
             // =====================================================
 
-            User user = new User();
+            User user =
+                    new User();
 
-            user.setFullName(fullName);
-            user.setEmail(email);
-            user.setPhone(phone);
-            user.setPassword(password);
 
-            user.setAddress(address);
-            user.setCity(city);
-            user.setState(state);
-            user.setPincode(pincode);
+            user.setFullName(
+                    fullName
+            );
+
+            user.setEmail(
+                    email
+            );
+
+            user.setPhone(
+                    phone
+            );
+
+            user.setPassword(
+                    password
+            );
+
+            user.setAddress(
+                    address
+            );
+
+            user.setCity(
+                    city
+            );
+
+            user.setState(
+                    state
+            );
+
+            user.setPincode(
+                    pincode
+            );
 
 
             // =====================================================
@@ -282,7 +394,9 @@ public class RegisterServlet extends HttpServlet {
             // =====================================================
 
             boolean registered =
-                    userDAO.registerUser(user);
+                    userDAO.registerUser(
+                            user
+                    );
 
 
             // =====================================================
@@ -295,6 +409,7 @@ public class RegisterServlet extends HttpServlet {
                         "User registered successfully: "
                         + email
                 );
+
 
                 response.sendRedirect(
                         request.getContextPath()
@@ -309,28 +424,132 @@ public class RegisterServlet extends HttpServlet {
             // DATABASE FAILURE
             // =====================================================
 
-            request.setAttribute(
-                    "error",
-                    "Registration failed. Please try again."
+            showRegisterError(
+                    request,
+                    response,
+                    "Registration failed. Please try again.",
+                    fullName,
+                    email,
+                    phone,
+                    address,
+                    city,
+                    state,
+                    pincode
             );
-
-            request.getRequestDispatcher(
-                    "/WEB-INF/views/register.jsp"
-            ).forward(request, response);
 
 
         } catch (Exception e) {
 
             e.printStackTrace();
 
+
             request.setAttribute(
                     "error",
                     "Something went wrong while creating your account."
             );
 
+
             request.getRequestDispatcher(
                     "/WEB-INF/views/register.jsp"
-            ).forward(request, response);
+            ).forward(
+                    request,
+                    response
+            );
         }
+    }
+
+
+    // =========================================================
+    // SHOW REGISTER PAGE WITH ERROR
+    // =========================================================
+
+    private void showRegisterError(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            String errorMessage,
+            String fullName,
+            String email,
+            String phone,
+            String address,
+            String city,
+            String state,
+            String pincode)
+            throws ServletException, IOException {
+
+
+        // ERROR MESSAGE
+
+        request.setAttribute(
+                "error",
+                errorMessage
+        );
+
+
+        // KEEP FULL NAME
+
+        request.setAttribute(
+                "fullName",
+                fullName
+        );
+
+
+        // KEEP EMAIL
+
+        request.setAttribute(
+                "email",
+                email
+        );
+
+
+        // KEEP PHONE
+
+        request.setAttribute(
+                "phone",
+                phone
+        );
+
+
+        // KEEP ADDRESS
+
+        request.setAttribute(
+                "address",
+                address
+        );
+
+
+        // KEEP CITY
+
+        request.setAttribute(
+                "city",
+                city
+        );
+
+
+        // KEEP STATE
+
+        request.setAttribute(
+                "state",
+                state
+        );
+
+
+        // KEEP PINCODE
+
+        request.setAttribute(
+                "pincode",
+                pincode
+        );
+
+
+        // PASSWORD IS NOT PRESERVED
+        // USER MUST ENTER PASSWORD AGAIN
+
+
+        request.getRequestDispatcher(
+                "/WEB-INF/views/register.jsp"
+        ).forward(
+                request,
+                response
+        );
     }
 }

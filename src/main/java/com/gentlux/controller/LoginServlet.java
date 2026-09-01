@@ -39,29 +39,10 @@ public class LoginServlet extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        /*
-         * If user is already logged in,
-         * don't show login page again.
-         */
-
-        HttpSession session = request.getSession(false);
-
-        if (session != null
-                && session.getAttribute("loggedInUser") != null) {
-
-            response.sendRedirect(
-                    request.getContextPath() + "/home"
-            );
-
-            return;
-        }
-
-
         request.getRequestDispatcher(
                 "/WEB-INF/views/login.jsp"
         ).forward(request, response);
     }
-
 
     /*
      * =========================================================

@@ -111,6 +111,7 @@
                 <input
                     type="email"
                     name="email"
+                    autocomplete="email"
                     required
                     style="
                         width: 100%;
@@ -130,6 +131,7 @@
                 <input
                     type="password"
                     name="password"
+                    autocomplete="current-password"
                     required
                     style="
                         width: 100%;
