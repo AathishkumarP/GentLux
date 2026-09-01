@@ -131,7 +131,7 @@
                    class="shop-category-card <%= selectedCategoryId == null ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/categories/AllCat.jpg"
+                        <img src="${pageContext.request.contextPath}/assets/images/hero-men.jpg"
                              alt="All Products">
                     </div>
 
@@ -143,7 +143,7 @@
                    class="shop-category-card <%= Integer.valueOf(1).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/categories/T-Shirt.jpg"
+                        <img src="${pageContext.request.contextPath}/assets/images/product-1.jpg"
                              alt="T-Shirts">
                     </div>
 
@@ -155,7 +155,7 @@
                    class="shop-category-card <%= Integer.valueOf(2).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/categories/Shirt.jpg"
+                        <img src="${pageContext.request.contextPath}/assets/images/product-2.jpg"
                              alt="Shirts">
                     </div>
 
@@ -167,7 +167,7 @@
                    class="shop-category-card <%= Integer.valueOf(3).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/categories/Jeans.jpg"
+                        <img src="${pageContext.request.contextPath}/assets/images/product-3.jpg"
                              alt="Jeans">
                     </div>
 
@@ -179,7 +179,7 @@
                    class="shop-category-card <%= Integer.valueOf(4).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/categories/Trousers.jpg"
+                        <img src="${pageContext.request.contextPath}/assets/images/product-4.jpg"
                              alt="Trousers">
                     </div>
 
@@ -191,7 +191,7 @@
                    class="shop-category-card <%= Integer.valueOf(5).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/categories/Jackets.jpg"
+                        <img src="${pageContext.request.contextPath}/assets/images/product-1.jpg"
                              alt="Jackets">
                     </div>
 
@@ -203,7 +203,7 @@
                    class="shop-category-card <%= Integer.valueOf(6).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/categories/Hoodies.jpg"
+                        <img src="${pageContext.request.contextPath}/assets/images/product-2.jpg"
                              alt="Hoodies">
                     </div>
 
@@ -215,7 +215,7 @@
                    class="shop-category-card <%= Integer.valueOf(7).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/categories/SweatShirt.jpg"
+                        <img src="${pageContext.request.contextPath}/assets/images/product-3.jpg"
                              alt="Sweatshirts">
                     </div>
 
@@ -227,7 +227,7 @@
                    class="shop-category-card <%= Integer.valueOf(8).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/categories/Shorts.jpg"
+                        <img src="${pageContext.request.contextPath}/assets/images/product-4.jpg"
                              alt="Shorts">
                     </div>
 
@@ -239,7 +239,7 @@
                    class="shop-category-card <%= Integer.valueOf(9).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/categories/EthnicWear.jpg"
+                        <img src="${pageContext.request.contextPath}/assets/images/product-1.jpg"
                              alt="Ethnic Wear">
                     </div>
 
@@ -251,7 +251,7 @@
                    class="shop-category-card <%= Integer.valueOf(10).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/categories/Footwear.jpg"
+                        <img src="${pageContext.request.contextPath}/assets/images/product-2.jpg"
                              alt="Footwear">
                     </div>
 

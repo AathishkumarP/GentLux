@@ -33,7 +33,9 @@ public class RemoveFromWishlistServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession(false);
+        HttpSession session =
+                request.getSession(false);
+
 
         if (session == null
                 || session.getAttribute("userId") == null) {
@@ -49,17 +51,29 @@ public class RemoveFromWishlistServlet extends HttpServlet {
         try {
 
             int userId =
-                    (Integer) session.getAttribute("userId");
+                    (Integer) session.getAttribute(
+                            "userId"
+                    );
+
 
             String productIdParameter =
-                    request.getParameter("productId");
+                    request.getParameter(
+                            "productId"
+                    );
+
+
+            String redirect =
+                    request.getParameter(
+                            "redirect"
+                    );
 
 
             if (productIdParameter == null
                     || productIdParameter.isBlank()) {
 
                 response.sendRedirect(
-                        request.getContextPath() + "/wishlist"
+                        request.getContextPath()
+                        + "/wishlist"
                 );
 
                 return;
@@ -67,7 +81,9 @@ public class RemoveFromWishlistServlet extends HttpServlet {
 
 
             int productId =
-                    Integer.parseInt(productIdParameter);
+                    Integer.parseInt(
+                            productIdParameter
+                    );
 
 
             wishlistDAO.removeFromWishlist(
@@ -75,6 +91,27 @@ public class RemoveFromWishlistServlet extends HttpServlet {
                     productId
             );
 
+
+            // =========================================
+            // REMOVE FROM PRODUCT DETAILS PAGE
+            // =========================================
+
+            if ("product".equals(redirect)) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/product-details?id="
+                        + productId
+                        + "&wishlistStatus=removed"
+                );
+
+                return;
+            }
+
+
+            // =========================================
+            // REMOVE FROM WISHLIST PAGE
+            // =========================================
 
             response.sendRedirect(
                     request.getContextPath()
@@ -85,7 +122,8 @@ public class RemoveFromWishlistServlet extends HttpServlet {
         } catch (NumberFormatException e) {
 
             response.sendRedirect(
-                    request.getContextPath() + "/wishlist"
+                    request.getContextPath()
+                    + "/wishlist"
             );
 
 
@@ -94,7 +132,8 @@ public class RemoveFromWishlistServlet extends HttpServlet {
             e.printStackTrace();
 
             response.sendError(
-                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    HttpServletResponse
+                            .SC_INTERNAL_SERVER_ERROR,
                     "Unable to remove product from wishlist."
             );
         }

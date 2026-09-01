@@ -37,12 +37,16 @@ public class AddToWishlistServlet extends HttpServlet {
         HttpSession session =
                 request.getSession(false);
 
+
+        // =====================================================
+        // LOGIN CHECK
+        // =====================================================
+
         if (session == null
                 || session.getAttribute("userId") == null) {
 
             response.sendRedirect(
-                    request.getContextPath()
-                    + "/login"
+                    request.getContextPath() + "/login"
             );
 
             return;
@@ -56,11 +60,22 @@ public class AddToWishlistServlet extends HttpServlet {
                             "userId"
                     );
 
+
             String productIdParameter =
                     request.getParameter(
                             "productId"
                     );
 
+
+            String redirect =
+                    request.getParameter(
+                            "redirect"
+                    );
+
+
+            // =================================================
+            // VALIDATE PRODUCT ID
+            // =================================================
 
             if (productIdParameter == null
                     || productIdParameter.isBlank()) {
@@ -80,16 +95,32 @@ public class AddToWishlistServlet extends HttpServlet {
                     );
 
 
+            // =================================================
+            // CHECK IF ALREADY IN WISHLIST
+            // =================================================
+
             boolean alreadyExists =
-                    wishlistDAO
-                            .isProductInWishlist(
-                                    userId,
-                                    productId
-                            );
+                    wishlistDAO.isProductInWishlist(
+                            userId,
+                            productId
+                    );
 
 
             if (alreadyExists) {
 
+                // From Products page
+                if ("products".equals(redirect)) {
+
+                    response.sendRedirect(
+                            request.getContextPath()
+                            + "/products"
+                    );
+
+                    return;
+                }
+
+
+                // From Product Details page
                 response.sendRedirect(
                         request.getContextPath()
                         + "/product-details?id="
@@ -101,20 +132,52 @@ public class AddToWishlistServlet extends HttpServlet {
             }
 
 
+            // =================================================
+            // CREATE WISHLIST OBJECT
+            // =================================================
+
             Wishlist wishlist =
                     new Wishlist();
 
-            wishlist.setUserId(userId);
 
-            wishlist.setProductId(productId);
+            wishlist.setUserId(
+                    userId
+            );
 
+
+            wishlist.setProductId(
+                    productId
+            );
+
+
+            // =================================================
+            // ADD TO DATABASE
+            // =================================================
 
             boolean added =
-                    wishlistDAO
-                            .addToWishlist(
-                                    wishlist
-                            );
+                    wishlistDAO.addToWishlist(
+                            wishlist
+                    );
 
+
+            // =================================================
+            // REDIRECT FROM PRODUCTS PAGE
+            // =================================================
+
+            if ("products".equals(redirect)) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/products"
+                );
+
+                return;
+            }
+
+
+            // =================================================
+            // REDIRECT FROM PRODUCT DETAILS PAGE
+            // =================================================
 
             if (added) {
 

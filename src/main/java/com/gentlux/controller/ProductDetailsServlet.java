@@ -5,16 +5,23 @@ import java.util.List;
 
 import com.gentlux.dao.ProductDAO;
 import com.gentlux.dao.ProductVariantDAO;
+import com.gentlux.dao.WishlistDAO;
+
 import com.gentlux.dao.impl.ProductDAOImpl;
 import com.gentlux.dao.impl.ProductVariantDAOImpl;
+import com.gentlux.dao.impl.WishlistDAOImpl;
+
 import com.gentlux.model.Product;
 import com.gentlux.model.ProductVariant;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 
 @WebServlet("/product-details")
 public class ProductDetailsServlet extends HttpServlet {
@@ -23,15 +30,26 @@ public class ProductDetailsServlet extends HttpServlet {
 
     private ProductDAO productDAO;
     private ProductVariantDAO productVariantDAO;
+    private WishlistDAO wishlistDAO;
+
 
     @Override
     public void init() {
 
         productDAO = new ProductDAOImpl();
-        productVariantDAO = new ProductVariantDAOImpl();
 
-        System.out.println("ProductDetailsServlet initialized");
+        productVariantDAO =
+                new ProductVariantDAOImpl();
+
+        wishlistDAO =
+                new WishlistDAOImpl();
+
+
+        System.out.println(
+                "ProductDetailsServlet initialized"
+        );
     }
+
 
     @Override
     protected void doGet(
@@ -39,11 +57,18 @@ public class ProductDetailsServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        String idParameter = request.getParameter("id");
+        String idParameter =
+                request.getParameter("id");
 
-        System.out.println("Received Product ID = " + idParameter);
 
-        if (idParameter == null || idParameter.trim().isEmpty()) {
+        System.out.println(
+                "Received Product ID = "
+                + idParameter
+        );
+
+
+        if (idParameter == null
+                || idParameter.trim().isEmpty()) {
 
             response.sendError(
                     HttpServletResponse.SC_BAD_REQUEST,
@@ -53,9 +78,14 @@ public class ProductDetailsServlet extends HttpServlet {
             return;
         }
 
+
         try {
 
-            int productId = Integer.parseInt(idParameter);
+            int productId =
+                    Integer.parseInt(
+                            idParameter
+                    );
+
 
             System.out.println(
                     "Searching database for Product ID = "
@@ -68,7 +98,10 @@ public class ProductDetailsServlet extends HttpServlet {
             // =====================================================
 
             Product product =
-                    productDAO.getProductById(productId);
+                    productDAO
+                            .getProductById(
+                                    productId
+                            );
 
 
             if (product == null) {
@@ -87,34 +120,84 @@ public class ProductDetailsServlet extends HttpServlet {
             // =====================================================
 
             List<ProductVariant> variants =
-                    productVariantDAO.getVariantsByProductId(productId);
+                    productVariantDAO
+                            .getVariantsByProductId(
+                                    productId
+                            );
+
+
+            // =====================================================
+            // CHECK WISHLIST STATUS
+            // =====================================================
+
+            boolean inWishlist = false;
+
+
+            HttpSession session =
+                    request.getSession(false);
+
+
+            if (session != null
+                    && session.getAttribute("userId") != null) {
+
+
+                int userId =
+                        (Integer) session.getAttribute(
+                                "userId"
+                        );
+
+
+                inWishlist =
+                        wishlistDAO
+                                .isProductInWishlist(
+                                        userId,
+                                        productId
+                                );
+            }
 
 
             // =====================================================
             // DEBUG OUTPUT
             // =====================================================
 
-            System.out.println("PRODUCT FOUND");
-
             System.out.println(
-                    "ID    : " + product.getProductId()
-            );
-
-            System.out.println(
-                    "Name  : " + product.getProductName()
-            );
-
-            System.out.println(
-                    "Brand : " + product.getBrand()
-            );
-
-            System.out.println(
-                    "Price : " + product.getPrice()
+                    "PRODUCT FOUND"
             );
 
 
             System.out.println(
-                    "Total Variants : " + variants.size()
+                    "ID    : "
+                    + product.getProductId()
+            );
+
+
+            System.out.println(
+                    "Name  : "
+                    + product.getProductName()
+            );
+
+
+            System.out.println(
+                    "Brand : "
+                    + product.getBrand()
+            );
+
+
+            System.out.println(
+                    "Price : "
+                    + product.getPrice()
+            );
+
+
+            System.out.println(
+                    "Total Variants : "
+                    + variants.size()
+            );
+
+
+            System.out.println(
+                    "In Wishlist : "
+                    + inWishlist
             );
 
 
@@ -140,9 +223,16 @@ public class ProductDetailsServlet extends HttpServlet {
                     product
             );
 
+
             request.setAttribute(
                     "variants",
                     variants
+            );
+
+
+            request.setAttribute(
+                    "inWishlist",
+                    inWishlist
             );
 
 
@@ -152,7 +242,10 @@ public class ProductDetailsServlet extends HttpServlet {
 
             request.getRequestDispatcher(
                     "/WEB-INF/views/product-details.jsp"
-            ).forward(request, response);
+            ).forward(
+                    request,
+                    response
+            );
 
 
         } catch (NumberFormatException e) {

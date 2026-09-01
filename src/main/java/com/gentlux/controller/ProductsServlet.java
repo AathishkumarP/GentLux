@@ -1,17 +1,23 @@
 package com.gentlux.controller;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.gentlux.dao.ProductDAO;
+import com.gentlux.dao.WishlistDAO;
 import com.gentlux.dao.impl.ProductDAOImpl;
+import com.gentlux.dao.impl.WishlistDAOImpl;
 import com.gentlux.model.Product;
+import com.gentlux.model.Wishlist;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/products")
 public class ProductsServlet extends HttpServlet {
@@ -19,17 +25,23 @@ public class ProductsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private ProductDAO productDAO;
+    private WishlistDAO wishlistDAO;
+
 
     @Override
     public void init() {
+
         productDAO = new ProductDAOImpl();
+        wishlistDAO = new WishlistDAOImpl();
     }
+
 
     @Override
     protected void doGet(
             HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
+
 
         String search =
                 request.getParameter("search");
@@ -137,7 +149,7 @@ public class ProductsServlet extends HttpServlet {
         List<Product> products;
 
 
-        // Search has priority for now
+        // Search has priority
         if (search != null) {
 
             products =
@@ -162,6 +174,45 @@ public class ProductsServlet extends HttpServlet {
 
 
         // =====================================================
+        // GET USER WISHLIST PRODUCT IDS
+        // =====================================================
+
+        Set<Integer> wishlistProductIds =
+                new HashSet<>();
+
+
+        HttpSession session =
+                request.getSession(false);
+
+
+        if (session != null
+                && session.getAttribute("userId") != null) {
+
+            int userId =
+                    (Integer) session.getAttribute(
+                            "userId"
+                    );
+
+
+            List<Wishlist> wishlistItems =
+                    wishlistDAO.getWishlistByUserId(
+                            userId
+                    );
+
+
+            if (wishlistItems != null) {
+
+                for (Wishlist wishlist : wishlistItems) {
+
+                    wishlistProductIds.add(
+                            wishlist.getProductId()
+                    );
+                }
+            }
+        }
+
+
+        // =====================================================
         // SEND DATA TO JSP
         // =====================================================
 
@@ -170,35 +221,62 @@ public class ProductsServlet extends HttpServlet {
                 products
         );
 
+
+        /*
+         * This Set contains the product IDs currently
+         * saved in the logged-in user's wishlist.
+         *
+         * Example:
+         *
+         * [3, 7, 11]
+         *
+         * products.jsp can therefore decide:
+         *
+         * product 11 -> ♥
+         * product 12 -> ♡
+         */
+
+        request.setAttribute(
+                "wishlistProductIds",
+                wishlistProductIds
+        );
+
+
         request.setAttribute(
                 "searchKeyword",
                 search
         );
+
 
         request.setAttribute(
                 "selectedCategoryId",
                 categoryId
         );
 
+
         request.setAttribute(
                 "selectedBrand",
                 brand
         );
+
 
         request.setAttribute(
                 "selectedMinPrice",
                 minPrice
         );
 
+
         request.setAttribute(
                 "selectedMaxPrice",
                 maxPrice
         );
 
+
         request.setAttribute(
                 "selectedSize",
                 size
         );
+
 
         request.setAttribute(
                 "selectedSort",
@@ -208,8 +286,15 @@ public class ProductsServlet extends HttpServlet {
         );
 
 
+        // =====================================================
+        // FORWARD TO PRODUCTS PAGE
+        // =====================================================
+
         request.getRequestDispatcher(
                 "/WEB-INF/views/products.jsp"
-        ).forward(request, response);
+        ).forward(
+                request,
+                response
+        );
     }
 }

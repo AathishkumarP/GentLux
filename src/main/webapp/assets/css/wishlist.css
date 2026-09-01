@@ -404,3 +404,52 @@
         padding: 60px 15px;
     }
 }
+
+/* ============================= */
+/* PRODUCT DETAILS - WISHLIST */
+/* ============================= */
+
+.product-wishlist-section {
+    margin-top: 22px;
+    width: 100%;
+}
+
+.product-wishlist-section form {
+    margin: 0;
+}
+
+.add-to-wishlist-button {
+    width: 100%;
+    max-width: 430px;
+    min-height: 54px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    background: #ffffff;
+    color: #38251e;
+
+    border: 1px solid #38251e;
+
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1.2px;
+
+    cursor: pointer;
+
+    transition: background 0.25s ease,
+                color 0.25s ease,
+                border-color 0.25s ease;
+}
+
+.add-to-wishlist-button:hover {
+    background: #38251e;
+    color: #ffffff;
+}
+
+.wishlist-heart {
+    font-size: 21px;
+    line-height: 1;
+}
