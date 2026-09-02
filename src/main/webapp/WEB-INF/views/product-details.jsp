@@ -19,16 +19,153 @@
     <title>${product.productName} | GENTLUX</title>
 
 
-    <!-- MAIN CSS -->
-
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/css/style.css">
 
 
-    <!-- WISHLIST CSS -->
-
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/css/wishlist.css">
+
+
+    <!-- =========================================================
+         PRODUCT DETAILS WISHLIST SVG
+    ========================================================== -->
+
+    <style>
+
+        .product-wishlist-section {
+            margin-top: 16px;
+        }
+
+
+        .add-to-wishlist-button {
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 10px;
+
+            min-height: 46px;
+
+            padding: 0 22px;
+
+            background: transparent;
+
+            border: none;
+
+            color: #38251e;
+
+            cursor: pointer;
+
+            font-family: inherit;
+
+            transition:
+                opacity 0.25s ease,
+                transform 0.25s ease;
+
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+
+        /* =========================
+           SVG HEART
+        ========================== */
+
+        .add-to-wishlist-button
+        .product-wishlist-heart {
+
+            width: 24px;
+            height: 24px;
+
+            flex-shrink: 0;
+
+            fill: transparent;
+
+            stroke: #38251e;
+
+            stroke-width: 1.8;
+
+            stroke-linecap: round;
+            stroke-linejoin: round;
+
+            pointer-events: none;
+
+            transition:
+                fill 0.25s ease,
+                stroke 0.25s ease,
+                transform 0.25s ease;
+        }
+
+
+        /* =========================
+           TEXT
+        ========================== */
+
+        .add-to-wishlist-button
+        .wishlist-text {
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+            letter-spacing: 1.2px;
+
+            color: #38251e;
+        }
+
+
+        /* =========================
+           HOVER
+        ========================== */
+
+        .add-to-wishlist-button:hover
+        .product-wishlist-heart {
+
+            transform: scale(1.12);
+        }
+
+
+        /* =========================
+           SAVED
+        ========================== */
+
+        .add-to-wishlist-button.wishlist-active
+        .product-wishlist-heart {
+
+            fill: #38251e;
+
+            stroke: #38251e;
+        }
+
+
+        /* =========================
+           FOCUS
+        ========================== */
+
+        .add-to-wishlist-button:focus,
+        .add-to-wishlist-button:focus-visible {
+
+            outline: none;
+
+            box-shadow: none;
+        }
+
+
+        /* =========================
+           AJAX PROCESSING
+        ========================== */
+
+        .add-to-wishlist-button:disabled {
+
+            opacity: 0.55;
+
+            cursor: wait;
+        }
+
+    </style>
+
 
 </head>
 
@@ -37,39 +174,58 @@
 
 
 <%
+
     String cartStatus =
             request.getParameter("cartStatus");
 
-    String wishlistStatus =
-            request.getParameter("wishlistStatus");
+
+    Boolean inWishlist =
+            (Boolean)
+            request.getAttribute("inWishlist");
+
+
+    boolean productInWishlist =
+            inWishlist != null
+            && inWishlist;
+
 %>
 
 
 
 <!-- =========================================================
-     CART - ADDED SUCCESS
+     CART SUCCESS MESSAGE
 ========================================================== -->
 
 <% if ("added".equals(cartStatus)) { %>
 
+
     <div class="cart-toast cart-toast-success"
          id="cartToast">
 
+
         <div class="cart-toast-icon">
+
             ✓
+
         </div>
+
 
         <div class="cart-toast-content">
 
             <strong>
+
                 ADDED TO CART
+
             </strong>
 
             <span>
+
                 Your item has been added successfully.
+
             </span>
 
         </div>
+
 
         <button type="button"
                 class="cart-toast-close"
@@ -79,36 +235,48 @@
 
         </button>
 
+
     </div>
+
 
 <% } %>
 
 
 
 <!-- =========================================================
-     CART - OUT OF STOCK
+     OUT OF STOCK MESSAGE
 ========================================================== -->
 
 <% if ("outOfStock".equals(cartStatus)) { %>
 
+
     <div class="cart-toast cart-toast-error"
          id="cartToast">
 
+
         <div class="cart-toast-icon">
+
             !
+
         </div>
+
 
         <div class="cart-toast-content">
 
             <strong>
+
                 OUT OF STOCK
+
             </strong>
 
             <span>
+
                 This product is currently unavailable.
+
             </span>
 
         </div>
+
 
         <button type="button"
                 class="cart-toast-close"
@@ -118,163 +286,9 @@
 
         </button>
 
-    </div>
-
-<% } %>
-
-
-
-<!-- =========================================================
-     WISHLIST - ADDED
-========================================================== -->
-
-<% if ("added".equals(wishlistStatus)) { %>
-
-    <div class="cart-toast cart-toast-success"
-         id="wishlistToast">
-
-        <div class="cart-toast-icon">
-            ♡
-        </div>
-
-        <div class="cart-toast-content">
-
-            <strong>
-                ADDED TO WISHLIST
-            </strong>
-
-            <span>
-                This product has been saved to your wishlist.
-            </span>
-
-        </div>
-
-        <button type="button"
-                class="cart-toast-close"
-                onclick="closeWishlistToast()">
-
-            ×
-
-        </button>
 
     </div>
 
-<% } %>
-
-
-
-<!-- =========================================================
-     WISHLIST - ALREADY EXISTS
-========================================================== -->
-
-<% if ("exists".equals(wishlistStatus)) { %>
-
-    <div class="cart-toast cart-toast-success"
-         id="wishlistToast">
-
-        <div class="cart-toast-icon">
-            ♥
-        </div>
-
-        <div class="cart-toast-content">
-
-            <strong>
-                ALREADY IN WISHLIST
-            </strong>
-
-            <span>
-                This product is already saved in your wishlist.
-            </span>
-
-        </div>
-
-        <button type="button"
-                class="cart-toast-close"
-                onclick="closeWishlistToast()">
-
-            ×
-
-        </button>
-
-    </div>
-
-<% } %>
-
-
-
-<!-- =========================================================
-     WISHLIST - REMOVED
-========================================================== -->
-
-<% if ("removed".equals(wishlistStatus)) { %>
-
-    <div class="cart-toast cart-toast-success"
-         id="wishlistToast">
-
-        <div class="cart-toast-icon">
-            ✓
-        </div>
-
-        <div class="cart-toast-content">
-
-            <strong>
-                REMOVED FROM WISHLIST
-            </strong>
-
-            <span>
-                This product has been removed from your wishlist.
-            </span>
-
-        </div>
-
-        <button type="button"
-                class="cart-toast-close"
-                onclick="closeWishlistToast()">
-
-            ×
-
-        </button>
-
-    </div>
-
-<% } %>
-
-
-
-<!-- =========================================================
-     WISHLIST - ERROR
-========================================================== -->
-
-<% if ("error".equals(wishlistStatus)) { %>
-
-    <div class="cart-toast cart-toast-error"
-         id="wishlistToast">
-
-        <div class="cart-toast-icon">
-            !
-        </div>
-
-        <div class="cart-toast-content">
-
-            <strong>
-                UNABLE TO ADD
-            </strong>
-
-            <span>
-                Something went wrong while adding this product.
-            </span>
-
-        </div>
-
-        <button type="button"
-                class="cart-toast-close"
-                onclick="closeWishlistToast()">
-
-            ×
-
-        </button>
-
-    </div>
 
 <% } %>
 
@@ -304,24 +318,31 @@
 
 
 
-        <!-- PRODUCT IMAGE -->
+        <!-- =================================================
+             PRODUCT IMAGE
+        ================================================== -->
 
         <div class="product-details-image">
 
+
             <div class="product-details-main-image product-image-1">
+
             </div>
+
 
         </div>
 
 
 
-        <!-- PRODUCT INFORMATION -->
+        <!-- =================================================
+             PRODUCT INFORMATION
+        ================================================== -->
 
         <div class="product-details-info">
 
 
 
-            <!-- BRAND -->
+            <!-- Brand -->
 
             <p class="product-details-brand">
 
@@ -331,7 +352,7 @@
 
 
 
-            <!-- PRODUCT NAME -->
+            <!-- Product Name -->
 
             <h1 class="product-details-title">
 
@@ -341,23 +362,28 @@
 
 
 
-            <!-- RATING -->
+            <!-- Rating -->
 
             <div class="product-details-rating">
 
                 ★★★★★
 
                 <span>
+
                     4.8 (124 Reviews)
+
                 </span>
 
             </div>
 
 
 
-            <!-- PRICE -->
+            <!-- =================================================
+                 PRICE
+            ================================================== -->
 
             <div class="product-details-price">
+
 
                 <span class="current-price">
 
@@ -379,11 +405,12 @@
 
                 </span>
 
+
             </div>
 
 
 
-            <!-- DESCRIPTION -->
+            <!-- Description -->
 
             <p class="product-details-description">
 
@@ -394,6 +421,7 @@
 
 
             <div class="product-details-divider">
+
             </div>
 
 
@@ -407,13 +435,20 @@
 
                 <div class="size-heading">
 
+
                     <h3>
+
                         SELECT SIZE
+
                     </h3>
 
+
                     <a href="#">
+
                         Size Guide
+
                     </a>
+
 
                 </div>
 
@@ -421,63 +456,68 @@
 
                 <div class="size-options">
 
-                    <%
 
-                        List<ProductVariant> variants =
-                                (List<ProductVariant>)
-                                request.getAttribute("variants");
+<%
 
-
-                        if (variants != null
-                                && !variants.isEmpty()) {
+    List<ProductVariant> variants =
+            (List<ProductVariant>)
+            request.getAttribute("variants");
 
 
-                            for (ProductVariant variant : variants) {
-
-                    %>
-
-
-                        <button type="button"
-                                class="size-button"
-
-                                data-variant-id="<%= variant.getVariantId() %>"
-
-                                data-stock="<%= variant.getStockQuantity() %>"
-
-                                onclick="selectProductVariant(this)"
-
-                                <%= variant.getStockQuantity() == 0
-                                        ? "disabled"
-                                        : "" %>>
-
-                            <%= variant.getSize() %>
-
-                        </button>
+    if (variants != null
+            && !variants.isEmpty()) {
 
 
-                    <%
+        for (ProductVariant variant : variants) {
 
-                            }
-
-                        } else {
-
-                    %>
+%>
 
 
-                        <p class="no-variants-message">
+                    <button type="button"
+                            class="size-button"
 
-                            No sizes available for this product.
+                            data-variant-id="<%= variant.getVariantId() %>"
 
-                        </p>
+                            data-stock="<%= variant.getStockQuantity() %>"
+
+                            onclick="selectProductVariant(this)"
+
+                            <%= variant.getStockQuantity() == 0
+                                    ? "disabled"
+                                    : "" %>>
 
 
-                    <%
+                        <%= variant.getSize() %>
 
-                        }
 
-                    %>
+                    </button>
+
+
+<%
+
+        }
+
+    } else {
+
+%>
+
+
+                    <p class="no-variants-message">
+
+                        No sizes available for this product.
+
+                    </p>
+
+
+<%
+
+    }
+
+%>
+
 
                 </div>
+
 
             </div>
 
@@ -489,12 +529,16 @@
 
             <div class="quantity-section">
 
+
                 <h3>
+
                     QUANTITY
+
                 </h3>
 
 
                 <div class="quantity-control">
+
 
                     <button type="button"
                             class="quantity-minus">
@@ -518,7 +562,9 @@
 
                     </button>
 
+
                 </div>
+
 
             </div>
 
@@ -557,6 +603,7 @@
 
                     </button>
 
+
                 </form>
 
 
@@ -586,6 +633,7 @@
 
                     </button>
 
+
                 </form>
 
 
@@ -594,91 +642,74 @@
 
 
             <!-- =================================================
-                 WISHLIST
+                 AJAX WISHLIST
             ================================================== -->
 
             <div class="product-wishlist-section">
 
-                <%
 
-                    Boolean inWishlist =
-                            (Boolean)
-                            request.getAttribute(
-                                    "inWishlist"
-                            );
+                <button type="button"
 
+                        id="productWishlistButton"
 
-                    boolean productInWishlist =
-                            inWishlist != null
-                            && inWishlist;
+                        class="add-to-wishlist-button
+                               <%= productInWishlist
+                                       ? "wishlist-active"
+                                       : "" %>"
 
-                %>
+                        data-product-id="${product.productId}"
 
+                        data-in-wishlist="<%= productInWishlist %>"
 
-                <% if (productInWishlist) { %>
+                        onclick="toggleProductWishlist(this)"
 
+                        title="<%= productInWishlist
+                                ? "Remove from wishlist"
+                                : "Add to wishlist" %>"
 
-                    <!-- ALREADY IN WISHLIST -->
-
-                    <form action="${pageContext.request.contextPath}/remove-from-wishlist"
-                          method="post">
-
-
-                        <input type="hidden"
-                               name="productId"
-                               value="${product.productId}">
+                        aria-label="<%= productInWishlist
+                                ? "Remove from wishlist"
+                                : "Add to wishlist" %>">
 
 
-                        <input type="hidden"
-                               name="redirect"
-                               value="product">
+                    <!--
+                        Same GentLux heart used on
+                        Home and Products pages
+                    -->
+
+                    <svg class="product-wishlist-heart"
+                         viewBox="0 0 24 24"
+                         aria-hidden="true">
 
 
-                        <button type="submit"
-                                class="add-to-wishlist-button wishlist-active">
-
-                            <span class="wishlist-heart">
-                                ♥
-                            </span>
-
-                            IN WISHLIST — REMOVE
-
-                        </button>
-
-
-                    </form>
+                        <path
+                            d="M20.84 4.61
+                               a5.5 5.5 0 0 0-7.78 0
+                               L12 5.67
+                               l-1.06-1.06
+                               a5.5 5.5 0 0 0-7.78 7.78
+                               L12 21.23
+                               l8.84-8.84
+                               a5.5 5.5 0 0 0 0-7.78z">
+                        </path>
 
 
-                <% } else { %>
+                    </svg>
 
 
-                    <!-- NOT IN WISHLIST -->
 
-                    <form action="${pageContext.request.contextPath}/add-to-wishlist"
-                          method="post">
+                    <span class="wishlist-text">
 
 
-                        <input type="hidden"
-                               name="productId"
-                               value="${product.productId}">
+                        <%= productInWishlist
+                                ? "IN WISHLIST — REMOVE"
+                                : "ADD TO WISHLIST" %>
 
 
-                        <button type="submit"
-                                class="add-to-wishlist-button">
-
-                            <span class="wishlist-heart">
-                                ♡
-                            </span>
-
-                            ADD TO WISHLIST
-
-                        </button>
+                    </span>
 
 
-                    </form>
-
-
-                <% } %>
+                </button>
 
 
             </div>
@@ -695,21 +726,33 @@
 
                 <div class="product-feature">
 
+
                     <span class="feature-icon">
+
                         ✓
+
                     </span>
+
 
                     <div>
 
+
                         <strong>
+
                             Premium Quality
+
                         </strong>
 
+
                         <p>
+
                             Carefully selected materials
+
                         </p>
 
+
                     </div>
+
 
                 </div>
 
@@ -717,21 +760,33 @@
 
                 <div class="product-feature">
 
+
                     <span class="feature-icon">
+
                         ✓
+
                     </span>
+
 
                     <div>
 
+
                         <strong>
+
                             Easy Returns
+
                         </strong>
 
+
                         <p>
+
                             Hassle-free returns
+
                         </p>
 
+
                     </div>
+
 
                 </div>
 
@@ -739,21 +794,33 @@
 
                 <div class="product-feature">
 
+
                     <span class="feature-icon">
+
                         ✓
+
                     </span>
+
 
                     <div>
 
+
                         <strong>
+
                             Secure Payment
+
                         </strong>
 
+
                         <p>
+
                             100% secure checkout
+
                         </p>
 
+
                     </div>
+
 
                 </div>
 
@@ -763,6 +830,7 @@
 
 
         </div>
+
 
     </section>
 
@@ -777,13 +845,20 @@
 
         <div class="section-heading">
 
+
             <p class="section-subtitle">
+
                 DETAILS
+
             </p>
 
+
             <h2>
+
                 PRODUCT DESCRIPTION
+
             </h2>
+
 
         </div>
 
@@ -791,15 +866,20 @@
 
         <div class="product-description-content">
 
+
             <p>
+
                 ${product.description}
+
             </p>
 
 
             <p>
 
                 <strong>
+
                     Brand:
+
                 </strong>
 
                 ${product.brand}
@@ -810,12 +890,15 @@
             <p>
 
                 <strong>
+
                     Color:
+
                 </strong>
 
                 ${product.color}
 
             </p>
+
 
         </div>
 
@@ -836,18 +919,22 @@
 
 
 <!-- =========================================================
-     PRODUCT VARIANT SCRIPT
+     PRODUCT VARIANT SELECTION
 ========================================================== -->
 
 <script>
 
+
 function selectProductVariant(button) {
 
+
     const variantId =
-        button.getAttribute("data-variant-id");
+        button.getAttribute(
+            "data-variant-id"
+        );
 
 
-    /* ADD TO CART VARIANT */
+    /* ADD TO CART */
 
     const cartVariantInput =
         document.getElementById(
@@ -859,11 +946,12 @@ function selectProductVariant(button) {
 
         cartVariantInput.value =
             variantId;
+
     }
 
 
 
-    /* BUY NOW VARIANT */
+    /* BUY NOW */
 
     const buyNowVariantInput =
         document.getElementById(
@@ -875,6 +963,7 @@ function selectProductVariant(button) {
 
         buyNowVariantInput.value =
             variantId;
+
     }
 
 
@@ -885,9 +974,11 @@ function selectProductVariant(button) {
         .querySelectorAll(".size-button")
         .forEach(function(sizeButton) {
 
+
             sizeButton.classList.remove(
                 "selected"
             );
+
 
         });
 
@@ -900,104 +991,308 @@ function selectProductVariant(button) {
     );
 
 
-    console.log(
-        "Selected variant ID:",
-        variantId
-    );
 }
 
-</script>
 
-
-
-<!-- EXISTING PRODUCT DETAILS JS -->
-
-<script src="${pageContext.request.contextPath}/assets/js/product-details.js">
 </script>
 
 
 
 <!-- =========================================================
-     CART TOAST SCRIPT
+     EXISTING PRODUCT DETAILS JAVASCRIPT
+========================================================== -->
+
+<script src="${pageContext.request.contextPath}/assets/js/product-details.js">
+
+</script>
+
+
+
+<!-- =========================================================
+     CART TOAST
 ========================================================== -->
 
 <script>
 
-    const cartToast =
-        document.getElementById(
-            "cartToast"
-        );
+
+const cartToast =
+    document.getElementById(
+        "cartToast"
+    );
 
 
-    function closeCartToast() {
 
-        if (cartToast) {
-
-            cartToast.classList.add(
-                "cart-toast-hide"
-            );
-
-
-            setTimeout(function () {
-
-                cartToast.remove();
-
-            }, 350);
-        }
-    }
+function closeCartToast() {
 
 
     if (cartToast) {
 
-        setTimeout(function () {
 
-            closeCartToast();
+        cartToast.classList.add(
+            "cart-toast-hide"
+        );
 
-        }, 3500);
+
+        setTimeout(function() {
+
+            cartToast.remove();
+
+        }, 350);
+
+
     }
+
+
+}
+
+
+
+if (cartToast) {
+
+
+    setTimeout(function() {
+
+        closeCartToast();
+
+    }, 3500);
+
+
+}
+
 
 </script>
 
 
 
 <!-- =========================================================
-     WISHLIST TOAST SCRIPT
+     AJAX WISHLIST
 ========================================================== -->
 
 <script>
 
-    const wishlistToast =
-        document.getElementById(
-            "wishlistToast"
+
+async function toggleProductWishlist(button) {
+
+
+    /*
+     * Prevent double click
+     */
+
+    if (button.disabled) {
+
+        return;
+
+    }
+
+
+    button.disabled = true;
+
+
+
+    const productId =
+        button.getAttribute(
+            "data-product-id"
         );
 
 
-    function closeWishlistToast() {
 
-        if (wishlistToast) {
+    try {
 
-            wishlistToast.classList.add(
-                "cart-toast-hide"
+
+        const response =
+            await fetch(
+
+                "${pageContext.request.contextPath}/toggle-wishlist",
+
+                {
+
+                    method: "POST",
+
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/x-www-form-urlencoded"
+
+                    },
+
+
+                    body:
+
+                        "productId="
+                        + encodeURIComponent(
+                            productId
+                        )
+
+                }
+
             );
 
 
-            setTimeout(function () {
 
-                wishlistToast.remove();
+        /* =========================================
+           LOGIN REQUIRED
+        ========================================= */
 
-            }, 350);
+        if (response.status === 401) {
+
+
+            window.location.href =
+                "${pageContext.request.contextPath}/login";
+
+
+            return;
+
         }
+
+
+
+        const data =
+            await response.json();
+
+
+
+        /* =========================================
+           ERROR
+        ========================================= */
+
+        if (!response.ok
+                || !data.success) {
+
+
+            console.error(
+                "Wishlist update failed:",
+                data
+            );
+
+
+            return;
+
+        }
+
+
+
+        const text =
+            button.querySelector(
+                ".wishlist-text"
+            );
+
+
+
+        /* =========================================
+           ADDED TO WISHLIST
+        ========================================= */
+
+        if (data.inWishlist) {
+
+
+            /*
+             * SVG remains in the button.
+             * CSS fills the heart.
+             */
+
+            button.classList.add(
+                "wishlist-active"
+            );
+
+
+            button.setAttribute(
+                "data-in-wishlist",
+                "true"
+            );
+
+
+            button.setAttribute(
+                "title",
+                "Remove from wishlist"
+            );
+
+
+            button.setAttribute(
+                "aria-label",
+                "Remove from wishlist"
+            );
+
+
+            if (text) {
+
+
+                text.textContent =
+                    "IN WISHLIST — REMOVE";
+
+
+            }
+
+
+        }
+
+
+
+        /* =========================================
+           REMOVED FROM WISHLIST
+        ========================================= */
+
+        else {
+
+
+            button.classList.remove(
+                "wishlist-active"
+            );
+
+
+            button.setAttribute(
+                "data-in-wishlist",
+                "false"
+            );
+
+
+            button.setAttribute(
+                "title",
+                "Add to wishlist"
+            );
+
+
+            button.setAttribute(
+                "aria-label",
+                "Add to wishlist"
+            );
+
+
+            if (text) {
+
+
+                text.textContent =
+                    "ADD TO WISHLIST";
+
+
+            }
+
+
+        }
+
+
+
+    } catch (error) {
+
+
+        console.error(
+            "Wishlist error:",
+            error
+        );
+
+
+    } finally {
+
+
+        button.disabled =
+            false;
+
+
     }
 
 
-    if (wishlistToast) {
+}
 
-        setTimeout(function () {
-
-            closeWishlistToast();
-
-        }, 3500);
-    }
 
 </script>
 

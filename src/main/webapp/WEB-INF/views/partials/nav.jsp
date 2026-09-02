@@ -22,6 +22,7 @@
 
         navCartCount =
                 (Integer) cartCountObject;
+
     }
 
 %>
@@ -35,7 +36,9 @@
     <div class="navbar-brand">
 
         <a href="<%= request.getContextPath() %>/home">
+
             GENTLUX
+
         </a>
 
     </div>
@@ -46,21 +49,34 @@
 
     <div class="navbar-links">
 
+
         <a href="<%= request.getContextPath() %>/home">
+
             Home
+
         </a>
+
 
         <a href="<%= request.getContextPath() %>/products">
+
             Shop
+
         </a>
+
 
         <a href="<%= request.getContextPath() %>/categories">
+
             Categories
+
         </a>
 
+
         <a href="<%= request.getContextPath() %>/about">
+
             About
+
         </a>
+
 
     </div>
 
@@ -71,25 +87,34 @@
     <div class="navbar-actions">
 
 
+
         <!-- SEARCH -->
 
-        <form action="<%= request.getContextPath() %>/search"
-              method="get"
-              style="
-                  display: flex;
-                  align-items: center;
-                  border: 1px solid #d8cec7;
-                  background: #ffffff;
-                  height: 34px;
-                  overflow: hidden;
-              ">
+        <form
+            action="<%= request.getContextPath() %>/search"
+            method="get"
+
+            style="
+                display: flex;
+                align-items: center;
+                border: 1px solid #d8cec7;
+                background: #ffffff;
+                height: 34px;
+                overflow: hidden;
+            ">
+
 
             <input
                 type="text"
+
                 name="q"
+
                 placeholder="Search..."
+
                 autocomplete="off"
+
                 aria-label="Search products"
+
                 style="
                     width: 150px;
                     height: 100%;
@@ -101,9 +126,12 @@
                     font-size: 12px;
                 ">
 
+
             <button
                 type="submit"
+
                 aria-label="Search"
+
                 style="
                     height: 100%;
                     padding: 0 10px;
@@ -117,31 +145,47 @@
 
             </button>
 
+
         </form>
 
 
 
-        <!-- WISHLIST -->
+        <!-- =====================================================
+             WISHLIST
+        ====================================================== -->
 
-        <a href="<%= request.getContextPath() %>/wishlist"
-           aria-label="Wishlist"
-           title="Wishlist"
-           style="
-               display: inline-flex;
-               align-items: center;
-               justify-content: center;
-               text-decoration: none;
-           ">
+        <a
+            href="<%= request.getContextPath() %>/wishlist"
 
-            <span style="
-                font-size: 22px;
-                line-height: 1;
-                color: #38251e;
-            ">
+            class="nav-wishlist-link"
 
-                ♡
+            aria-label="Wishlist"
 
-            </span>
+            title="Wishlist">
+
+
+            <svg
+                class="nav-wishlist-heart"
+
+                viewBox="0 0 24 24"
+
+                aria-hidden="true">
+
+
+                <path
+                    d="M20.84 4.61
+                       a5.5 5.5 0 0 0-7.78 0
+                       L12 5.67
+                       l-1.06-1.06
+                       a5.5 5.5 0 0 0-7.78 7.78
+                       L12 21.23
+                       l8.84-8.84
+                       a5.5 5.5 0 0 0 0-7.78z">
+                </path>
+
+
+            </svg>
+
 
         </a>
 
@@ -149,47 +193,68 @@
 
         <!-- CART WITH COUNT -->
 
-        <a href="<%= request.getContextPath() %>/cart"
-           aria-label="Cart"
-           title="Cart"
-           style="
-               position: relative;
-               display: inline-flex;
-               align-items: center;
-               justify-content: center;
-               text-decoration: none;
-           ">
+        <a
+            href="<%= request.getContextPath() %>/cart"
+
+            aria-label="Cart"
+
+            title="Cart"
+
+            style="
+                position: relative;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+            ">
+
 
             <span style="font-size: 18px;">
+
                 🛍
+
             </span>
+
 
 
             <% if (navCartCount > 0) { %>
 
-                <span style="
-                    position: absolute;
-                    top: -8px;
-                    right: -10px;
-                    min-width: 17px;
-                    height: 17px;
-                    padding: 0 4px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    background: #38251e;
-                    color: #ffffff;
-                    border-radius: 50%;
-                    font-size: 9px;
-                    font-weight: 600;
-                    line-height: 17px;
-                ">
+
+                <span
+                    style="
+                        position: absolute;
+
+                        top: -8px;
+                        right: -10px;
+
+                        min-width: 17px;
+                        height: 17px;
+
+                        padding: 0 4px;
+
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        background: #38251e;
+
+                        color: #ffffff;
+
+                        border-radius: 50%;
+
+                        font-size: 9px;
+                        font-weight: 600;
+
+                        line-height: 17px;
+                    ">
 
                     <%= navCartCount %>
 
                 </span>
 
+
             <% } %>
+
 
         </a>
 
@@ -197,9 +262,12 @@
 
         <!-- PROFILE -->
 
-        <a href="<%= request.getContextPath() %>/profile"
-           aria-label="Profile"
-           title="Profile">
+        <a
+            href="<%= request.getContextPath() %>/profile"
+
+            aria-label="Profile"
+
+            title="Profile">
 
             👤
 
@@ -211,25 +279,34 @@
 
         <% if (isLoggedIn) { %>
 
-            <a href="<%= request.getContextPath() %>/logout"
-               aria-label="Logout">
+
+            <a
+                href="<%= request.getContextPath() %>/logout"
+
+                aria-label="Logout">
 
                 Logout
 
             </a>
 
+
         <% } else { %>
 
-            <a href="<%= request.getContextPath() %>/login"
-               aria-label="Login">
+
+            <a
+                href="<%= request.getContextPath() %>/login"
+
+                aria-label="Login">
 
                 Login
 
             </a>
 
+
         <% } %>
 
 
     </div>
+
 
 </nav>

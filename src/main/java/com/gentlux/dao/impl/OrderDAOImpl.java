@@ -723,7 +723,52 @@ public class OrderDAOImpl implements OrderDAO {
 
 
     // =========================================================
-    // 13. DELETE ORDER
+    // 13. CANCEL ORDER
+    // =========================================================
+
+    @Override
+    public boolean cancelOrder(
+            int orderId,
+            int userId) {
+
+        String sql =
+                "UPDATE orders SET "
+              + "order_status = 'CANCELLED' "
+              + "WHERE order_id = ? "
+              + "AND user_id = ? "
+              + "AND order_status IN ('PLACED', 'CONFIRMED')";
+
+        try (
+            Connection connection =
+                    DBConnection.getConnection();
+
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
+
+            statement.setInt(
+                    1,
+                    orderId
+            );
+
+            statement.setInt(
+                    2,
+                    userId
+            );
+
+            return statement.executeUpdate() > 0;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+    // =========================================================
+    // 14. DELETE ORDER
     // =========================================================
 
     @Override
@@ -759,7 +804,7 @@ public class OrderDAOImpl implements OrderDAO {
 
 
     // =========================================================
-    // 14. CHECK ORDER EXISTS
+    // 15. CHECK ORDER EXISTS
     // =========================================================
 
     @Override
@@ -801,7 +846,7 @@ public class OrderDAOImpl implements OrderDAO {
 
 
     // =========================================================
-    // 15. COUNT ORDERS BY USER
+    // 16. COUNT ORDERS BY USER
     // =========================================================
 
     @Override
@@ -847,7 +892,7 @@ public class OrderDAOImpl implements OrderDAO {
 
 
     // =========================================================
-    // 16. COUNT ORDERS BY STATUS
+    // 17. COUNT ORDERS BY STATUS
     // =========================================================
 
     @Override
@@ -903,11 +948,13 @@ public class OrderDAOImpl implements OrderDAO {
         Order order =
                 new Order();
 
+
         order.setOrderId(
                 resultSet.getInt(
                         "order_id"
                 )
         );
+
 
         order.setUserId(
                 resultSet.getInt(
@@ -915,11 +962,13 @@ public class OrderDAOImpl implements OrderDAO {
                 )
         );
 
+
         order.setTotalAmount(
                 resultSet.getDouble(
                         "total_amount"
                 )
         );
+
 
         order.setPaymentMethod(
                 resultSet.getString(
@@ -927,11 +976,13 @@ public class OrderDAOImpl implements OrderDAO {
                 )
         );
 
+
         order.setPaymentStatus(
                 resultSet.getString(
                         "payment_status"
                 )
         );
+
 
         order.setOrderStatus(
                 resultSet.getString(
@@ -939,11 +990,13 @@ public class OrderDAOImpl implements OrderDAO {
                 )
         );
 
+
         order.setShippingName(
                 resultSet.getString(
                         "shipping_name"
                 )
         );
+
 
         order.setShippingPhone(
                 resultSet.getString(
@@ -951,11 +1004,13 @@ public class OrderDAOImpl implements OrderDAO {
                 )
         );
 
+
         order.setShippingAddress(
                 resultSet.getString(
                         "shipping_address"
                 )
         );
+
 
         order.setShippingCity(
                 resultSet.getString(
@@ -963,11 +1018,13 @@ public class OrderDAOImpl implements OrderDAO {
                 )
         );
 
+
         order.setShippingState(
                 resultSet.getString(
                         "shipping_state"
                 )
         );
+
 
         order.setShippingPincode(
                 resultSet.getString(
@@ -975,11 +1032,13 @@ public class OrderDAOImpl implements OrderDAO {
                 )
         );
 
+
         order.setOrderDate(
                 resultSet.getTimestamp(
                         "order_date"
                 )
         );
+
 
         return order;
     }

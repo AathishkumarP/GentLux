@@ -1,11 +1,9 @@
 <%@ page language="java"
-
     contentType="text/html; charset=UTF-8"
-
     pageEncoding="UTF-8"%>
 
 <%@ page import="java.util.List" %>
-
+<%@ page import="java.util.Set" %>
 <%@ page import="com.gentlux.model.Product" %>
 
 <!DOCTYPE html>
@@ -17,106 +15,311 @@
     <meta charset="UTF-8">
 
     <meta name="viewport"
-
           content="width=device-width, initial-scale=1.0">
 
     <title>Shop | GENTLUX</title>
 
-    <link rel="stylesheet"
 
+    <!-- MAIN CSS -->
+    <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/css/style.css">
+
+
+    <!-- WISHLIST CSS -->
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/assets/css/wishlist.css">
+
+
+    <!-- =========================================================
+         PRODUCTS PAGE - HEART ONLY WISHLIST
+         This overrides old wishlist circle styling
+    ========================================================== -->
+
+    <style>
+
+        .modern-product-image-wrapper {
+            position: relative;
+        }
+
+
+        .modern-wishlist {
+
+            position: absolute !important;
+
+            top: 16px !important;
+            right: 16px !important;
+
+            width: 34px !important;
+            height: 34px !important;
+
+            padding: 0 !important;
+            margin: 0 !important;
+
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+
+            background: transparent !important;
+
+            border: none !important;
+            border-radius: 0 !important;
+
+            outline: none !important;
+
+            box-shadow: none !important;
+
+            color: #38251e !important;
+
+            cursor: pointer;
+
+            z-index: 20;
+
+            appearance: none !important;
+            -webkit-appearance: none !important;
+
+            transition:
+                transform 0.25s ease,
+                opacity 0.25s ease !important;
+        }
+
+
+
+        /* =========================
+           HEART SVG
+        ========================== */
+
+        .modern-wishlist .gentlux-heart {
+
+            width: 27px;
+            height: 27px;
+
+            fill: transparent;
+
+            stroke: #38251e;
+
+            stroke-width: 1.8;
+
+            stroke-linecap: round;
+            stroke-linejoin: round;
+
+            pointer-events: none;
+
+            filter:
+                drop-shadow(
+                    0 1px 1px
+                    rgba(255, 255, 255, 0.95)
+                );
+
+            transition:
+                fill 0.25s ease,
+                stroke 0.25s ease,
+                transform 0.25s ease;
+        }
+
+
+
+        /* =========================
+           HOVER
+        ========================== */
+
+        .modern-wishlist:hover {
+
+            background: transparent !important;
+
+            border: none !important;
+
+            box-shadow: none !important;
+
+            transform: scale(1.12);
+        }
+
+
+        .modern-wishlist:hover
+        .gentlux-heart {
+
+            transform: scale(1.05);
+        }
+
+
+
+        /* =========================
+           SELECTED / SAVED
+        ========================== */
+
+        .modern-wishlist.wishlist-selected
+        .gentlux-heart {
+
+            fill: #38251e;
+
+            stroke: #38251e;
+        }
+
+
+
+        /* =========================
+           CLICK
+        ========================== */
+
+        .modern-wishlist:active {
+
+            transform: scale(0.92);
+        }
+
+
+
+        /* =========================
+           FOCUS
+        ========================== */
+
+        .modern-wishlist:focus,
+        .modern-wishlist:focus-visible {
+
+            background: transparent !important;
+
+            border: none !important;
+
+            outline: none !important;
+
+            box-shadow: none !important;
+        }
+
+
+
+        /* =========================
+           AJAX PROCESSING
+        ========================== */
+
+        .modern-wishlist:disabled {
+
+            opacity: 0.55;
+
+            cursor: wait;
+        }
+
+    </style>
 
 </head>
 
+
+
 <body>
 
+
+
     <!-- =========================================================
-
          NAVBAR
-
     ========================================================== -->
 
     <jsp:include page="partials/nav.jsp" />
 
-    <%
 
-        List<Product> products =
 
-                (List<Product>) request.getAttribute("products");
+<%
 
-        Integer selectedCategoryId =
+    List<Product> products =
+            (List<Product>)
+            request.getAttribute("products");
 
-                (Integer) request.getAttribute("selectedCategoryId");
 
-        String selectedBrand =
+    Integer selectedCategoryId =
+            (Integer)
+            request.getAttribute("selectedCategoryId");
 
-                (String) request.getAttribute("selectedBrand");
 
-        Double selectedMinPrice =
+    String selectedBrand =
+            (String)
+            request.getAttribute("selectedBrand");
 
-                (Double) request.getAttribute("selectedMinPrice");
 
-        Double selectedMaxPrice =
+    Double selectedMinPrice =
+            (Double)
+            request.getAttribute("selectedMinPrice");
 
-                (Double) request.getAttribute("selectedMaxPrice");
 
-        String selectedSize =
+    Double selectedMaxPrice =
+            (Double)
+            request.getAttribute("selectedMaxPrice");
 
-                (String) request.getAttribute("selectedSize");
 
-        String selectedSort =
+    String selectedSize =
+            (String)
+            request.getAttribute("selectedSize");
 
-                (String) request.getAttribute("selectedSort");
 
-        String searchKeyword =
+    String selectedSort =
+            (String)
+            request.getAttribute("selectedSort");
 
-                (String) request.getAttribute("searchKeyword");
 
-    %>
+    String searchKeyword =
+            (String)
+            request.getAttribute("searchKeyword");
+
+
+    Set<Integer> wishlistProductIds =
+            (Set<Integer>)
+            request.getAttribute("wishlistProductIds");
+
+
+    if (wishlistProductIds == null) {
+
+        wishlistProductIds =
+                new java.util.HashSet<>();
+
+    }
+
+%>
+
+
 
     <main class="shop-page">
 
+
+
         <!-- =====================================================
-
              SHOP HERO
-
         ====================================================== -->
 
         <section class="shop-hero">
 
+
             <div class="shop-hero-content">
+
 
                 <div class="shop-eyebrow">
 
                     <span></span>
 
                     <p>
-
                         COLLECTION
-
                     </p>
 
                     <span></span>
 
                 </div>
 
+
                 <h1>
-
                     SHOP GENTLUX
-
                 </h1>
+
 
                 <p class="shop-hero-description">
 
                     Discover refined essentials designed
-
                     for the modern gentleman.
 
                 </p>
 
+
             </div>
 
+
         </section>
+
+
+
+
 
         <!-- =====================================================
              CATEGORY NAVIGATION
@@ -124,1153 +327,1313 @@
 
         <section class="shop-category-section">
 
+
             <div class="shop-category-scroll">
 
+
+
                 <!-- ALL -->
+
                 <a href="${pageContext.request.contextPath}/products"
                    class="shop-category-card <%= selectedCategoryId == null ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/hero-men.jpg"
-                             alt="All Products">
+
+                        <img
+                            src="${pageContext.request.contextPath}/assets/images/categories/AllCat.jpg"
+                            alt="All Products">
+
                     </div>
 
-                    <span class="shop-category-name">ALL</span>
+                    <span class="shop-category-name">
+                        ALL
+                    </span>
+
                 </a>
 
+
+
                 <!-- T-SHIRTS -->
+
                 <a href="${pageContext.request.contextPath}/products?categoryId=1"
                    class="shop-category-card <%= Integer.valueOf(1).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/product-1.jpg"
-                             alt="T-Shirts">
+
+                        <img
+                            src="${pageContext.request.contextPath}/assets/images/categories/T-Shirt.jpg"
+                            alt="T-Shirts">
+
                     </div>
 
-                    <span class="shop-category-name">T-SHIRTS</span>
+                    <span class="shop-category-name">
+                        T-SHIRTS
+                    </span>
+
                 </a>
 
+
+
                 <!-- SHIRTS -->
+
                 <a href="${pageContext.request.contextPath}/products?categoryId=2"
                    class="shop-category-card <%= Integer.valueOf(2).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/product-2.jpg"
-                             alt="Shirts">
+
+                        <img
+                            src="${pageContext.request.contextPath}/assets/images/categories/Shirt.jpg"
+                            alt="Shirts">
+
                     </div>
 
-                    <span class="shop-category-name">SHIRTS</span>
+                    <span class="shop-category-name">
+                        SHIRTS
+                    </span>
+
                 </a>
 
+
+
                 <!-- JEANS -->
+
                 <a href="${pageContext.request.contextPath}/products?categoryId=3"
                    class="shop-category-card <%= Integer.valueOf(3).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/product-3.jpg"
-                             alt="Jeans">
+
+                        <img
+                            src="${pageContext.request.contextPath}/assets/images/categories/Jeans.jpg"
+                            alt="Jeans">
+
                     </div>
 
-                    <span class="shop-category-name">JEANS</span>
+                    <span class="shop-category-name">
+                        JEANS
+                    </span>
+
                 </a>
 
+
+
                 <!-- TROUSERS -->
+
                 <a href="${pageContext.request.contextPath}/products?categoryId=4"
                    class="shop-category-card <%= Integer.valueOf(4).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/product-4.jpg"
-                             alt="Trousers">
+
+                        <img
+                            src="${pageContext.request.contextPath}/assets/images/categories/Trousers.jpg"
+                            alt="Trousers">
+
                     </div>
 
-                    <span class="shop-category-name">TROUSERS</span>
+                    <span class="shop-category-name">
+                        TROUSERS
+                    </span>
+
                 </a>
 
+
+
                 <!-- JACKETS -->
+
                 <a href="${pageContext.request.contextPath}/products?categoryId=5"
                    class="shop-category-card <%= Integer.valueOf(5).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/product-1.jpg"
-                             alt="Jackets">
+
+                        <img
+                            src="${pageContext.request.contextPath}/assets/images/categories/Jackets.jpg"
+                            alt="Jackets">
+
                     </div>
 
-                    <span class="shop-category-name">JACKETS</span>
+                    <span class="shop-category-name">
+                        JACKETS
+                    </span>
+
                 </a>
 
+
+
                 <!-- HOODIES -->
+
                 <a href="${pageContext.request.contextPath}/products?categoryId=6"
                    class="shop-category-card <%= Integer.valueOf(6).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/product-2.jpg"
-                             alt="Hoodies">
+
+                        <img
+                            src="${pageContext.request.contextPath}/assets/images/categories/Hoodies.jpg"
+                            alt="Hoodies">
+
                     </div>
 
-                    <span class="shop-category-name">HOODIES</span>
+                    <span class="shop-category-name">
+                        HOODIES
+                    </span>
+
                 </a>
 
+
+
                 <!-- SWEATSHIRTS -->
+
                 <a href="${pageContext.request.contextPath}/products?categoryId=7"
                    class="shop-category-card <%= Integer.valueOf(7).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/product-3.jpg"
-                             alt="Sweatshirts">
+
+                        <img
+                            src="${pageContext.request.contextPath}/assets/images/categories/SweatShirt.jpg"
+                            alt="Sweatshirts">
+
                     </div>
 
-                    <span class="shop-category-name">SWEATSHIRTS</span>
+                    <span class="shop-category-name">
+                        SWEATSHIRTS
+                    </span>
+
                 </a>
 
+
+
                 <!-- SHORTS -->
+
                 <a href="${pageContext.request.contextPath}/products?categoryId=8"
                    class="shop-category-card <%= Integer.valueOf(8).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/product-4.jpg"
-                             alt="Shorts">
+
+                        <img
+                            src="${pageContext.request.contextPath}/assets/images/categories/Shorts.jpg"
+                            alt="Shorts">
+
                     </div>
 
-                    <span class="shop-category-name">SHORTS</span>
+                    <span class="shop-category-name">
+                        SHORTS
+                    </span>
+
                 </a>
 
+
+
                 <!-- ETHNIC WEAR -->
+
                 <a href="${pageContext.request.contextPath}/products?categoryId=9"
                    class="shop-category-card <%= Integer.valueOf(9).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/product-1.jpg"
-                             alt="Ethnic Wear">
+
+                        <img
+                            src="${pageContext.request.contextPath}/assets/images/categories/EthnicWear.jpg"
+                            alt="Ethnic Wear">
+
                     </div>
 
-                    <span class="shop-category-name">ETHNIC WEAR</span>
+                    <span class="shop-category-name">
+                        ETHNIC WEAR
+                    </span>
+
                 </a>
 
+
+
                 <!-- FOOTWEAR -->
+
                 <a href="${pageContext.request.contextPath}/products?categoryId=10"
                    class="shop-category-card <%= Integer.valueOf(10).equals(selectedCategoryId) ? "active" : "" %>">
 
                     <div class="shop-category-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/product-2.jpg"
-                             alt="Footwear">
+
+                        <img
+                            src="${pageContext.request.contextPath}/assets/images/categories/Footwear.jpg"
+                            alt="Footwear">
+
                     </div>
 
-                    <span class="shop-category-name">FOOTWEAR</span>
+                    <span class="shop-category-name">
+                        FOOTWEAR
+                    </span>
+
                 </a>
 
+
             </div>
+
 
         </section>
 
 
 
+
+
         <!-- =====================================================
-
              SEARCH + FILTER PANEL
-
         ====================================================== -->
 
         <section class="shop-filter-wrapper">
 
-            <!-- Search -->
 
-            <form action="${pageContext.request.contextPath}/products"
 
-                  method="get"
+            <!-- SEARCH -->
 
-                  class="shop-search-form">
+            <form
+                action="${pageContext.request.contextPath}/products"
+                method="get"
+                class="shop-search-form">
+
 
                 <span class="shop-search-icon">
-
                     ⌕
-
                 </span>
 
-                <input type="text"
 
-                       name="search"
+                <input
+                    type="text"
+                    name="search"
 
-                       value="<%= searchKeyword != null
+                    value="<%= searchKeyword != null
+                            ? searchKeyword
+                            : "" %>"
 
-                               ? searchKeyword
+                    placeholder="Search products or brands...">
 
-                               : "" %>"
 
-                       placeholder="Search products or brands...">
-
-                <button type="submit"
-
-                        class="shop-search-button">
+                <button
+                    type="submit"
+                    class="shop-search-button">
 
                     SEARCH
 
                 </button>
 
-                <a href="${pageContext.request.contextPath}/products"
 
-                   class="shop-clear-all">
+                <a
+                    href="${pageContext.request.contextPath}/products"
+                    class="shop-clear-all">
 
                     CLEAR ALL
 
                 </a>
 
+
             </form>
 
-            <!-- Filter Heading -->
+
+
+
+
+            <!-- FILTER HEADING -->
 
             <div class="shop-filter-heading">
+
 
                 <div>
 
                     <span class="filter-heading-icon">
-
                         ☷
-
                     </span>
 
                     <span>
-
                         REFINE YOUR SEARCH
-
                     </span>
 
                 </div>
 
+
                 <span class="filter-heading-note">
-
                     Find your perfect style
-
                 </span>
+
 
             </div>
 
-            <!-- Filters -->
 
-            <form action="${pageContext.request.contextPath}/products"
 
-                  method="get"
 
-                  class="modern-filter-form">
+
+            <!-- FILTER FORM -->
+
+            <form
+                action="${pageContext.request.contextPath}/products"
+                method="get"
+                class="modern-filter-form">
+
+
 
                 <!-- CATEGORY -->
 
                 <div class="modern-filter-group">
 
+
                     <label for="categoryId">
-
                         CATEGORY
-
                     </label>
 
-                    <select name="categoryId"
 
-                            id="categoryId">
+                    <select
+                        name="categoryId"
+                        id="categoryId">
+
 
                         <option value="">
-
                             All Categories
-
                         </option>
 
-                        <option value="1"
 
+                        <option
+                            value="1"
                             <%= Integer.valueOf(1).equals(selectedCategoryId)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             T-Shirts
 
                         </option>
 
-                        <option value="2"
 
+                        <option
+                            value="2"
                             <%= Integer.valueOf(2).equals(selectedCategoryId)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Shirts
 
                         </option>
 
-                        <option value="3"
 
+                        <option
+                            value="3"
                             <%= Integer.valueOf(3).equals(selectedCategoryId)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Jeans
 
                         </option>
 
-                        <option value="4"
 
+                        <option
+                            value="4"
                             <%= Integer.valueOf(4).equals(selectedCategoryId)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Trousers
 
                         </option>
 
-                        <option value="5"
 
+                        <option
+                            value="5"
                             <%= Integer.valueOf(5).equals(selectedCategoryId)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Jackets
 
                         </option>
 
-                        <option value="6"
 
+                        <option
+                            value="6"
                             <%= Integer.valueOf(6).equals(selectedCategoryId)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Hoodies
 
                         </option>
 
-                        <option value="7"
 
+                        <option
+                            value="7"
                             <%= Integer.valueOf(7).equals(selectedCategoryId)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Sweatshirts
 
                         </option>
 
-                        <option value="8"
 
+                        <option
+                            value="8"
                             <%= Integer.valueOf(8).equals(selectedCategoryId)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Shorts
 
                         </option>
 
-                        <option value="9"
 
+                        <option
+                            value="9"
                             <%= Integer.valueOf(9).equals(selectedCategoryId)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Ethnic Wear
 
                         </option>
 
-                        <option value="10"
 
+                        <option
+                            value="10"
                             <%= Integer.valueOf(10).equals(selectedCategoryId)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Footwear
 
                         </option>
 
+
                     </select>
 
+
                 </div>
+
+
+
+
 
                 <!-- BRAND -->
 
                 <div class="modern-filter-group">
 
+
                     <label for="brand">
-
                         BRAND
-
                     </label>
 
-                    <select name="brand"
 
-                            id="brand">
+                    <select
+                        name="brand"
+                        id="brand">
+
 
                         <option value="">
-
                             All Brands
-
                         </option>
 
-                        <option value="Roadster"
 
+                        <option
+                            value="Roadster"
                             <%= "Roadster".equals(selectedBrand)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Roadster
 
                         </option>
 
-                        <option value="U.S. Polo Assn."
 
+                        <option
+                            value="U.S. Polo Assn."
                             <%= "U.S. Polo Assn.".equals(selectedBrand)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             U.S. Polo Assn.
 
                         </option>
 
-                        <option value="H&M"
 
+                        <option
+                            value="H&M"
                             <%= "H&M".equals(selectedBrand)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             H&M
 
                         </option>
 
-                        <option value="Allen Solly"
 
+                        <option
+                            value="Allen Solly"
                             <%= "Allen Solly".equals(selectedBrand)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Allen Solly
 
                         </option>
 
-                        <option value="Louis Philippe"
 
+                        <option
+                            value="Louis Philippe"
                             <%= "Louis Philippe".equals(selectedBrand)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Louis Philippe
 
                         </option>
 
-                        <option value="Van Heusen"
 
+                        <option
+                            value="Van Heusen"
                             <%= "Van Heusen".equals(selectedBrand)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Van Heusen
 
                         </option>
 
-                        <option value="Levis"
 
+                        <option
+                            value="Levis"
                             <%= "Levis".equals(selectedBrand)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Levis
 
                         </option>
 
-                        <option value="Wrangler"
 
+                        <option
+                            value="Wrangler"
                             <%= "Wrangler".equals(selectedBrand)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Wrangler
 
                         </option>
 
-                        <option value="Pepe Jeans"
 
+                        <option
+                            value="Pepe Jeans"
                             <%= "Pepe Jeans".equals(selectedBrand)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Pepe Jeans
 
                         </option>
 
-                        <option value="Peter England"
 
+                        <option
+                            value="Peter England"
                             <%= "Peter England".equals(selectedBrand)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Peter England
 
                         </option>
 
-                        <option value="Puma"
 
+                        <option
+                            value="Puma"
                             <%= "Puma".equals(selectedBrand)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Puma
 
                         </option>
 
-                        <option value="Manyavar"
 
+                        <option
+                            value="Manyavar"
                             <%= "Manyavar".equals(selectedBrand)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Manyavar
 
                         </option>
 
-                        <option value="Nike"
 
+                        <option
+                            value="Nike"
                             <%= "Nike".equals(selectedBrand)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Nike
 
                         </option>
 
-                        <option value="Adidas"
 
+                        <option
+                            value="Adidas"
                             <%= "Adidas".equals(selectedBrand)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Adidas
 
                         </option>
 
-                        <option value="Bata"
 
+                        <option
+                            value="Bata"
                             <%= "Bata".equals(selectedBrand)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Bata
 
                         </option>
 
+
                     </select>
 
+
                 </div>
+
+
+
+
 
                 <!-- MIN PRICE -->
 
                 <div class="modern-filter-group">
 
+
                     <label for="minPrice">
-
                         MIN PRICE
-
                     </label>
+
 
                     <div class="price-input-wrapper">
 
+
                         <span>
-
                             ₹
-
                         </span>
 
-                        <input type="number"
 
-                               name="minPrice"
+                        <input
+                            type="number"
+                            name="minPrice"
+                            id="minPrice"
+                            min="0"
+                            placeholder="0"
 
-                               id="minPrice"
+                            value="<%= selectedMinPrice != null
+                                    ? selectedMinPrice.intValue()
+                                    : "" %>">
 
-                               min="0"
-
-                               placeholder="0"
-
-                               value="<%= selectedMinPrice != null
-
-                                       ? selectedMinPrice.intValue()
-
-                                       : "" %>">
 
                     </div>
 
+
                 </div>
+
+
+
+
 
                 <!-- MAX PRICE -->
 
                 <div class="modern-filter-group">
 
+
                     <label for="maxPrice">
-
                         MAX PRICE
-
                     </label>
+
 
                     <div class="price-input-wrapper">
 
+
                         <span>
-
                             ₹
-
                         </span>
 
-                        <input type="number"
 
-                               name="maxPrice"
+                        <input
+                            type="number"
+                            name="maxPrice"
+                            id="maxPrice"
+                            min="0"
+                            placeholder="5000"
 
-                               id="maxPrice"
+                            value="<%= selectedMaxPrice != null
+                                    ? selectedMaxPrice.intValue()
+                                    : "" %>">
 
-                               min="0"
-
-                               placeholder="5000"
-
-                               value="<%= selectedMaxPrice != null
-
-                                       ? selectedMaxPrice.intValue()
-
-                                       : "" %>">
 
                     </div>
 
+
                 </div>
+
+
+
+
 
                 <!-- SIZE -->
 
                 <div class="modern-filter-group">
 
+
                     <label for="size">
-
                         SIZE
-
                     </label>
 
-                    <select name="size"
 
-                            id="size">
+                    <select
+                        name="size"
+                        id="size">
+
 
                         <option value="">
-
                             All Sizes
-
                         </option>
 
-                        <option value="S"
 
+                        <option
+                            value="S"
                             <%= "S".equals(selectedSize)
-
                                     ? "selected"
-
                                     : "" %>>
-
                             S
-
                         </option>
 
-                        <option value="M"
 
+                        <option
+                            value="M"
                             <%= "M".equals(selectedSize)
-
                                     ? "selected"
-
                                     : "" %>>
-
                             M
-
                         </option>
 
-                        <option value="L"
 
+                        <option
+                            value="L"
                             <%= "L".equals(selectedSize)
-
                                     ? "selected"
-
                                     : "" %>>
-
                             L
-
                         </option>
 
-                        <option value="XL"
 
+                        <option
+                            value="XL"
                             <%= "XL".equals(selectedSize)
-
                                     ? "selected"
-
                                     : "" %>>
-
                             XL
-
                         </option>
 
-                        <option value="XXL"
 
+                        <option
+                            value="XXL"
                             <%= "XXL".equals(selectedSize)
-
                                     ? "selected"
-
                                     : "" %>>
-
                             XXL
-
                         </option>
 
-                        <option value="28"
 
+                        <option
+                            value="28"
                             <%= "28".equals(selectedSize)
-
                                     ? "selected"
-
                                     : "" %>>
-
                             28
-
                         </option>
 
-                        <option value="30"
 
+                        <option
+                            value="30"
                             <%= "30".equals(selectedSize)
-
                                     ? "selected"
-
                                     : "" %>>
-
                             30
-
                         </option>
 
-                        <option value="32"
 
+                        <option
+                            value="32"
                             <%= "32".equals(selectedSize)
-
                                     ? "selected"
-
                                     : "" %>>
-
                             32
-
                         </option>
 
-                        <option value="34"
 
+                        <option
+                            value="34"
                             <%= "34".equals(selectedSize)
-
                                     ? "selected"
-
                                     : "" %>>
-
                             34
-
                         </option>
 
-                        <option value="36"
 
+                        <option
+                            value="36"
                             <%= "36".equals(selectedSize)
-
                                     ? "selected"
-
                                     : "" %>>
-
                             36
-
                         </option>
 
-                        <option value="7"
 
+                        <option
+                            value="7"
                             <%= "7".equals(selectedSize)
-
                                     ? "selected"
-
                                     : "" %>>
-
                             7
-
                         </option>
 
-                        <option value="8"
 
+                        <option
+                            value="8"
                             <%= "8".equals(selectedSize)
-
                                     ? "selected"
-
                                     : "" %>>
-
                             8
-
                         </option>
 
-                        <option value="9"
 
+                        <option
+                            value="9"
                             <%= "9".equals(selectedSize)
-
                                     ? "selected"
-
                                     : "" %>>
-
                             9
-
                         </option>
 
-                        <option value="10"
 
+                        <option
+                            value="10"
                             <%= "10".equals(selectedSize)
-
                                     ? "selected"
-
                                     : "" %>>
-
                             10
-
                         </option>
 
-                        <option value="11"
 
+                        <option
+                            value="11"
                             <%= "11".equals(selectedSize)
-
                                     ? "selected"
-
                                     : "" %>>
-
                             11
-
                         </option>
+
 
                     </select>
 
+
                 </div>
+
+
+
+
 
                 <!-- SORT -->
 
                 <div class="modern-filter-group">
 
+
                     <label for="sort">
-
                         SORT BY
-
                     </label>
 
-                    <select name="sort"
 
-                            id="sort">
+                    <select
+                        name="sort"
+                        id="sort">
+
 
                         <option value="">
-
                             Recommended
-
                         </option>
 
-                        <option value="price_low"
 
+                        <option
+                            value="price_low"
                             <%= "price_low".equals(selectedSort)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Price: Low to High
 
                         </option>
 
-                        <option value="price_high"
 
+                        <option
+                            value="price_high"
                             <%= "price_high".equals(selectedSort)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Price: High to Low
 
                         </option>
 
-                        <option value="discount"
 
+                        <option
+                            value="discount"
                             <%= "discount".equals(selectedSort)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Highest Discount
 
                         </option>
 
-                        <option value="newest"
 
+                        <option
+                            value="newest"
                             <%= "newest".equals(selectedSort)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Newest
 
                         </option>
 
-                        <option value="oldest"
 
+                        <option
+                            value="oldest"
                             <%= "oldest".equals(selectedSort)
-
                                     ? "selected"
-
                                     : "" %>>
 
                             Oldest
 
                         </option>
 
+
                     </select>
+
 
                 </div>
 
-                <!-- APPLY -->
 
-                <button type="submit"
 
-                        class="modern-apply-filter">
+
+
+                <!-- APPLY FILTER -->
+
+                <button
+                    type="submit"
+                    class="modern-apply-filter">
+
 
                     <span>
-
                         ☷
-
                     </span>
+
 
                     APPLY FILTERS
 
+
                     <span>
-
                         →
-
                     </span>
+
 
                 </button>
 
+
             </form>
 
-            <!-- Quick Prices -->
+
+
+
+
+            <!-- QUICK PRICE -->
 
             <div class="quick-filter-row">
 
+
                 <span class="quick-filter-title">
-
                     Quick Price:
-
                 </span>
 
+
                 <a href="${pageContext.request.contextPath}/products?maxPrice=500">
-
                     Under ₹500
-
                 </a>
+
 
                 <a href="${pageContext.request.contextPath}/products?minPrice=500&maxPrice=1000">
-
                     ₹500 - ₹1000
-
                 </a>
+
 
                 <a href="${pageContext.request.contextPath}/products?minPrice=1000&maxPrice=2000">
-
                     ₹1000 - ₹2000
-
                 </a>
+
 
                 <a href="${pageContext.request.contextPath}/products?minPrice=2000&maxPrice=3000">
-
                     ₹2000 - ₹3000
-
                 </a>
+
 
                 <a href="${pageContext.request.contextPath}/products?minPrice=3000">
-
                     Above ₹3000
-
                 </a>
+
 
             </div>
 
+
         </section>
 
+
+
+
+
         <!-- =====================================================
-
-             PRODUCT RESULT HEADER
-
+             PRODUCT RESULTS
         ====================================================== -->
 
         <section class="shop-results-section">
 
+
+
+            <!-- RESULT HEADER -->
+
             <div class="shop-results-toolbar">
+
 
                 <div class="shop-result-count">
 
+
                     <span class="result-count-icon">
-
                         ◇
-
                     </span>
+
 
                     <strong>
 
                         <%= products != null
-
                                 ? products.size()
-
                                 : 0 %>
 
                     </strong>
 
+
                     <span>
-
                         Products found
-
                     </span>
 
+
                 </div>
+
+
 
                 <div class="shop-result-status">
-
                     Curated for you
-
                 </div>
+
 
             </div>
 
+
+
+
+
             <!-- =================================================
-
                  PRODUCTS GRID
-
             ================================================== -->
 
             <div class="modern-products-grid">
 
-                <%
 
-                    if (products != null && !products.isEmpty()) {
+<%
 
-                        for (Product product : products) {
+    if (products != null
+            && !products.isEmpty()) {
 
-                %>
+
+        for (Product product : products) {
+
+%>
+
+
 
                 <article class="modern-product-card">
 
+
+
+                    <!-- PRODUCT IMAGE WRAPPER -->
+
                     <div class="modern-product-image-wrapper">
 
-                        <!-- Discount badge -->
 
-                        <%
 
-                            if (product.getDiscount() > 0) {
+                        <!-- =========================
+                             DISCOUNT BADGE
+                        ========================== -->
 
-                        %>
+<%
 
-                            <span class="modern-product-badge">
+    if (product.getDiscount() > 0) {
 
-                                <%= product.getDiscount() %>% OFF
+%>
 
-                            </span>
+                        <span class="modern-product-badge">
 
-                        <%
-
-                            }
-
-                        %>
-
-                        <!-- Product Image -->
-
-                        <a href="${pageContext.request.contextPath}/product-details?id=<%= product.getProductId() %>"
-
-                           class="modern-product-image">
-
-                            <%
-
-                                if (product.getImageUrl() != null
-
-                                        && !product.getImageUrl().trim().isEmpty()) {
-
-                            %>
-
-                                <img src="<%= product.getImageUrl() %>"
-
-                                     alt="<%= product.getProductName() %>">
-
-                            <%
-
-                                } else {
-
-                            %>
-
-                                <div class="product-image-placeholder">
-
-                                    <span>
-
-                                        GENTLUX
-
-                                    </span>
-
-                                </div>
-
-                            <%
-
-                                }
-
-                            %>
-
-                        </a>
-
-                        <!-- Decorative wishlist -->
-
-                        <span class="modern-wishlist">
-
-                            ♡
+                            <%= product.getDiscount() %>% OFF
 
                         </span>
 
+<%
+
+    }
+
+%>
+
+
+
+                        <!-- =========================
+                             PRODUCT IMAGE
+                        ========================== -->
+
+                        <a
+                            href="${pageContext.request.contextPath}/product-details?id=<%= product.getProductId() %>"
+                            class="modern-product-image">
+
+
+<%
+
+    if (product.getImageUrl() != null
+            && !product.getImageUrl()
+                    .trim()
+                    .isEmpty()) {
+
+%>
+
+
+                            <img
+                                src="<%= product.getImageUrl() %>"
+                                alt="<%= product.getProductName() %>">
+
+
+<%
+
+    } else {
+
+%>
+
+
+                            <div class="product-image-placeholder">
+
+                                <span>
+                                    GENTLUX
+                                </span>
+
+                            </div>
+
+
+<%
+
+    }
+
+%>
+
+
+                        </a>
+
+
+
+
+
+                        <!-- =================================================
+                             AJAX WISHLIST
+                        ================================================== -->
+
+<%
+
+    boolean productInWishlist =
+            wishlistProductIds.contains(
+                    product.getProductId()
+            );
+
+%>
+
+
+                        <button
+                            type="button"
+
+                            class="modern-wishlist
+                                   <%= productInWishlist
+                                           ? "wishlist-selected"
+                                           : "" %>"
+
+                            data-product-id="<%= product.getProductId() %>"
+
+                            data-in-wishlist="<%= productInWishlist %>"
+
+                            onclick="toggleWishlist(this)"
+
+                            title="<%= productInWishlist
+                                    ? "Remove from wishlist"
+                                    : "Add to wishlist" %>"
+
+                            aria-label="<%= productInWishlist
+                                    ? "Remove from wishlist"
+                                    : "Add to wishlist" %>">
+
+
+                            <!--
+                                Heart stays permanently as SVG.
+
+                                CSS changes:
+                                outline -> filled
+                            -->
+
+                            <svg
+                                class="gentlux-heart"
+                                viewBox="0 0 24 24"
+                                aria-hidden="true">
+
+
+                                <path
+                                    d="M20.84 4.61
+                                       a5.5 5.5 0 0 0-7.78 0
+                                       L12 5.67
+                                       l-1.06-1.06
+                                       a5.5 5.5 0 0 0-7.78 7.78
+                                       L12 21.23
+                                       l8.84-8.84
+                                       a5.5 5.5 0 0 0 0-7.78z">
+                                </path>
+
+
+                            </svg>
+
+
+                        </button>
+
+
                     </div>
 
-                    <!-- Product Content -->
+
+
+
+
+                    <!-- =========================
+                         PRODUCT CONTENT
+                    ========================== -->
 
                     <div class="modern-product-content">
+
+
 
                         <p class="modern-product-brand">
 
@@ -1278,103 +1641,128 @@
 
                         </p>
 
+
+
                         <h3>
 
-                            <a href="${pageContext.request.contextPath}/product-details?id=<%= product.getProductId() %>">
+
+                            <a
+                                href="${pageContext.request.contextPath}/product-details?id=<%= product.getProductId() %>">
 
                                 <%= product.getProductName() %>
 
                             </a>
 
+
                         </h3>
 
+
+
+
+
+                        <!-- PRICE -->
+
                         <div class="modern-product-price">
+
 
                             <span class="modern-current-price">
 
                                 ₹<%= String.format(
-
                                         "%.0f",
-
                                         product.getPrice()
-
                                 ) %>
 
                             </span>
 
-                            <%
 
-                                if (product.getMrp()
 
-                                        > product.getPrice()) {
+<%
 
-                            %>
+    if (product.getMrp()
+            > product.getPrice()) {
 
-                                <span class="modern-original-price">
+%>
 
-                                    ₹<%= String.format(
 
-                                            "%.0f",
+                            <span class="modern-original-price">
 
-                                            product.getMrp()
-
-                                    ) %>
-
-                                </span>
-
-                            <%
-
-                                }
-
-                            %>
-
-                        </div>
-
-                        <a href="${pageContext.request.contextPath}/product-details?id=<%= product.getProductId() %>"
-
-                           class="modern-view-product">
-
-                            VIEW PRODUCT
-
-                            <span>
-
-                                →
+                                ₹<%= String.format(
+                                        "%.0f",
+                                        product.getMrp()
+                                ) %>
 
                             </span>
 
+
+<%
+
+    }
+
+%>
+
+
+                        </div>
+
+
+
+
+
+                        <!-- VIEW PRODUCT -->
+
+                        <a
+                            href="${pageContext.request.contextPath}/product-details?id=<%= product.getProductId() %>"
+                            class="modern-view-product">
+
+
+                            VIEW PRODUCT
+
+
+                            <span>
+                                →
+                            </span>
+
+
                         </a>
 
+
                     </div>
+
 
                 </article>
 
-                <%
 
-                        }
 
-                    } else {
+<%
 
-                %>
+        }
+
+    } else {
+
+%>
+
+
+
+                <!-- =================================================
+                     NO PRODUCTS
+                ================================================== -->
 
                 <div class="modern-no-products">
 
+
                     <div class="modern-no-products-icon">
-
                         ◇
-
                     </div>
 
+
                     <h2>
-
                         No products found
-
                     </h2>
 
+
                     <p>
-
                         Try changing your search or filters.
-
                     </p>
+
 
                     <a href="${pageContext.request.contextPath}/products">
 
@@ -1382,27 +1770,263 @@
 
                     </a>
 
+
                 </div>
 
-                <%
 
-                    }
 
-                %>
+<%
+
+    }
+
+%>
+
 
             </div>
 
+
         </section>
+
 
     </main>
 
+
+
+
+
     <!-- =========================================================
-
          FOOTER
-
     ========================================================== -->
 
     <jsp:include page="partials/footer.jsp" />
+
+
+
+
+
+    <!-- =========================================================
+         AJAX WISHLIST
+    ========================================================== -->
+
+    <script>
+
+
+        async function toggleWishlist(button) {
+
+
+            /*
+             * Prevent repeated clicks
+             */
+
+            if (button.disabled) {
+
+                return;
+
+            }
+
+
+
+            button.disabled = true;
+
+
+
+            const productId =
+                    button.getAttribute(
+                            "data-product-id"
+                    );
+
+
+
+            try {
+
+
+                const response =
+                        await fetch(
+
+                            "${pageContext.request.contextPath}/toggle-wishlist",
+
+                            {
+
+                                method: "POST",
+
+
+                                headers: {
+
+                                    "Content-Type":
+                                        "application/x-www-form-urlencoded"
+
+                                },
+
+
+                                body:
+
+                                    "productId="
+                                    + encodeURIComponent(
+                                        productId
+                                    )
+
+                            }
+
+                        );
+
+
+
+
+
+                /* =========================================
+                   LOGIN REQUIRED
+                ========================================= */
+
+                if (response.status === 401) {
+
+
+                    window.location.href =
+                            "${pageContext.request.contextPath}/login";
+
+
+                    return;
+
+                }
+
+
+
+
+
+                const data =
+                        await response.json();
+
+
+
+
+
+                /* =========================================
+                   REQUEST FAILED
+                ========================================= */
+
+                if (!response.ok
+                        || !data.success) {
+
+
+                    console.error(
+                        "Wishlist update failed:",
+                        data
+                    );
+
+
+                    return;
+
+                }
+
+
+
+
+
+                /* =========================================
+                   ADDED TO WISHLIST
+                ========================================= */
+
+                if (data.inWishlist) {
+
+
+                    /*
+                     * DO NOT replace SVG.
+                     * Only apply selected class.
+                     */
+
+
+                    button.classList.add(
+                            "wishlist-selected"
+                    );
+
+
+                    button.setAttribute(
+                            "data-in-wishlist",
+                            "true"
+                    );
+
+
+                    button.setAttribute(
+                            "title",
+                            "Remove from wishlist"
+                    );
+
+
+                    button.setAttribute(
+                            "aria-label",
+                            "Remove from wishlist"
+                    );
+
+
+                }
+
+
+
+
+
+                /* =========================================
+                   REMOVED FROM WISHLIST
+                ========================================= */
+
+                else {
+
+
+                    /*
+                     * SVG stays.
+                     * Removing class returns it
+                     * to outline state.
+                     */
+
+
+                    button.classList.remove(
+                            "wishlist-selected"
+                    );
+
+
+                    button.setAttribute(
+                            "data-in-wishlist",
+                            "false"
+                    );
+
+
+                    button.setAttribute(
+                            "title",
+                            "Add to wishlist"
+                    );
+
+
+                    button.setAttribute(
+                            "aria-label",
+                            "Add to wishlist"
+                    );
+
+
+                }
+
+
+
+            } catch (error) {
+
+
+                console.error(
+                        "Wishlist error:",
+                        error
+                );
+
+
+            } finally {
+
+
+                button.disabled = false;
+
+
+            }
+
+
+        }
+
+
+    </script>
+
 
 </body>
 

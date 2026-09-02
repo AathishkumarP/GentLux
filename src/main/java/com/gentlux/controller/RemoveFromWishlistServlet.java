@@ -37,6 +37,10 @@ public class RemoveFromWishlistServlet extends HttpServlet {
                 request.getSession(false);
 
 
+        // =====================================================
+        // LOGIN CHECK
+        // =====================================================
+
         if (session == null
                 || session.getAttribute("userId") == null) {
 
@@ -68,6 +72,10 @@ public class RemoveFromWishlistServlet extends HttpServlet {
                     );
 
 
+            // =================================================
+            // VALIDATE PRODUCT ID
+            // =================================================
+
             if (productIdParameter == null
                     || productIdParameter.isBlank()) {
 
@@ -86,15 +94,34 @@ public class RemoveFromWishlistServlet extends HttpServlet {
                     );
 
 
+            // =================================================
+            // REMOVE FROM WISHLIST
+            // =================================================
+
             wishlistDAO.removeFromWishlist(
                     userId,
                     productId
             );
 
 
-            // =========================================
-            // REMOVE FROM PRODUCT DETAILS PAGE
-            // =========================================
+            // =================================================
+            // CLICK CAME FROM PRODUCTS PAGE
+            // =================================================
+
+            if ("products".equals(redirect)) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/products"
+                );
+
+                return;
+            }
+
+
+            // =================================================
+            // CLICK CAME FROM PRODUCT DETAILS PAGE
+            // =================================================
 
             if ("product".equals(redirect)) {
 
@@ -109,9 +136,9 @@ public class RemoveFromWishlistServlet extends HttpServlet {
             }
 
 
-            // =========================================
-            // REMOVE FROM WISHLIST PAGE
-            // =========================================
+            // =================================================
+            // CLICK CAME FROM WISHLIST PAGE
+            // =================================================
 
             response.sendRedirect(
                     request.getContextPath()
