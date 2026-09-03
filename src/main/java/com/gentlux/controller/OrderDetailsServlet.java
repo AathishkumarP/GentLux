@@ -18,6 +18,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 
 @WebServlet("/order-details")
@@ -50,19 +51,66 @@ public class OrderDetailsServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
+
+        // =========================================================
+        // CHECK LOGIN
+        // =========================================================
+
+        HttpSession session =
+                request.getSession(false);
+
+
+        if (session == null
+                || session.getAttribute("userId") == null) {
+
+            response.sendRedirect(
+                    request.getContextPath()
+                    + "/login"
+            );
+
+            return;
+        }
+
+
+        int userId =
+                (Integer)
+                session.getAttribute("userId");
+
+
         try {
 
-            int orderId =
-                    Integer.parseInt(
-                            request.getParameter(
-                                    "orderId"
-                            )
+
+            // =====================================================
+            // GET ORDER ID
+            // =====================================================
+
+            String orderIdParameter =
+                    request.getParameter(
+                            "orderId"
                     );
 
 
-            // =================================================
+            if (orderIdParameter == null
+                    || orderIdParameter.isBlank()) {
+
+                response.sendError(
+                        HttpServletResponse.SC_BAD_REQUEST,
+                        "Invalid order ID."
+                );
+
+                return;
+            }
+
+
+            int orderId =
+                    Integer.parseInt(
+                            orderIdParameter
+                    );
+
+
+            // =====================================================
             // GET ORDER
-            // =================================================
+            // =====================================================
 
             Order order =
                     orderDAO.getOrderById(
@@ -81,9 +129,24 @@ public class OrderDetailsServlet extends HttpServlet {
             }
 
 
-            // =================================================
+            // =====================================================
+            // VERIFY ORDER BELONGS TO LOGGED-IN USER
+            // =====================================================
+
+            if (order.getUserId() != userId) {
+
+                response.sendError(
+                        HttpServletResponse.SC_FORBIDDEN,
+                        "You are not allowed to view this order."
+                );
+
+                return;
+            }
+
+
+            // =====================================================
             // GET ORDER ITEMS WITH PRODUCT DETAILS
-            // =================================================
+            // =====================================================
 
             List<OrderItemView> orderItems =
                     orderItemDAO
@@ -92,14 +155,15 @@ public class OrderDetailsServlet extends HttpServlet {
                     );
 
 
-            // =================================================
+            // =====================================================
             // SEND DATA TO JSP
-            // =================================================
+            // =====================================================
 
             request.setAttribute(
                     "order",
                     order
             );
+
 
             request.setAttribute(
                     "orderItems",
@@ -107,9 +171,9 @@ public class OrderDetailsServlet extends HttpServlet {
             );
 
 
-            // =================================================
+            // =====================================================
             // OPEN ORDER DETAILS PAGE
-            // =================================================
+            // =====================================================
 
             request.getRequestDispatcher(
                     "/WEB-INF/views/order-details.jsp"
@@ -121,6 +185,7 @@ public class OrderDetailsServlet extends HttpServlet {
 
         } catch (NumberFormatException e) {
 
+
             response.sendError(
                     HttpServletResponse.SC_BAD_REQUEST,
                     "Invalid order ID."
@@ -129,7 +194,9 @@ public class OrderDetailsServlet extends HttpServlet {
 
         } catch (Exception e) {
 
+
             e.printStackTrace();
+
 
             response.sendError(
                     HttpServletResponse
@@ -138,4 +205,4 @@ public class OrderDetailsServlet extends HttpServlet {
             );
         }
     }
-} 
+}

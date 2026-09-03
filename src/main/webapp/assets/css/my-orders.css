@@ -372,3 +372,75 @@
         width: 100%;
     }
 }
+
+/* =========================================================
+   ORDER STATUS BADGES
+========================================================= */
+
+.order-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 90px;
+    min-height: 30px;
+
+    padding: 6px 13px;
+
+    border-radius: 20px;
+
+    font-size: 9px;
+    font-weight: 600;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+
+/* PLACED */
+
+.order-status-badge.status-placed {
+    background: #f6efe9;
+    color: #6f4d3d;
+}
+
+
+/* CONFIRMED */
+
+.order-status-badge.status-confirmed {
+    background: #eee9df;
+    color: #5d5144;
+}
+
+
+/* SHIPPED */
+
+.order-status-badge.status-shipped {
+    background: #e7edf0;
+    color: #415d68;
+}
+
+
+/* DELIVERED */
+
+.order-status-badge.status-delivered {
+    background: #e6eee8;
+    color: #41624a;
+}
+
+
+/* CANCELLED */
+
+.order-status-badge.status-cancelled {
+    background: #f5e7e7;
+    color: #8a3030;
+}
+
+
+/* FALLBACK */
+
+.order-status-badge.status-default {
+    background: #eeeeee;
+    color: #666666;
+}

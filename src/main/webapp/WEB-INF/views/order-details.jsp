@@ -431,7 +431,51 @@
                         </strong>
 
                     </div>
-
+		
+		<%
+		    String currentOrderStatus =
+		            order.getOrderStatus();
+		
+		    boolean canCancelOrder =
+		            currentOrderStatus != null
+		            && (
+		                currentOrderStatus.equalsIgnoreCase("PLACED")
+		                || currentOrderStatus.equalsIgnoreCase("CONFIRMED")
+		            );
+		%>
+		
+		
+		<% if (canCancelOrder) { %>
+		
+		    <div class="cancel-order-section">
+		
+		        <form
+		            action="${pageContext.request.contextPath}/cancel-order"
+		            method="post"
+		            onsubmit="return confirmOrderCancellation();">
+		
+		            <input
+		                type="hidden"
+		                name="orderId"
+		                value="<%= order.getOrderId() %>">
+		
+		            <button
+		                type="submit"
+		                class="cancel-order-button">
+		
+		                CANCEL ORDER
+		
+		            </button>
+		
+		        </form>
+		
+		        <p class="cancel-order-note">
+		            You can cancel this order before it is shipped.
+		        </p>
+		
+		    </div>
+		
+		<% } %>
 
                     <a
                         href="${pageContext.request.contextPath}/my-orders"
@@ -462,6 +506,18 @@
 
 
     <jsp:include page="partials/footer.jsp" />
+    
+		<script>
+		
+		function confirmOrderCancellation() {
+		
+		    return confirm(
+		        "Are you sure you want to cancel this order?"
+		    );
+		
+		}
+		
+		</script>
 
 
 </body>

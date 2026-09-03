@@ -23,7 +23,6 @@ import jakarta.servlet.http.HttpSession;
 public class CartCountFilter implements Filter {
 
     private CartDAO cartDAO;
-
     private CartItemDAO cartItemDAO;
 
 
@@ -36,12 +35,7 @@ public class CartCountFilter implements Filter {
             throws ServletException {
 
         cartDAO = new CartDAOImpl();
-
         cartItemDAO = new CartItemDAOImpl();
-
-        System.out.println(
-                "CartCountFilter initialized successfully"
-        );
     }
 
 
@@ -88,12 +82,6 @@ public class CartCountFilter implements Filter {
                         );
 
 
-                System.out.println(
-                        "CartCountFilter USER ID = "
-                        + userId
-                );
-
-
                 // =================================================
                 // GET USER CART
                 // =================================================
@@ -105,60 +93,26 @@ public class CartCountFilter implements Filter {
 
 
                 // =================================================
-                // CART EXISTS
+                // GET CART ITEM COUNT
                 // =================================================
 
                 if (cart != null) {
 
-                    System.out.println(
-                            "CartCountFilter CART ID = "
-                            + cart.getCartId()
-                    );
-
-
-                    // Get number of cart items
                     cartCount =
                             cartItemDAO
                                     .getCartItemCount(
                                             cart.getCartId()
                                     );
-
-                } else {
-
-                    System.out.println(
-                            "CartCountFilter: No cart found for user"
-                    );
                 }
 
 
             } catch (Exception e) {
 
-                System.out.println(
-                        "CartCountFilter ERROR:"
-                );
-
                 e.printStackTrace();
 
                 cartCount = 0;
             }
-
-
-        } else {
-
-            System.out.println(
-                    "CartCountFilter: User not logged in"
-            );
         }
-
-
-        // =====================================================
-        // DEBUG CART COUNT
-        // =====================================================
-
-        System.out.println(
-                "NAV CART COUNT = "
-                + cartCount
-        );
 
 
         // =====================================================

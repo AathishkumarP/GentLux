@@ -19,10 +19,10 @@
     <title>My Orders | GENTLUX</title>
 
     <link rel="stylesheet"
-      href="${pageContext.request.contextPath}/assets/css/style.css">
-	
-	<link rel="stylesheet"
-	      href="${pageContext.request.contextPath}/assets/css/my-orders.css">
+          href="${pageContext.request.contextPath}/assets/css/style.css">
+
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/assets/css/my-orders.css">
 
 </head>
 
@@ -32,9 +32,11 @@
 
 
     <%
+
         List<Order> orders =
                 (List<Order>)
                 request.getAttribute("orders");
+
     %>
 
 
@@ -42,6 +44,10 @@
 
         <section class="my-orders-section">
 
+
+            <!-- =====================================================
+                 PAGE HEADING
+            ====================================================== -->
 
             <div class="section-heading">
 
@@ -64,15 +70,68 @@
 
 
                 <%
+
                     if (orders != null
                             && !orders.isEmpty()) {
 
                         for (Order order : orders) {
+
+
+                            String orderStatus =
+                                    order.getOrderStatus();
+
+
+                            String statusClass =
+                                    "status-default";
+
+
+                            if (orderStatus != null) {
+
+                                if (orderStatus.equalsIgnoreCase(
+                                        "PLACED")) {
+
+                                    statusClass =
+                                            "status-placed";
+
+                                } else if (
+                                    orderStatus.equalsIgnoreCase(
+                                            "CONFIRMED")) {
+
+                                    statusClass =
+                                            "status-confirmed";
+
+                                } else if (
+                                    orderStatus.equalsIgnoreCase(
+                                            "SHIPPED")) {
+
+                                    statusClass =
+                                            "status-shipped";
+
+                                } else if (
+                                    orderStatus.equalsIgnoreCase(
+                                            "DELIVERED")) {
+
+                                    statusClass =
+                                            "status-delivered";
+
+                                } else if (
+                                    orderStatus.equalsIgnoreCase(
+                                            "CANCELLED")) {
+
+                                    statusClass =
+                                            "status-cancelled";
+                                }
+                            }
+
                 %>
 
 
                 <div class="order-card">
 
+
+                    <!-- =================================================
+                         ORDER HEADER
+                    ================================================== -->
 
                     <div class="order-card-top">
 
@@ -90,8 +149,12 @@
                         </div>
 
 
-                        <div class="order-status-badge">
-                            <%= order.getOrderStatus() %>
+                        <div class="order-status-badge <%= statusClass %>">
+
+                            <%= orderStatus != null
+                                    ? orderStatus
+                                    : "-" %>
+
                         </div>
 
 
@@ -100,6 +163,10 @@
 
                     <div class="order-card-divider"></div>
 
+
+                    <!-- =================================================
+                         ORDER INFORMATION
+                    ================================================== -->
 
                     <div class="order-card-info">
 
@@ -111,9 +178,11 @@
                             </span>
 
                             <strong>
+
                                 <%= order.getOrderDate() != null
                                         ? order.getOrderDate()
                                         : "-" %>
+
                             </strong>
 
                         </div>
@@ -126,7 +195,11 @@
                             </span>
 
                             <strong>
-                                <%= order.getPaymentMethod() %>
+
+                                <%= order.getPaymentMethod() != null
+                                        ? order.getPaymentMethod()
+                                        : "-" %>
+
                             </strong>
 
                         </div>
@@ -139,7 +212,11 @@
                             </span>
 
                             <strong>
-                                <%= order.getPaymentStatus() %>
+
+                                <%= order.getPaymentStatus() != null
+                                        ? order.getPaymentStatus()
+                                        : "-" %>
+
                             </strong>
 
                         </div>
@@ -152,10 +229,12 @@
                             </span>
 
                             <strong>
+
                                 ₹<%= String.format(
                                         "%.2f",
                                         order.getTotalAmount()
                                 ) %>
+
                             </strong>
 
                         </div>
@@ -163,6 +242,10 @@
 
                     </div>
 
+
+                    <!-- =================================================
+                         ACTION
+                    ================================================== -->
 
                     <div class="order-card-actions">
 
@@ -181,11 +264,17 @@
 
 
                 <%
+
                         }
 
                     } else {
+
                 %>
 
+
+                <!-- =====================================================
+                     EMPTY ORDERS
+                ====================================================== -->
 
                 <div class="no-orders">
 
@@ -209,7 +298,9 @@
 
 
                 <%
+
                     }
+
                 %>
 
 
