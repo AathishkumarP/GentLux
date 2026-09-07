@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
@@ -20,23 +21,27 @@ public class LoginServlet extends HttpServlet {
 
     private UserDAO userDAO;
 
+
     @Override
     public void init() {
 
-        userDAO = new UserDAOImpl();
+        userDAO =
+                new UserDAOImpl();
 
-        System.out.println("LoginServlet initialized");
+        System.out.println(
+                "LoginServlet initialized"
+        );
     }
 
 
-    /*
-     * =========================================================
-     * SHOW LOGIN PAGE
-     * =========================================================
-     */
+    // =========================================================
+    // SHOW LOGIN PAGE
+    // =========================================================
+
     @Override
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
+    protected void doGet(
+            HttpServletRequest request,
+            HttpServletResponse response)
             throws ServletException, IOException {
 
         request.getRequestDispatcher(
@@ -44,19 +49,22 @@ public class LoginServlet extends HttpServlet {
         ).forward(request, response);
     }
 
-    /*
-     * =========================================================
-     * LOGIN USER
-     * =========================================================
-     */
+
+    // =========================================================
+    // LOGIN USER
+    // =========================================================
+
     @Override
-    protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response)
+    protected void doPost(
+            HttpServletRequest request,
+            HttpServletResponse response)
             throws ServletException, IOException {
 
         try {
 
-            request.setCharacterEncoding("UTF-8");
+            request.setCharacterEncoding(
+                    "UTF-8"
+            );
 
 
             // =====================================================
@@ -64,10 +72,14 @@ public class LoginServlet extends HttpServlet {
             // =====================================================
 
             String email =
-                    request.getParameter("email");
+                    request.getParameter(
+                            "email"
+                    );
 
             String password =
-                    request.getParameter("password");
+                    request.getParameter(
+                            "password"
+                    );
 
 
             // =====================================================
@@ -76,7 +88,9 @@ public class LoginServlet extends HttpServlet {
 
             if (email != null) {
 
-                email = email.trim().toLowerCase();
+                email =
+                        email.trim()
+                             .toLowerCase();
             }
 
 
@@ -96,7 +110,10 @@ public class LoginServlet extends HttpServlet {
 
                 request.getRequestDispatcher(
                         "/WEB-INF/views/login.jsp"
-                ).forward(request, response);
+                ).forward(
+                        request,
+                        response
+                );
 
                 return;
             }
@@ -107,11 +124,13 @@ public class LoginServlet extends HttpServlet {
             // =====================================================
 
             User user =
-                    userDAO.getUserByEmail(email);
+                    userDAO.getUserByEmail(
+                            email
+                    );
 
 
             // =====================================================
-            // EMAIL NOT FOUND
+            // USER NOT FOUND
             // =====================================================
 
             if (user == null) {
@@ -123,7 +142,10 @@ public class LoginServlet extends HttpServlet {
 
                 request.getRequestDispatcher(
                         "/WEB-INF/views/login.jsp"
-                ).forward(request, response);
+                ).forward(
+                        request,
+                        response
+                );
 
                 return;
             }
@@ -133,7 +155,9 @@ public class LoginServlet extends HttpServlet {
             // CHECK PASSWORD
             // =====================================================
 
-            if (!password.equals(user.getPassword())) {
+            if (!password.equals(
+                    user.getPassword()
+            )) {
 
                 request.setAttribute(
                         "error",
@@ -142,7 +166,10 @@ public class LoginServlet extends HttpServlet {
 
                 request.getRequestDispatcher(
                         "/WEB-INF/views/login.jsp"
-                ).forward(request, response);
+                ).forward(
+                        request,
+                        response
+                );
 
                 return;
             }
@@ -155,10 +182,12 @@ public class LoginServlet extends HttpServlet {
             HttpSession session =
                     request.getSession();
 
+
             session.setAttribute(
                     "loggedInUser",
                     user
             );
+
 
             session.setAttribute(
                     "userId",
@@ -166,37 +195,81 @@ public class LoginServlet extends HttpServlet {
             );
 
 
+            // =====================================================
+            // STORE ROLE IN SESSION
+            // =====================================================
+
+            String role =
+                    user.getRole();
+
+
+            if (role == null
+                    || role.isBlank()) {
+
+                role =
+                        "CUSTOMER";
+            }
+
+
+            session.setAttribute(
+                    "role",
+                    role
+            );
+
+
             // Session expires after 30 minutes of inactivity
-            session.setMaxInactiveInterval(30 * 60);
+            session.setMaxInactiveInterval(
+                    30 * 60
+            );
 
 
             System.out.println(
                     "Login successful: "
                     + user.getEmail()
+                    + " | Role: "
+                    + role
             );
 
 
             // =====================================================
-            // REDIRECT AFTER LOGIN
+            // REDIRECT BASED ON ROLE
             // =====================================================
 
-            response.sendRedirect(
-                    request.getContextPath() + "/home"
-            );
+            if ("ADMIN".equalsIgnoreCase(
+                    role
+            )) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/admin/dashboard"
+                );
+
+            } else {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/home"
+                );
+            }
 
 
         } catch (Exception e) {
 
             e.printStackTrace();
 
+
             request.setAttribute(
                     "error",
                     "Something went wrong while logging in."
             );
 
+
             request.getRequestDispatcher(
                     "/WEB-INF/views/login.jsp"
-            ).forward(request, response);
+            ).forward(
+                    request,
+                    response
+            );
         }
     }
 }

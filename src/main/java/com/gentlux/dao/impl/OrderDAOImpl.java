@@ -723,7 +723,7 @@ public class OrderDAOImpl implements OrderDAO {
 
 
     // =========================================================
-    // 13. CANCEL ORDER
+    // 13. CANCEL ORDER AND RESTORE STOCK
     // =========================================================
 
     @Override
@@ -731,37 +731,226 @@ public class OrderDAOImpl implements OrderDAO {
             int orderId,
             int userId) {
 
-        String sql =
+
+        String cancelOrderSql =
                 "UPDATE orders SET "
               + "order_status = 'CANCELLED' "
               + "WHERE order_id = ? "
               + "AND user_id = ? "
               + "AND order_status IN ('PLACED', 'CONFIRMED')";
 
-        try (
-            Connection connection =
+
+        String getOrderItemsSql =
+                "SELECT variant_id, quantity "
+              + "FROM order_items "
+              + "WHERE order_id = ?";
+
+
+        String restoreStockSql =
+                "UPDATE product_variants SET "
+              + "stock = stock + ? "
+              + "WHERE variant_id = ?";
+
+
+        Connection connection = null;
+
+
+        try {
+
+
+            // =====================================================
+            // GET DATABASE CONNECTION
+            // =====================================================
+
+            connection =
                     DBConnection.getConnection();
 
-            PreparedStatement statement =
-                    connection.prepareStatement(sql)
-        ) {
 
-            statement.setInt(
-                    1,
-                    orderId
-            );
+            // =====================================================
+            // START TRANSACTION
+            // =====================================================
 
-            statement.setInt(
-                    2,
-                    userId
-            );
+            connection.setAutoCommit(false);
 
-            return statement.executeUpdate() > 0;
+
+            // =====================================================
+            // CANCEL ORDER
+            // =====================================================
+
+            try (
+                PreparedStatement cancelStatement =
+                        connection.prepareStatement(
+                                cancelOrderSql
+                        )
+            ) {
+
+
+                cancelStatement.setInt(
+                        1,
+                        orderId
+                );
+
+
+                cancelStatement.setInt(
+                        2,
+                        userId
+                );
+
+
+                int cancelledRows =
+                        cancelStatement.executeUpdate();
+
+
+                // =================================================
+                // ORDER CANNOT BE CANCELLED
+                // =================================================
+
+                if (cancelledRows == 0) {
+
+                    connection.rollback();
+
+                    return false;
+                }
+            }
+
+
+            // =====================================================
+            // GET ALL ITEMS FROM ORDER
+            // =====================================================
+
+            try (
+                PreparedStatement itemStatement =
+                        connection.prepareStatement(
+                                getOrderItemsSql
+                        )
+            ) {
+
+
+                itemStatement.setInt(
+                        1,
+                        orderId
+                );
+
+
+                try (
+                    ResultSet resultSet =
+                            itemStatement.executeQuery()
+                ) {
+
+
+                    // =================================================
+                    // RESTORE STOCK FOR EACH ITEM
+                    // =================================================
+
+                    while (resultSet.next()) {
+
+
+                        int variantId =
+                                resultSet.getInt(
+                                        "variant_id"
+                                );
+
+
+                        int quantity =
+                                resultSet.getInt(
+                                        "quantity"
+                                );
+
+
+                        try (
+                            PreparedStatement stockStatement =
+                                    connection.prepareStatement(
+                                            restoreStockSql
+                                    )
+                        ) {
+
+
+                            stockStatement.setInt(
+                                    1,
+                                    quantity
+                            );
+
+
+                            stockStatement.setInt(
+                                    2,
+                                    variantId
+                            );
+
+
+                            int stockRowsUpdated =
+                                    stockStatement.executeUpdate();
+
+
+                            // =========================================
+                            // VARIANT NOT FOUND
+                            // =========================================
+
+                            if (stockRowsUpdated == 0) {
+
+                                connection.rollback();
+
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            // =====================================================
+            // EVERYTHING SUCCESSFUL
+            // =====================================================
+
+            connection.commit();
+
+            return true;
+
 
         } catch (Exception e) {
 
+
             e.printStackTrace();
+
+
+            // =====================================================
+            // ROLLBACK TRANSACTION
+            // =====================================================
+
+            if (connection != null) {
+
+                try {
+
+                    connection.rollback();
+
+                } catch (Exception rollbackException) {
+
+                    rollbackException.printStackTrace();
+                }
+            }
+
+
+        } finally {
+
+
+            // =====================================================
+            // CLOSE CONNECTION
+            // =====================================================
+
+            if (connection != null) {
+
+                try {
+
+                    connection.setAutoCommit(true);
+
+                    connection.close();
+
+                } catch (Exception closeException) {
+
+                    closeException.printStackTrace();
+                }
+            }
         }
+
 
         return false;
     }
@@ -944,6 +1133,7 @@ public class OrderDAOImpl implements OrderDAO {
     private Order mapOrder(
             ResultSet resultSet)
             throws Exception {
+
 
         Order order =
                 new Order();
