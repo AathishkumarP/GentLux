@@ -69,7 +69,7 @@
         }
 
         .container {
-            width: min(1250px, 94%);
+            width: min(1350px, 96%);
             margin: 40px auto;
         }
 
@@ -78,7 +78,6 @@
             align-items: center;
             justify-content: space-between;
             gap: 20px;
-
             margin-bottom: 30px;
         }
 
@@ -95,7 +94,6 @@
 
         .add-button {
             display: inline-block;
-
             background: #2e2723;
             color: white;
 
@@ -110,9 +108,7 @@
 
         .table-wrapper {
             overflow-x: auto;
-
             background: white;
-
             border: 1px solid #e2dad5;
         }
 
@@ -145,8 +141,64 @@
             vertical-align: middle;
         }
 
+
+        /* =========================================
+           PRODUCT IMAGE
+        ========================================= */
+
+        .product-image-box {
+
+            width: 72px;
+            height: 90px;
+
+            overflow: hidden;
+
+            background: #f1ece8;
+
+            border: 1px solid #e6ddd8;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .product-image-box img {
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            display: block;
+        }
+
+
+        .product-image-placeholder {
+
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            color: #7a6c64;
+
+            font-size: 7px;
+            font-weight: 600;
+
+            letter-spacing: 1px;
+
+            padding: 5px;
+        }
+
+
         .product-name {
             font-weight: 600;
+            min-width: 160px;
         }
 
         .price {
@@ -175,7 +227,10 @@
 
             font-size: 9px;
             font-weight: 600;
+
             letter-spacing: 1px;
+
+            white-space: nowrap;
         }
 
         .action-button:hover {
@@ -187,6 +242,20 @@
             padding: 40px;
             text-align: center;
             color: #82766f;
+        }
+
+
+        @media (max-width: 768px) {
+
+            .admin-header {
+                padding: 0 20px;
+            }
+
+            .page-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
         }
 
     </style>
@@ -253,7 +322,10 @@
 
 
     <%
-        if (products != null && !products.isEmpty()) {
+
+        if (products != null
+                && !products.isEmpty()) {
+
     %>
 
 
@@ -267,6 +339,8 @@
                 <tr>
 
                     <th>ID</th>
+
+                    <th>Image</th>
 
                     <th>Product</th>
 
@@ -293,17 +367,155 @@
 
 
             <%
+
                 for (Product product : products) {
+
+
+                    /*
+                     * =========================================
+                     * PRODUCT IMAGE
+                     * =========================================
+                     */
+
+                    String adminImageUrl =
+                            product.getImageUrl();
+
+
+                    boolean hasAdminImage =
+                            adminImageUrl != null
+                            && !adminImageUrl
+                                    .trim()
+                                    .isEmpty();
+
+
+                    String finalAdminImageUrl =
+                            null;
+
+
+                    if (hasAdminImage) {
+
+
+                        adminImageUrl =
+                                adminImageUrl.trim();
+
+
+                        /*
+                         * External image
+                         */
+
+                        if (adminImageUrl.startsWith("http://")
+                                || adminImageUrl.startsWith("https://")) {
+
+
+                            finalAdminImageUrl =
+                                    adminImageUrl;
+
+
+                        } else {
+
+
+                            /*
+                             * Local uploaded image
+                             */
+
+                            if (adminImageUrl.startsWith("/")) {
+
+                                adminImageUrl =
+                                        adminImageUrl.substring(1);
+                            }
+
+
+                            finalAdminImageUrl =
+                                    request.getContextPath()
+                                    + "/"
+                                    + adminImageUrl;
+
+                        }
+                    }
+
             %>
 
 
                 <tr>
 
 
+                    <!-- =========================
+                         PRODUCT ID
+                    ========================== -->
+
                     <td>
+
                         #<%= product.getProductId() %>
+
                     </td>
 
+
+                    <!-- =========================
+                         PRODUCT IMAGE
+                    ========================== -->
+
+                    <td>
+
+                        <div class="product-image-box">
+
+
+                            <%
+
+                                if (hasAdminImage
+                                        && finalAdminImageUrl != null) {
+
+                            %>
+
+
+                                <img
+                                    src="<%= finalAdminImageUrl %>"
+                                    alt="<%= product.getProductName() %>"
+                                    loading="lazy"
+
+                                    onerror="
+                                        this.style.display='none';
+                                        this.nextElementSibling.style.display='flex';
+                                    ">
+
+
+                                <div
+                                    class="product-image-placeholder"
+                                    style="display:none;">
+
+                                    GENTLUX
+
+                                </div>
+
+
+                            <%
+
+                                } else {
+
+                            %>
+
+
+                                <div class="product-image-placeholder">
+
+                                    GENTLUX
+
+                                </div>
+
+
+                            <%
+
+                                }
+
+                            %>
+
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- =========================
+                         PRODUCT NAME
+                    ========================== -->
 
                     <td class="product-name">
 
@@ -314,6 +526,10 @@
                     </td>
 
 
+                    <!-- =========================
+                         BRAND
+                    ========================== -->
+
                     <td>
 
                         <%= product.getBrand() != null
@@ -323,6 +539,10 @@
                     </td>
 
 
+                    <!-- =========================
+                         COLOR
+                    ========================== -->
+
                     <td>
 
                         <%= product.getColor() != null
@@ -331,6 +551,10 @@
 
                     </td>
 
+
+                    <!-- =========================
+                         PRICE
+                    ========================== -->
 
                     <td class="price">
 
@@ -342,6 +566,10 @@
                     </td>
 
 
+                    <!-- =========================
+                         MRP
+                    ========================== -->
+
                     <td>
 
                         ₹<%= String.format(
@@ -351,6 +579,10 @@
 
                     </td>
 
+
+                    <!-- =========================
+                         DISCOUNT
+                    ========================== -->
 
                     <td class="discount">
 
@@ -362,12 +594,20 @@
                     </td>
 
 
+                    <!-- =========================
+                         CATEGORY
+                    ========================== -->
+
                     <td>
 
                         <%= product.getCategoryId() %>
 
                     </td>
 
+
+                    <!-- =========================
+                         ACTIONS
+                    ========================== -->
 
                     <td>
 
@@ -401,7 +641,9 @@
 
 
             <%
+
                 }
+
             %>
 
 
@@ -414,7 +656,9 @@
 
 
     <%
+
         } else {
+
     %>
 
 
@@ -426,7 +670,9 @@
 
 
     <%
+
         }
+
     %>
 
 

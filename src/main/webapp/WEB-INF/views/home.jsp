@@ -2,8 +2,11 @@
     contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
+<%@ page import="java.util.List" %>
 <%@ page import="java.util.Set" %>
 <%@ page import="java.util.HashSet" %>
+
+<%@ page import="com.gentlux.model.Product" %>
 
 <!DOCTYPE html>
 
@@ -31,16 +34,69 @@
 
 
     <!-- =========================
-         HOME WISHLIST HEART
+         HOME PAGE EXTRA CSS
     ========================== -->
 
     <style>
 
+        /* =========================================
+           FEATURED PRODUCT CARD
+        ========================================= */
 
         .featured-products .product-card {
-
             position: relative;
+        }
 
+
+        /* =========================================
+           PRODUCT IMAGE
+        ========================================= */
+
+        .featured-products .product-image {
+            position: relative;
+            display: block;
+            width: 100%;
+            overflow: hidden;
+            background: #f1ece8;
+        }
+
+
+        .featured-products .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+
+            transition:
+                transform 0.35s ease;
+        }
+
+
+        .featured-products .product-card:hover
+        .product-image img {
+            transform: scale(1.03);
+        }
+
+
+        /* =========================================
+           IMAGE PLACEHOLDER
+        ========================================= */
+
+        .home-product-image-placeholder {
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #f1ece8;
+            color: #38251e;
+
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 4px;
         }
 
 
@@ -61,13 +117,13 @@
             padding: 0;
 
             display: flex;
+
             align-items: center;
             justify-content: center;
 
             background: transparent;
 
             border: none;
-
             outline: none;
 
             box-shadow: none;
@@ -84,9 +140,7 @@
             transition:
                 transform 0.25s ease,
                 opacity 0.25s ease;
-
         }
-
 
 
         /* =========================================
@@ -109,11 +163,6 @@
 
             pointer-events: none;
 
-            /*
-             * Small light shadow helps the heart
-             * remain visible on dark product images
-             */
-
             filter:
                 drop-shadow(
                     0 1px 1px
@@ -124,9 +173,7 @@
                 fill 0.25s ease,
                 stroke 0.25s ease,
                 transform 0.25s ease;
-
         }
-
 
 
         /* =========================================
@@ -136,7 +183,6 @@
         .home-wishlist-button:hover {
 
             transform: scale(1.12);
-
         }
 
 
@@ -144,9 +190,7 @@
         .gentlux-heart {
 
             transform: scale(1.05);
-
         }
-
 
 
         /* =========================================
@@ -157,11 +201,8 @@
         .gentlux-heart {
 
             fill: #38251e;
-
             stroke: #38251e;
-
         }
-
 
 
         /* =========================================
@@ -171,9 +212,7 @@
         .home-wishlist-button:active {
 
             transform: scale(0.92);
-
         }
-
 
 
         /* =========================================
@@ -188,9 +227,7 @@
             border: none;
 
             box-shadow: none;
-
         }
-
 
 
         /* =========================================
@@ -202,7 +239,6 @@
             opacity: 0.55;
 
             cursor: wait;
-
         }
 
 
@@ -212,11 +248,23 @@
 </head>
 
 
-
 <body>
 
 
 <%
+
+    /*
+     * =========================================
+     * FEATURED PRODUCTS
+     * =========================================
+     */
+
+    List<Product> featuredProducts =
+            (List<Product>)
+            request.getAttribute(
+                    "featuredProducts"
+            );
+
 
     /*
      * =========================================
@@ -235,1047 +283,866 @@
 
         wishlistProductIds =
                 new HashSet<Integer>();
-
     }
-
-
-
-    boolean product1Wishlist =
-            wishlistProductIds.contains(1);
-
-
-    boolean product2Wishlist =
-            wishlistProductIds.contains(2);
-
-
-    boolean product3Wishlist =
-            wishlistProductIds.contains(3);
-
-
-    boolean product4Wishlist =
-            wishlistProductIds.contains(4);
 
 %>
 
 
+<!-- =========================
+     NAVBAR
+========================== -->
+
+<jsp:include page="partials/nav.jsp" />
+
+
+<!-- =========================
+     HOME PAGE
+========================== -->
+
+<main>
+
 
     <!-- =========================
-         NAVBAR
+         HERO SECTION
     ========================== -->
 
-    <jsp:include page="partials/nav.jsp" />
+    <section class="hero-section">
 
+
+        <div class="hero-content">
+
+
+            <p class="hero-subtitle"
+               id="heroSubtitle">
+
+                MEN'S FASHION
+
+            </p>
+
+
+            <h1 id="heroTitle">
+
+                ELEVATE<br>
+                YOUR STYLE
+
+            </h1>
+
+
+            <p class="hero-description"
+               id="heroDescription">
+
+                Discover timeless fashion crafted for the modern gentleman.
+
+            </p>
+
+
+            <a
+                href="${pageContext.request.contextPath}/products"
+                class="hero-button"
+                id="heroButton">
+
+                SHOP COLLECTION
+
+            </a>
+
+
+        </div>
+
+
+        <div
+            class="hero-image"
+            id="heroImage">
+        </div>
+
+
+    </section>
 
 
     <!-- =========================
-         HOME PAGE
+         FEATURED CATEGORIES
     ========================== -->
 
-    <main>
+    <section class="featured-categories">
 
 
+        <div class="section-heading">
 
-        <!-- =========================
-             HERO SECTION
-        ========================== -->
 
-        <section class="hero-section">
+            <p class="section-subtitle">
 
+                EXPLORE
 
-            <div class="hero-content">
+            </p>
 
 
-                <p class="hero-subtitle"
-                   id="heroSubtitle">
+            <h2>
 
-                    MEN'S FASHION
+                SHOP BY CATEGORY
 
-                </p>
+            </h2>
 
 
+            <p class="section-description">
 
-                <h1 id="heroTitle">
+                Discover styles designed for every occasion.
 
-                    ELEVATE<br>
-                    YOUR STYLE
+            </p>
 
-                </h1>
 
+        </div>
 
 
-                <p class="hero-description"
-                   id="heroDescription">
-
-                    Discover timeless fashion crafted for the modern gentleman.
-
-                </p>
-
-
-
-                <a href="${pageContext.request.contextPath}/products"
-                   class="hero-button"
-                   id="heroButton">
-
-                    SHOP COLLECTION
-
-                </a>
-
-
-            </div>
-
-
-
-            <div class="hero-image"
-                 id="heroImage">
-
-            </div>
-
-
-        </section>
-
-
-
-
-
-        <!-- =========================
-             FEATURED CATEGORIES
-        ========================== -->
-
-        <section class="featured-categories">
-
-
-            <div class="section-heading">
-
-
-                <p class="section-subtitle">
-
-                    EXPLORE
-
-                </p>
-
-
-                <h2>
-
-                    SHOP BY CATEGORY
-
-                </h2>
-
-
-                <p class="section-description">
-
-                    Discover styles designed for every occasion.
-
-                </p>
-
-
-            </div>
-
-
-
-            <div class="category-grid">
-
-
-
-                <!-- =========================
-                     SHIRTS
-                ========================== -->
-
-                <div class="category-card">
-
-
-                    <a href="${pageContext.request.contextPath}/products?categoryId=2"
-                       class="home-category-image-link">
-
-
-                        <div class="category-image">
-
-
-                            <img
-                                src="${pageContext.request.contextPath}/assets/images/categories/Shirt.jpg"
-                                alt="Men's Shirts">
-
-
-                        </div>
-
-
-                    </a>
-
-
-
-                    <div class="category-info">
-
-
-                        <h3>
-
-                            SHIRTS
-
-                        </h3>
-
-
-                        <a href="${pageContext.request.contextPath}/products?categoryId=2">
-
-                            SHOP NOW →
-
-                        </a>
-
-
-                    </div>
-
-
-                </div>
-
-
-
-
-
-                <!-- =========================
-                     TROUSERS
-                ========================== -->
-
-                <div class="category-card">
-
-
-                    <a href="${pageContext.request.contextPath}/products?categoryId=4"
-                       class="home-category-image-link">
-
-
-                        <div class="category-image">
-
-
-                            <img
-                                src="${pageContext.request.contextPath}/assets/images/categories/Trousers.jpg"
-                                alt="Men's Trousers">
-
-
-                        </div>
-
-
-                    </a>
-
-
-
-                    <div class="category-info">
-
-
-                        <h3>
-
-                            TROUSERS
-
-                        </h3>
-
-
-                        <a href="${pageContext.request.contextPath}/products?categoryId=4">
-
-                            SHOP NOW →
-
-                        </a>
-
-
-                    </div>
-
-
-                </div>
-
-
-
-
-
-                <!-- =========================
-                     FOOTWEAR
-                ========================== -->
-
-                <div class="category-card">
-
-
-                    <a href="${pageContext.request.contextPath}/products?categoryId=10"
-                       class="home-category-image-link">
-
-
-                        <div class="category-image">
-
-
-                            <img
-                                src="${pageContext.request.contextPath}/assets/images/categories/Footwear.jpg"
-                                alt="Men's Footwear">
-
-
-                        </div>
-
-
-                    </a>
-
-
-
-                    <div class="category-info">
-
-
-                        <h3>
-
-                            FOOTWEAR
-
-                        </h3>
-
-
-                        <a href="${pageContext.request.contextPath}/products?categoryId=10">
-
-                            SHOP NOW →
-
-                        </a>
-
-
-                    </div>
-
-
-                </div>
-
-
-
-
-
-                <!-- =========================
-                     JACKETS
-                ========================== -->
-
-                <div class="category-card">
-
-
-                    <a href="${pageContext.request.contextPath}/products?categoryId=5"
-                       class="home-category-image-link">
-
-
-                        <div class="category-image">
-
-
-                            <img
-                                src="${pageContext.request.contextPath}/assets/images/categories/Jackets.jpg"
-                                alt="Men's Jackets">
-
-
-                        </div>
-
-
-                    </a>
-
-
-
-                    <div class="category-info">
-
-
-                        <h3>
-
-                            JACKETS
-
-                        </h3>
-
-
-                        <a href="${pageContext.request.contextPath}/products?categoryId=5">
-
-                            SHOP NOW →
-
-                        </a>
-
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-
-        </section>
-
-
-
-
-
-        <!-- =========================
-             FEATURED PRODUCTS
-        ========================== -->
-
-        <section class="featured-products">
-
-
-            <div class="section-heading">
-
-
-                <p class="section-subtitle">
-
-                    OUR COLLECTION
-
-                </p>
-
-
-                <h2>
-
-                    FEATURED PRODUCTS
-
-                </h2>
-
-
-                <p class="section-description">
-
-                    Discover our latest styles, carefully selected for you.
-
-                </p>
-
-
-            </div>
-
-
-
-
-
-            <div class="product-grid">
-
-
-
-                <!-- =========================
-                     PRODUCT 1
-                ========================== -->
-
-                <div class="product-card">
-
-
-                    <!-- Wishlist Heart -->
-
-                    <button
-                        type="button"
-
-                        class="home-wishlist-button
-                               <%= product1Wishlist
-                                       ? "wishlist-selected"
-                                       : "" %>"
-
-                        data-product-id="1"
-
-                        data-in-wishlist="<%= product1Wishlist %>"
-
-                        onclick="toggleHomeWishlist(this)"
-
-                        aria-label="<%= product1Wishlist
-                                ? "Remove from wishlist"
-                                : "Add to wishlist" %>"
-
-                        title="<%= product1Wishlist
-                                ? "Remove from wishlist"
-                                : "Add to wishlist" %>">
-
-
-                        <svg
-                            class="gentlux-heart"
-                            viewBox="0 0 24 24"
-                            aria-hidden="true">
-
-
-                            <path
-                                d="M20.84 4.61
-                                   a5.5 5.5 0 0 0-7.78 0
-                                   L12 5.67
-                                   l-1.06-1.06
-                                   a5.5 5.5 0 0 0-7.78 7.78
-                                   L12 21.23
-                                   l8.84-8.84
-                                   a5.5 5.5 0 0 0 0-7.78z">
-                            </path>
-
-
-                        </svg>
-
-
-                    </button>
-
-
-
-                    <!-- Product Image -->
-
-                    <a href="${pageContext.request.contextPath}/product-details?id=1"
-                       class="product-image product-image-1"
-                       aria-label="Classic Oxford Shirt">
-
-                    </a>
-
-
-
-                    <!-- Product Information -->
-
-                    <div class="product-info">
-
-
-                        <p class="product-brand">
-
-                            GENTLUX
-
-                        </p>
-
-
-                        <h3>
-
-                            Classic Oxford Shirt
-
-                        </h3>
-
-
-                        <p class="product-price">
-
-                            ₹1,499
-
-                        </p>
-
-
-                    </div>
-
-
-                </div>
-
-
-
-
-
-                <!-- =========================
-                     PRODUCT 2
-                ========================== -->
-
-                <div class="product-card">
-
-
-                    <!-- Wishlist Heart -->
-
-                    <button
-                        type="button"
-
-                        class="home-wishlist-button
-                               <%= product2Wishlist
-                                       ? "wishlist-selected"
-                                       : "" %>"
-
-                        data-product-id="2"
-
-                        data-in-wishlist="<%= product2Wishlist %>"
-
-                        onclick="toggleHomeWishlist(this)"
-
-                        aria-label="<%= product2Wishlist
-                                ? "Remove from wishlist"
-                                : "Add to wishlist" %>"
-
-                        title="<%= product2Wishlist
-                                ? "Remove from wishlist"
-                                : "Add to wishlist" %>">
-
-
-                        <svg
-                            class="gentlux-heart"
-                            viewBox="0 0 24 24"
-                            aria-hidden="true">
-
-
-                            <path
-                                d="M20.84 4.61
-                                   a5.5 5.5 0 0 0-7.78 0
-                                   L12 5.67
-                                   l-1.06-1.06
-                                   a5.5 5.5 0 0 0-7.78 7.78
-                                   L12 21.23
-                                   l8.84-8.84
-                                   a5.5 5.5 0 0 0 0-7.78z">
-                            </path>
-
-
-                        </svg>
-
-
-                    </button>
-
-
-
-                    <!-- Product Image -->
-
-                    <a href="${pageContext.request.contextPath}/product-details?id=2"
-                       class="product-image product-image-2"
-                       aria-label="Premium Casual Shirt">
-
-                    </a>
-
-
-
-                    <!-- Product Information -->
-
-                    <div class="product-info">
-
-
-                        <p class="product-brand">
-
-                            GENTLUX
-
-                        </p>
-
-
-                        <h3>
-
-                            Premium Casual Shirt
-
-                        </h3>
-
-
-                        <p class="product-price">
-
-                            ₹1,699
-
-                        </p>
-
-
-                    </div>
-
-
-                </div>
-
-
-
-
-
-                <!-- =========================
-                     PRODUCT 3
-                ========================== -->
-
-                <div class="product-card">
-
-
-                    <!-- Wishlist Heart -->
-
-                    <button
-                        type="button"
-
-                        class="home-wishlist-button
-                               <%= product3Wishlist
-                                       ? "wishlist-selected"
-                                       : "" %>"
-
-                        data-product-id="3"
-
-                        data-in-wishlist="<%= product3Wishlist %>"
-
-                        onclick="toggleHomeWishlist(this)"
-
-                        aria-label="<%= product3Wishlist
-                                ? "Remove from wishlist"
-                                : "Add to wishlist" %>"
-
-                        title="<%= product3Wishlist
-                                ? "Remove from wishlist"
-                                : "Add to wishlist" %>">
-
-
-                        <svg
-                            class="gentlux-heart"
-                            viewBox="0 0 24 24"
-                            aria-hidden="true">
-
-
-                            <path
-                                d="M20.84 4.61
-                                   a5.5 5.5 0 0 0-7.78 0
-                                   L12 5.67
-                                   l-1.06-1.06
-                                   a5.5 5.5 0 0 0-7.78 7.78
-                                   L12 21.23
-                                   l8.84-8.84
-                                   a5.5 5.5 0 0 0 0-7.78z">
-                            </path>
-
-
-                        </svg>
-
-
-                    </button>
-
-
-
-                    <!-- Product Image -->
-
-                    <a href="${pageContext.request.contextPath}/product-details?id=3"
-                       class="product-image product-image-3"
-                       aria-label="Slim Fit Trousers">
-
-                    </a>
-
-
-
-                    <!-- Product Information -->
-
-                    <div class="product-info">
-
-
-                        <p class="product-brand">
-
-                            GENTLUX
-
-                        </p>
-
-
-                        <h3>
-
-                            Slim Fit Trousers
-
-                        </h3>
-
-
-                        <p class="product-price">
-
-                            ₹1,899
-
-                        </p>
-
-
-                    </div>
-
-
-                </div>
-
-
-
-
-
-                <!-- =========================
-                     PRODUCT 4
-                ========================== -->
-
-                <div class="product-card">
-
-
-                    <!-- Wishlist Heart -->
-
-                    <button
-                        type="button"
-
-                        class="home-wishlist-button
-                               <%= product4Wishlist
-                                       ? "wishlist-selected"
-                                       : "" %>"
-
-                        data-product-id="4"
-
-                        data-in-wishlist="<%= product4Wishlist %>"
-
-                        onclick="toggleHomeWishlist(this)"
-
-                        aria-label="<%= product4Wishlist
-                                ? "Remove from wishlist"
-                                : "Add to wishlist" %>"
-
-                        title="<%= product4Wishlist
-                                ? "Remove from wishlist"
-                                : "Add to wishlist" %>">
-
-
-                        <svg
-                            class="gentlux-heart"
-                            viewBox="0 0 24 24"
-                            aria-hidden="true">
-
-
-                            <path
-                                d="M20.84 4.61
-                                   a5.5 5.5 0 0 0-7.78 0
-                                   L12 5.67
-                                   l-1.06-1.06
-                                   a5.5 5.5 0 0 0-7.78 7.78
-                                   L12 21.23
-                                   l8.84-8.84
-                                   a5.5 5.5 0 0 0 0-7.78z">
-                            </path>
-
-
-                        </svg>
-
-
-                    </button>
-
-
-
-                    <!-- Product Image -->
-
-                    <a href="${pageContext.request.contextPath}/product-details?id=4"
-                       class="product-image product-image-4"
-                       aria-label="Classic Leather Shoes">
-
-                    </a>
-
-
-
-                    <!-- Product Information -->
-
-                    <div class="product-info">
-
-
-                        <p class="product-brand">
-
-                            GENTLUX
-
-                        </p>
-
-
-                        <h3>
-
-                            Classic Leather Shoes
-
-                        </h3>
-
-
-                        <p class="product-price">
-
-                            ₹2,499
-
-                        </p>
-
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-
-
+        <div class="category-grid">
 
 
             <!-- =========================
-                 VIEW ALL PRODUCTS
+                 SHIRTS
             ========================== -->
 
-            <div class="featured-products-button">
+            <div class="category-card">
 
 
-                <a href="${pageContext.request.contextPath}/products"
-                   class="hero-button">
+                <a
+                    href="${pageContext.request.contextPath}/products?categoryId=2"
+                    class="home-category-image-link">
 
-                    VIEW ALL PRODUCTS
+
+                    <div class="category-image">
+
+
+                        <img
+                            src="${pageContext.request.contextPath}/assets/images/categories/Shirt.jpg"
+                            alt="Men's Shirts"
+                            loading="lazy">
+
+
+                    </div>
+
 
                 </a>
+
+
+                <div class="category-info">
+
+
+                    <h3>
+                        SHIRTS
+                    </h3>
+
+
+                    <a
+                        href="${pageContext.request.contextPath}/products?categoryId=2">
+
+                        SHOP NOW →
+
+                    </a>
+
+
+                </div>
 
 
             </div>
 
 
-        </section>
+            <!-- =========================
+                 TROUSERS
+            ========================== -->
+
+            <div class="category-card">
 
 
-    </main>
+                <a
+                    href="${pageContext.request.contextPath}/products?categoryId=4"
+                    class="home-category-image-link">
 
 
+                    <div class="category-image">
 
+
+                        <img
+                            src="${pageContext.request.contextPath}/assets/images/categories/Trousers.jpg"
+                            alt="Men's Trousers"
+                            loading="lazy">
+
+
+                    </div>
+
+
+                </a>
+
+
+                <div class="category-info">
+
+
+                    <h3>
+                        TROUSERS
+                    </h3>
+
+
+                    <a
+                        href="${pageContext.request.contextPath}/products?categoryId=4">
+
+                        SHOP NOW →
+
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =========================
+                 FOOTWEAR
+            ========================== -->
+
+            <div class="category-card">
+
+
+                <a
+                    href="${pageContext.request.contextPath}/products?categoryId=10"
+                    class="home-category-image-link">
+
+
+                    <div class="category-image">
+
+
+                        <img
+                            src="${pageContext.request.contextPath}/assets/images/categories/Footwear.jpg"
+                            alt="Men's Footwear"
+                            loading="lazy">
+
+
+                    </div>
+
+
+                </a>
+
+
+                <div class="category-info">
+
+
+                    <h3>
+                        FOOTWEAR
+                    </h3>
+
+
+                    <a
+                        href="${pageContext.request.contextPath}/products?categoryId=10">
+
+                        SHOP NOW →
+
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =========================
+                 JACKETS
+            ========================== -->
+
+            <div class="category-card">
+
+
+                <a
+                    href="${pageContext.request.contextPath}/products?categoryId=5"
+                    class="home-category-image-link">
+
+
+                    <div class="category-image">
+
+
+                        <img
+                            src="${pageContext.request.contextPath}/assets/images/categories/Jackets.jpg"
+                            alt="Men's Jackets"
+                            loading="lazy">
+
+
+                    </div>
+
+
+                </a>
+
+
+                <div class="category-info">
+
+
+                    <h3>
+                        JACKETS
+                    </h3>
+
+
+                    <a
+                        href="${pageContext.request.contextPath}/products?categoryId=5">
+
+                        SHOP NOW →
+
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
 
 
     <!-- =========================
-         FOOTER
+         FEATURED PRODUCTS
     ========================== -->
 
-    <jsp:include page="partials/footer.jsp" />
+    <section class="featured-products">
 
 
+        <div class="section-heading">
 
 
+            <p class="section-subtitle">
 
-    <!-- =========================================
-         HOME WISHLIST AJAX
-    ========================================== -->
+                OUR COLLECTION
 
-    <script>
-
-
-        async function toggleHomeWishlist(button) {
+            </p>
 
 
-            const productId =
-                    button.dataset.productId;
+            <h2>
+
+                FEATURED PRODUCTS
+
+            </h2>
 
 
-            if (!productId) {
+            <p class="section-description">
 
-                return;
+                Discover our latest styles, carefully selected for you.
 
-            }
+            </p>
 
+
+        </div>
+
+
+        <div class="product-grid">
+
+
+            <%
+
+                if (featuredProducts != null
+                        && !featuredProducts.isEmpty()) {
+
+
+                    for (Product product
+                            : featuredProducts) {
+
+
+                        int productId =
+                                product.getProductId();
+
+
+                        boolean inWishlist =
+                                wishlistProductIds
+                                        .contains(
+                                                productId
+                                        );
+
+
+                        /*
+                         * =========================================
+                         * PRODUCT IMAGE
+                         * =========================================
+                         */
+
+                        String homeImageUrl =
+                                product.getImageUrl();
+
+
+                        boolean hasHomeImage =
+                                homeImageUrl != null
+                                && !homeImageUrl
+                                        .trim()
+                                        .isEmpty();
+
+
+                        String finalHomeImageUrl =
+                                null;
+
+
+                        if (hasHomeImage) {
+
+
+                            homeImageUrl =
+                                    homeImageUrl.trim();
+
+
+                            /*
+                             * External URL
+                             */
+
+                            if (homeImageUrl
+                                    .startsWith("http://")
+                                    || homeImageUrl
+                                    .startsWith("https://")) {
+
+
+                                finalHomeImageUrl =
+                                        homeImageUrl;
+
+
+                            } else {
+
+
+                                /*
+                                 * Local uploaded image
+                                 */
+
+                                if (homeImageUrl
+                                        .startsWith("/")) {
+
+
+                                    homeImageUrl =
+                                            homeImageUrl
+                                                    .substring(1);
+                                }
+
+
+                                finalHomeImageUrl =
+                                        request
+                                                .getContextPath()
+                                        + "/"
+                                        + homeImageUrl;
+
+                            }
+                        }
+
+            %>
+
+
+            <div class="product-card">
+
+
+                <!-- =========================
+                     WISHLIST HEART
+                ========================== -->
+
+                <button
+                    type="button"
+
+                    class="home-wishlist-button
+                           <%= inWishlist
+                                   ? "wishlist-selected"
+                                   : "" %>"
+
+                    data-product-id="<%= productId %>"
+
+                    data-in-wishlist="<%= inWishlist %>"
+
+                    onclick="toggleHomeWishlist(this)"
+
+                    aria-label="<%= inWishlist
+                            ? "Remove from wishlist"
+                            : "Add to wishlist" %>"
+
+                    title="<%= inWishlist
+                            ? "Remove from wishlist"
+                            : "Add to wishlist" %>">
+
+
+                    <svg
+                        class="gentlux-heart"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true">
+
+
+                        <path
+                            d="M20.84 4.61
+                               a5.5 5.5 0 0 0-7.78 0
+                               L12 5.67
+                               l-1.06-1.06
+                               a5.5 5.5 0 0 0-7.78 7.78
+                               L12 21.23
+                               l8.84-8.84
+                               a5.5 5.5 0 0 0 0-7.78z">
+                        </path>
+
+
+                    </svg>
+
+
+                </button>
+
+
+                <!-- =========================
+                     PRODUCT IMAGE
+                ========================== -->
+
+                <a
+                    href="<%= request.getContextPath() %>/product-details?id=<%= productId %>"
+                    class="product-image"
+                    aria-label="<%= product.getProductName() %>">
+
+
+                    <%
+
+                        if (hasHomeImage
+                                && finalHomeImageUrl != null) {
+
+                    %>
+
+
+                        <img
+                            src="<%= finalHomeImageUrl %>"
+                            alt="<%= product.getProductName() %>"
+                            loading="lazy"
+
+                            onerror="
+                                this.style.display='none';
+                                this.nextElementSibling.style.display='flex';
+                            ">
+
+
+                        <div
+                            class="home-product-image-placeholder"
+                            style="display:none;">
+
+                            GENTLUX
+
+                        </div>
+
+
+                    <%
+
+                        } else {
+
+                    %>
+
+
+                        <div class="home-product-image-placeholder">
+
+                            GENTLUX
+
+                        </div>
+
+
+                    <%
+
+                        }
+
+                    %>
+
+
+                </a>
+
+
+                <!-- =========================
+                     PRODUCT INFORMATION
+                ========================== -->
+
+                <div class="product-info">
+
+
+                    <p class="product-brand">
+
+                        <%= product.getBrand() != null
+                                && !product.getBrand()
+                                        .trim()
+                                        .isEmpty()
+
+                                ? product.getBrand()
+
+                                : "GENTLUX" %>
+
+                    </p>
+
+
+                    <h3>
+
+                        <%= product.getProductName() %>
+
+                    </h3>
+
+
+                    <p class="product-price">
+
+                        ₹<%= String.format(
+                                "%,.2f",
+                                product.getPrice()
+                        ) %>
+
+                    </p>
+
+
+                </div>
+
+
+            </div>
+
+
+            <%
+
+                    }
+
+                } else {
+
+            %>
+
+
+            <!-- =========================
+                 NO FEATURED PRODUCTS
+            ========================== -->
+
+            <div
+                style="
+                    grid-column: 1 / -1;
+                    text-align: center;
+                    padding: 50px 20px;
+                ">
+
+
+                <h3>
+                    No featured products available
+                </h3>
+
+
+                <p>
+                    Products will appear here once they are available.
+                </p>
+
+
+            </div>
+
+
+            <%
+
+                }
+
+            %>
+
+
+        </div>
+
+
+        <!-- =========================
+             VIEW ALL PRODUCTS
+        ========================== -->
+
+        <div class="featured-products-button">
+
+
+            <a
+                href="${pageContext.request.contextPath}/products"
+                class="hero-button">
+
+                VIEW ALL PRODUCTS
+
+            </a>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+<!-- =========================
+     FOOTER
+========================== -->
+
+<jsp:include page="partials/footer.jsp" />
+
+
+<!-- =========================================
+     HOME WISHLIST AJAX
+========================================== -->
+
+<script>
+
+    async function toggleHomeWishlist(button) {
+
+
+        const productId =
+                button.dataset.productId;
+
+
+        if (!productId) {
+
+            return;
+        }
+
+
+        /*
+         * Stop double click while AJAX
+         * request is running
+         */
+
+        button.disabled = true;
+
+
+        try {
+
+
+            const response =
+                    await fetch(
+
+                        "${pageContext.request.contextPath}/toggle-wishlist",
+
+                        {
+
+                            method: "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/x-www-form-urlencoded"
+
+                            },
+
+                            body:
+
+                                "productId="
+                                + encodeURIComponent(
+                                    productId
+                                )
+
+                        }
+
+                    );
 
 
             /*
-             * Stop double click while AJAX
-             * request is running
+             * =========================================
+             * LOGIN REQUIRED
+             * =========================================
              */
 
-            button.disabled = true;
+            if (response.status === 401) {
 
 
+                window.location.href =
+                        "${pageContext.request.contextPath}/login";
 
-            try {
 
+                return;
+            }
 
-                const response =
-                        await fetch(
 
-                            "${pageContext.request.contextPath}/toggle-wishlist",
+            const data =
+                    await response.json();
 
-                            {
 
-                                method: "POST",
+            /*
+             * =========================================
+             * ERROR
+             * =========================================
+             */
 
-
-                                headers: {
-
-                                    "Content-Type":
-                                        "application/x-www-form-urlencoded"
-
-                                },
-
-
-                                body:
-
-                                    "productId="
-                                    + encodeURIComponent(
-                                        productId
-                                    )
-
-                            }
-
-                        );
-
-
-
-                /*
-                 * =========================================
-                 * LOGIN REQUIRED
-                 * =========================================
-                 */
-
-                if (response.status === 401) {
-
-
-                    window.location.href =
-                            "${pageContext.request.contextPath}/login";
-
-
-                    return;
-
-                }
-
-
-
-                const data =
-                        await response.json();
-
-
-
-                /*
-                 * =========================================
-                 * ERROR
-                 * =========================================
-                 */
-
-                if (!response.ok
-                        || !data.success) {
-
-
-                    console.error(
-                        "Wishlist update failed:",
-                        data
-                    );
-
-
-                    return;
-
-                }
-
-
-
-                /*
-                 * =========================================
-                 * ADDED TO WISHLIST
-                 * =========================================
-                 */
-
-                if (data.inWishlist) {
-
-
-                    button.classList.add(
-                        "wishlist-selected"
-                    );
-
-
-                    button.dataset.inWishlist =
-                            "true";
-
-
-                    button.title =
-                            "Remove from wishlist";
-
-
-                    button.setAttribute(
-                        "aria-label",
-                        "Remove from wishlist"
-                    );
-
-
-                }
-
-
-
-                /*
-                 * =========================================
-                 * REMOVED FROM WISHLIST
-                 * =========================================
-                 */
-
-                else {
-
-
-                    button.classList.remove(
-                        "wishlist-selected"
-                    );
-
-
-                    button.dataset.inWishlist =
-                            "false";
-
-
-                    button.title =
-                            "Add to wishlist";
-
-
-                    button.setAttribute(
-                        "aria-label",
-                        "Add to wishlist"
-                    );
-
-
-                }
-
-
-
-            } catch (error) {
+            if (!response.ok
+                    || !data.success) {
 
 
                 console.error(
-                    "Wishlist request error:",
-                    error
+                    "Wishlist update failed:",
+                    data
                 );
 
 
-            } finally {
+                return;
+            }
 
 
-                button.disabled = false;
+            /*
+             * =========================================
+             * ADDED TO WISHLIST
+             * =========================================
+             */
+
+            if (data.inWishlist) {
+
+
+                button.classList.add(
+                    "wishlist-selected"
+                );
+
+
+                button.dataset.inWishlist =
+                        "true";
+
+
+                button.title =
+                        "Remove from wishlist";
+
+
+                button.setAttribute(
+                    "aria-label",
+                    "Remove from wishlist"
+                );
 
 
             }
+
+
+            /*
+             * =========================================
+             * REMOVED FROM WISHLIST
+             * =========================================
+             */
+
+            else {
+
+
+                button.classList.remove(
+                    "wishlist-selected"
+                );
+
+
+                button.dataset.inWishlist =
+                        "false";
+
+
+                button.title =
+                        "Add to wishlist";
+
+
+                button.setAttribute(
+                    "aria-label",
+                    "Add to wishlist"
+                );
+
+
+            }
+
+
+        } catch (error) {
+
+
+            console.error(
+                "Wishlist request error:",
+                error
+            );
+
+
+        } finally {
+
+
+            button.disabled = false;
 
 
         }
 
+    }
 
-    </script>
+</script>
 
 
 </body>

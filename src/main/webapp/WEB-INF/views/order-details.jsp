@@ -19,30 +19,76 @@
 
     <title>Order Details | GENTLUX</title>
 
-	<link rel="stylesheet"
-	      href="${pageContext.request.contextPath}/assets/css/style.css">
-	
-	<link rel="stylesheet"
-	      href="${pageContext.request.contextPath}/assets/css/order-details.css">
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/assets/css/style.css">
+
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/assets/css/order-details.css">
+
+    <style>
+
+        /* =========================================================
+           ORDER PRODUCT IMAGE
+        ========================================================== */
+
+        .order-product-image {
+            overflow: hidden;
+        }
+
+        .order-product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .order-image-placeholder {
+            width: 100%;
+            height: 100%;
+            min-height: 110px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #f1ece8;
+            color: #38251e;
+
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+    </style>
+
 </head>
 
 <body>
+
+
+    <!-- =========================================================
+         NAVBAR
+    ========================================================== -->
 
     <jsp:include page="partials/nav.jsp" />
 
 
     <%
+
         Order order =
                 (Order)
                 request.getAttribute("order");
 
+
         List<OrderItemView> orderItems =
                 (List<OrderItemView>)
                 request.getAttribute("orderItems");
+
     %>
 
 
     <main>
+
 
         <section class="order-details-section">
 
@@ -53,18 +99,28 @@
 
             <div class="section-heading">
 
+
                 <p class="section-subtitle">
+
                     ORDER INFORMATION
+
                 </p>
+
 
                 <h2>
+
                     ORDER #<%= order.getOrderId() %>
+
                 </h2>
 
+
                 <p class="section-description">
+
                     Review your purchased products,
                     payment and delivery information.
+
                 </p>
+
 
             </div>
 
@@ -85,7 +141,9 @@
 
                     <div class="order-details-card">
 
+
                         <div class="order-details-card-heading">
+
 
                             <div>
 
@@ -99,12 +157,17 @@
 
                             </div>
 
+
                             <span>
+
                                 <%= orderItems != null
                                         ? orderItems.size()
                                         : 0 %>
+
                                 Item(s)
+
                             </span>
+
 
                         </div>
 
@@ -113,132 +176,254 @@
 
 
                             <%
+
                                 if (orderItems != null
                                         && !orderItems.isEmpty()) {
 
+
                                     for (OrderItemView item : orderItems) {
 
-                                        String imagePath =
-                                                item.getImageUrl();
-
-                                        if (imagePath != null
-                                                && !imagePath.isEmpty()
-                                                && !imagePath.startsWith("/")) {
-
-                                            imagePath =
-                                                    "/" + imagePath;
-                                        }
                             %>
 
 
                             <div class="order-product-item">
 
 
-                                <!-- PRODUCT IMAGE -->
+                                <!-- =================================
+                                     PRODUCT IMAGE
+                                ================================== -->
 
                                 <div class="order-product-image">
 
-					<%
-					    if (imagePath != null
-					            && !imagePath.isEmpty()) {
-					
-					        String finalImagePath;
-					
-					        if (imagePath.startsWith("http://")
-					                || imagePath.startsWith("https://")) {
-					
-					            finalImagePath = imagePath;
-					
-					        } else {
-					
-					            if (!imagePath.startsWith("/")) {
-					                imagePath = "/" + imagePath;
-					            }
-					
-					            finalImagePath =
-					                    request.getContextPath()
-					                    + imagePath;
-					        }
-					%>
-					
-					<img
-					    src="<%= finalImagePath %>"
-					    alt="<%= item.getProductName() %>"
-					    onerror="this.src='<%= request.getContextPath() %>/assets/images/products/default-product.jpg';">
-					
-					<%
-					    }
-					%>
+
+                                    <%
+
+                                        String orderImageUrl =
+                                                item.getImageUrl();
+
+
+                                        boolean hasOrderImage =
+                                                orderImageUrl != null
+                                                && !orderImageUrl
+                                                        .trim()
+                                                        .isEmpty();
+
+
+                                        if (hasOrderImage) {
+
+
+                                            orderImageUrl =
+                                                    orderImageUrl.trim();
+
+
+                                            String finalOrderImageUrl;
+
+
+                                            /*
+                                             * External image
+                                             */
+                                            if (orderImageUrl
+                                                    .startsWith("http://")
+                                                    || orderImageUrl
+                                                    .startsWith("https://")) {
+
+
+                                                finalOrderImageUrl =
+                                                        orderImageUrl;
+
+
+                                            } else {
+
+
+                                                /*
+                                                 * Local uploaded image
+                                                 *
+                                                 * Example:
+                                                 *
+                                                 * assets/images/products/
+                                                 * product.jpg
+                                                 */
+
+
+                                                if (orderImageUrl
+                                                        .startsWith("/")) {
+
+
+                                                    orderImageUrl =
+                                                            orderImageUrl
+                                                                    .substring(1);
+
+                                                }
+
+
+                                                finalOrderImageUrl =
+                                                        request
+                                                            .getContextPath()
+                                                        + "/"
+                                                        + orderImageUrl;
+
+                                            }
+
+                                    %>
+
+
+                                        <img
+                                            src="<%= finalOrderImageUrl %>"
+                                            alt="<%= item.getProductName() %>"
+                                            loading="lazy"
+                                            onerror="
+                                                this.style.display='none';
+                                                this.nextElementSibling.style.display='flex';
+                                            ">
+
+
+                                        <!-- Broken image fallback -->
+
+                                        <div
+                                            class="order-image-placeholder"
+                                            style="display:none;">
+
+                                            <span>
+                                                GENTLUX
+                                            </span>
+
+                                        </div>
+
+
+                                    <%
+
+                                        } else {
+
+                                    %>
+
+
+                                        <!-- No image fallback -->
+
+                                        <div class="order-image-placeholder">
+
+                                            <span>
+                                                GENTLUX
+                                            </span>
+
+                                        </div>
+
+
+                                    <%
+
+                                        }
+
+                                    %>
+
 
                                 </div>
 
 
-                                <!-- PRODUCT INFORMATION -->
+                                <!-- =================================
+                                     PRODUCT INFORMATION
+                                ================================== -->
 
                                 <div class="order-product-info">
 
+
                                     <p class="order-product-brand">
+
                                         <%= item.getBrand() %>
+
                                     </p>
 
+
                                     <h4>
+
                                         <%= item.getProductName() %>
+
                                     </h4>
 
 
                                     <div class="order-product-meta">
 
-                                        <span>
-                                            Size:
-                                            <strong>
-                                                <%= item.getSize() %>
-                                            </strong>
-                                        </span>
 
                                         <span>
-                                            Qty:
+
+                                            Size:
+
                                             <strong>
-                                                <%= item.getQuantity() %>
+
+                                                <%= item.getSize() %>
+
                                             </strong>
+
                                         </span>
+
+
+                                        <span>
+
+                                            Qty:
+
+                                            <strong>
+
+                                                <%= item.getQuantity() %>
+
+                                            </strong>
+
+                                        </span>
+
 
                                     </div>
+
 
                                 </div>
 
 
-                                <!-- PRICE -->
+                                <!-- =================================
+                                     PRICE
+                                ================================== -->
 
                                 <div class="order-product-price">
 
+
                                     <p>
+
                                         Unit Price
+
                                     </p>
 
+
                                     <strong>
+
                                         ₹<%= String.format(
                                                 "%.2f",
                                                 item.getPrice()
                                         ) %>
+
                                     </strong>
+
 
                                 </div>
 
 
-                                <!-- SUBTOTAL -->
+                                <!-- =================================
+                                     SUBTOTAL
+                                ================================== -->
 
                                 <div class="order-product-subtotal">
 
+
                                     <p>
+
                                         Subtotal
+
                                     </p>
 
+
                                     <strong>
+
                                         ₹<%= String.format(
                                                 "%.2f",
                                                 item.getSubtotal()
                                         ) %>
+
                                     </strong>
+
 
                                 </div>
 
@@ -247,9 +432,11 @@
 
 
                             <%
+
                                     }
 
                                 } else {
+
                             %>
 
 
@@ -261,11 +448,14 @@
 
 
                             <%
+
                                 }
+
                             %>
 
 
                         </div>
+
 
                     </div>
 
@@ -279,6 +469,7 @@
 
                         <div class="order-details-card-heading">
 
+
                             <div>
 
                                 <p>
@@ -291,36 +482,51 @@
 
                             </div>
 
+
                         </div>
 
 
                         <div class="order-shipping-details">
 
+
                             <strong class="order-shipping-name">
+
                                 <%= order.getShippingName() %>
+
                             </strong>
 
 
                             <p>
+
                                 <%= order.getShippingAddress() %>
+
                             </p>
 
 
                             <p>
+
                                 <%= order.getShippingCity() %>,
                                 <%= order.getShippingState() %>
                                 - <%= order.getShippingPincode() %>
+
                             </p>
 
 
                             <p>
+
                                 Phone:
+
                                 <strong>
+
                                     <%= order.getShippingPhone() %>
+
                                 </strong>
+
                             </p>
 
+
                         </div>
+
 
                     </div>
 
@@ -336,78 +542,127 @@
 
 
                     <p class="order-details-summary-label">
+
                         ORDER
+
                     </p>
 
 
                     <h3>
+
                         ORDER SUMMARY
+
                     </h3>
 
 
+                    <!-- ORDER ID -->
+
                     <div class="order-details-summary-row">
 
+
                         <span>
+
                             Order ID
+
                         </span>
 
+
                         <strong>
+
                             #<%= order.getOrderId() %>
+
                         </strong>
+
 
                     </div>
 
 
+                    <!-- ORDER STATUS -->
+
                     <div class="order-details-summary-row">
 
+
                         <span>
+
                             Order Status
+
                         </span>
 
+
                         <strong>
+
                             <%= order.getOrderStatus() %>
+
                         </strong>
+
 
                     </div>
 
 
+                    <!-- PAYMENT METHOD -->
+
                     <div class="order-details-summary-row">
 
+
                         <span>
+
                             Payment Method
+
                         </span>
 
+
                         <strong>
+
                             <%= order.getPaymentMethod() %>
+
                         </strong>
+
 
                     </div>
 
 
+                    <!-- PAYMENT STATUS -->
+
                     <div class="order-details-summary-row">
 
+
                         <span>
+
                             Payment Status
+
                         </span>
+
 
                         <strong>
+
                             <%= order.getPaymentStatus() %>
+
                         </strong>
+
 
                     </div>
 
 
+                    <!-- ORDER DATE -->
+
                     <div class="order-details-summary-row">
 
+
                         <span>
+
                             Order Date
+
                         </span>
+
 
                         <strong class="order-date-value">
+
                             <%= order.getOrderDate() != null
                                     ? order.getOrderDate()
                                     : "-" %>
+
                         </strong>
+
 
                     </div>
 
@@ -416,66 +671,105 @@
                     </div>
 
 
+                    <!-- =============================================
+                         TOTAL
+                    ============================================== -->
+
                     <div class="order-details-summary-row
                                 order-details-total">
 
+
                         <span>
+
                             TOTAL
+
                         </span>
 
+
                         <strong>
+
                             ₹<%= String.format(
                                     "%.2f",
                                     order.getTotalAmount()
                             ) %>
+
                         </strong>
 
+
                     </div>
-		
-		<%
-		    String currentOrderStatus =
-		            order.getOrderStatus();
-		
-		    boolean canCancelOrder =
-		            currentOrderStatus != null
-		            && (
-		                currentOrderStatus.equalsIgnoreCase("PLACED")
-		                || currentOrderStatus.equalsIgnoreCase("CONFIRMED")
-		            );
-		%>
-		
-		
-		<% if (canCancelOrder) { %>
-		
-		    <div class="cancel-order-section">
-		
-		        <form
-		            action="${pageContext.request.contextPath}/cancel-order"
-		            method="post"
-		            onsubmit="return confirmOrderCancellation();">
-		
-		            <input
-		                type="hidden"
-		                name="orderId"
-		                value="<%= order.getOrderId() %>">
-		
-		            <button
-		                type="submit"
-		                class="cancel-order-button">
-		
-		                CANCEL ORDER
-		
-		            </button>
-		
-		        </form>
-		
-		        <p class="cancel-order-note">
-		            You can cancel this order before it is shipped.
-		        </p>
-		
-		    </div>
-		
-		<% } %>
+
+
+                    <!-- =============================================
+                         CANCEL ORDER
+                    ============================================== -->
+
+                    <%
+
+                        String currentOrderStatus =
+                                order.getOrderStatus();
+
+
+                        boolean canCancelOrder =
+                                currentOrderStatus != null
+                                && (
+                                    currentOrderStatus
+                                        .equalsIgnoreCase("PLACED")
+
+                                    ||
+
+                                    currentOrderStatus
+                                        .equalsIgnoreCase("CONFIRMED")
+                                );
+
+                    %>
+
+
+                    <% if (canCancelOrder) { %>
+
+
+                        <div class="cancel-order-section">
+
+
+                            <form
+                                action="${pageContext.request.contextPath}/cancel-order"
+                                method="post"
+                                onsubmit="return confirmOrderCancellation();">
+
+
+                                <input
+                                    type="hidden"
+                                    name="orderId"
+                                    value="<%= order.getOrderId() %>">
+
+
+                                <button
+                                    type="submit"
+                                    class="cancel-order-button">
+
+                                    CANCEL ORDER
+
+                                </button>
+
+
+                            </form>
+
+
+                            <p class="cancel-order-note">
+
+                                You can cancel this order before it is shipped.
+
+                            </p>
+
+
+                        </div>
+
+
+                    <% } %>
+
+
+                    <!-- =============================================
+                         BACK TO ORDERS
+                    ============================================== -->
 
                     <a
                         href="${pageContext.request.contextPath}/my-orders"
@@ -485,6 +779,10 @@
 
                     </a>
 
+
+                    <!-- =============================================
+                         CONTINUE SHOPPING
+                    ============================================== -->
 
                     <a
                         href="${pageContext.request.contextPath}/products"
@@ -500,24 +798,35 @@
 
             </div>
 
+
         </section>
+
 
     </main>
 
 
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
     <jsp:include page="partials/footer.jsp" />
-    
-		<script>
-		
-		function confirmOrderCancellation() {
-		
-		    return confirm(
-		        "Are you sure you want to cancel this order?"
-		    );
-		
-		}
-		
-		</script>
+
+
+    <!-- =========================================================
+         CANCEL ORDER CONFIRMATION
+    ========================================================== -->
+
+    <script>
+
+        function confirmOrderCancellation() {
+
+            return confirm(
+                "Are you sure you want to cancel this order?"
+            );
+
+        }
+
+    </script>
 
 
 </body>

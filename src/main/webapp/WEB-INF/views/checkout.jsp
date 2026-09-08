@@ -33,6 +33,7 @@
 %>
 
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -46,15 +47,52 @@
 
 
     <!-- GLOBAL CSS -->
+
     <link rel="stylesheet"
           type="text/css"
           href="<%= request.getContextPath() %>/assets/css/style.css">
 
 
     <!-- CHECKOUT ONLY CSS -->
+
     <link rel="stylesheet"
           type="text/css"
           href="<%= request.getContextPath() %>/assets/css/checkout.css">
+
+
+    <!-- IMAGE SUPPORT -->
+
+    <style>
+
+        .gl-checkout-product-image {
+            overflow: hidden;
+        }
+
+        .gl-checkout-product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gl-checkout-image-placeholder {
+            width: 100%;
+            height: 100%;
+            min-height: 90px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #f1ece8;
+            color: #38251e;
+
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+    </style>
 
 </head>
 
@@ -84,12 +122,15 @@
 
         <div class="gl-checkout-heading">
 
-            <p>COMPLETE YOUR PURCHASE</p>
+            <p>
+                COMPLETE YOUR PURCHASE
+            </p>
 
-            <h1>Checkout</h1>
+            <h1>
+                Checkout
+            </h1>
 
         </div>
-
 
 
         <!-- =============================================
@@ -110,13 +151,11 @@
                 value="<%= cartId %>">
 
 
-
             <!-- =================================================
                  LEFT SIDE
             ================================================== -->
 
             <div class="gl-checkout-form-side">
-
 
 
                 <!-- =============================================
@@ -147,7 +186,6 @@
                     </div>
 
 
-
                     <!-- FULL NAME -->
 
                     <div class="gl-checkout-field">
@@ -160,20 +198,15 @@
                             type="text"
                             id="shippingName"
                             name="shippingName"
-
                             value="<%= user != null
                                     && user.getFullName() != null
                                     ? user.getFullName()
                                     : "" %>"
-
                             placeholder="Enter your full name"
-
                             autocomplete="name"
-
                             required>
 
                     </div>
-
 
 
                     <!-- PHONE -->
@@ -188,20 +221,15 @@
                             type="tel"
                             id="shippingPhone"
                             name="shippingPhone"
-
                             value="<%= user != null
                                     && user.getPhone() != null
                                     ? user.getPhone()
                                     : "" %>"
-
                             placeholder="Enter your phone number"
-
                             autocomplete="tel"
-
                             required>
 
                     </div>
-
 
 
                     <!-- ADDRESS -->
@@ -226,7 +254,6 @@
                     </div>
 
 
-
                     <!-- CITY + STATE -->
 
                     <div class="gl-checkout-two-column">
@@ -244,20 +271,15 @@
                                 type="text"
                                 id="shippingCity"
                                 name="shippingCity"
-
                                 value="<%= user != null
                                         && user.getCity() != null
                                         ? user.getCity()
                                         : "" %>"
-
                                 placeholder="City"
-
                                 autocomplete="address-level2"
-
                                 required>
 
                         </div>
-
 
 
                         <!-- STATE -->
@@ -272,22 +294,18 @@
                                 type="text"
                                 id="shippingState"
                                 name="shippingState"
-
                                 value="<%= user != null
                                         && user.getState() != null
                                         ? user.getState()
                                         : "" %>"
-
                                 placeholder="State"
-
                                 autocomplete="address-level1"
-
                                 required>
 
                         </div>
 
-                    </div>
 
+                    </div>
 
 
                     <!-- PINCODE -->
@@ -302,20 +320,15 @@
                             type="text"
                             id="shippingPincode"
                             name="shippingPincode"
-
                             value="<%= user != null
                                     && user.getPincode() != null
                                     ? user.getPincode()
                                     : "" %>"
-
                             placeholder="Enter pincode"
-
                             autocomplete="postal-code"
-
                             required>
 
                     </div>
-
 
 
                     <!-- SAVED ADDRESS INFORMATION -->
@@ -332,7 +345,6 @@
 
 
                 </section>
-
 
 
                 <!-- =============================================
@@ -363,7 +375,6 @@
                     </div>
 
 
-
                     <label class="gl-checkout-payment-option">
 
                         <input
@@ -389,7 +400,6 @@
                     </label>
 
 
-
                     <p class="gl-checkout-payment-coming">
                         Online payment options coming soon
                     </p>
@@ -399,7 +409,6 @@
 
 
             </div>
-
 
 
             <!-- =================================================
@@ -429,7 +438,6 @@
                     </div>
 
 
-
                     <!-- =========================================
                          PRODUCTS
                     ========================================== -->
@@ -438,54 +446,139 @@
 
 
                         <%
+
                             if (cartItems != null
                                     && !cartItems.isEmpty()) {
 
                                 for (CartItemView item : cartItems) {
+
                         %>
 
 
                         <div class="gl-checkout-product">
 
 
-                            <!-- PRODUCT IMAGE -->
+                            <!-- =================================
+                                 PRODUCT IMAGE
+                            ================================== -->
 
                             <div class="gl-checkout-product-image">
 
 
                                 <%
-                                    if (item.getImageUrl() != null
-                                            && !item.getImageUrl()
+
+                                    String checkoutImageUrl =
+                                            item.getImageUrl();
+
+                                    boolean hasCheckoutImage =
+                                            checkoutImageUrl != null
+                                            && !checkoutImageUrl
                                                     .trim()
-                                                    .isEmpty()) {
+                                                    .isEmpty();
+
+
+                                    if (hasCheckoutImage) {
+
+
+                                        checkoutImageUrl =
+                                                checkoutImageUrl.trim();
+
+
+                                        String finalCheckoutImageUrl;
+
+
+                                        /*
+                                         * External image URL
+                                         */
+                                        if (checkoutImageUrl
+                                                .startsWith("http://")
+                                                || checkoutImageUrl
+                                                .startsWith("https://")) {
+
+
+                                            finalCheckoutImageUrl =
+                                                    checkoutImageUrl;
+
+
+                                        } else {
+
+
+                                            /*
+                                             * Local uploaded image
+                                             *
+                                             * Example:
+                                             * assets/images/products/product.jpg
+                                             */
+
+                                            if (checkoutImageUrl
+                                                    .startsWith("/")) {
+
+                                                checkoutImageUrl =
+                                                        checkoutImageUrl
+                                                                .substring(1);
+                                            }
+
+
+                                            finalCheckoutImageUrl =
+                                                    request.getContextPath()
+                                                    + "/"
+                                                    + checkoutImageUrl;
+
+                                        }
+
                                 %>
 
 
-                                <img
-                                    src="<%= request.getContextPath() %>/<%= item.getImageUrl() %>"
-                                    alt="<%= item.getProductName() %>">
+                                    <img
+                                        src="<%= finalCheckoutImageUrl %>"
+                                        alt="<%= item.getProductName() %>"
+                                        loading="lazy"
+                                        onerror="
+                                            this.style.display='none';
+                                            this.nextElementSibling.style.display='flex';
+                                        ">
+
+
+                                    <!-- BROKEN IMAGE FALLBACK -->
+
+                                    <div
+                                        class="gl-checkout-image-placeholder"
+                                        style="display:none;">
+
+                                        GENTLUX
+
+                                    </div>
 
 
                                 <%
+
                                     } else {
+
                                 %>
 
 
-                                <div class="gl-checkout-image-placeholder">
-                                    GENTLUX
-                                </div>
+                                    <!-- NO IMAGE FALLBACK -->
+
+                                    <div class="gl-checkout-image-placeholder">
+
+                                        GENTLUX
+
+                                    </div>
 
 
                                 <%
+
                                     }
+
                                 %>
 
 
                             </div>
 
 
-
-                            <!-- PRODUCT INFORMATION -->
+                            <!-- =================================
+                                 PRODUCT INFORMATION
+                            ================================== -->
 
                             <div class="gl-checkout-product-info">
 
@@ -500,7 +593,9 @@
 
 
                                 <h3>
+
                                     <%= item.getProductName() %>
+
                                 </h3>
 
 
@@ -512,7 +607,9 @@
                                         Size:
 
                                         <strong>
+
                                             <%= item.getSize() %>
+
                                         </strong>
 
                                     </span>
@@ -523,7 +620,9 @@
                                         Qty:
 
                                         <strong>
+
                                             <%= item.getQuantity() %>
+
                                         </strong>
 
                                     </span>
@@ -535,8 +634,9 @@
                             </div>
 
 
-
-                            <!-- PRICE -->
+                            <!-- =================================
+                                 PRICE
+                            ================================== -->
 
                             <div class="gl-checkout-product-price">
 
@@ -552,9 +652,11 @@
 
 
                         <%
+
                                 }
 
                             } else {
+
                         %>
 
 
@@ -568,12 +670,13 @@
 
 
                         <%
+
                             }
+
                         %>
 
 
                     </div>
-
 
 
                     <!-- =========================================
@@ -583,10 +686,14 @@
                     <div class="gl-checkout-price-details">
 
 
+                        <!-- ITEMS -->
+
                         <div class="gl-checkout-price-row">
 
                             <span>
+
                                 Items (<%= totalQuantity %>)
+
                             </span>
 
                             <span>
@@ -601,6 +708,7 @@
                         </div>
 
 
+                        <!-- DELIVERY -->
 
                         <div class="gl-checkout-price-row">
 
@@ -615,10 +723,11 @@
                         </div>
 
 
+                        <div class="gl-checkout-divider">
+                        </div>
 
-                        <div class="gl-checkout-divider"></div>
 
-
+                        <!-- TOTAL -->
 
                         <div class="gl-checkout-total-row">
 
@@ -652,8 +761,9 @@
                     </div>
 
 
-
-                    <!-- PLACE ORDER -->
+                    <!-- =========================================
+                         PLACE ORDER
+                    ========================================== -->
 
                     <button
                         type="submit"
@@ -664,8 +774,9 @@
                     </button>
 
 
-
-                    <!-- SECURITY -->
+                    <!-- =========================================
+                         SECURITY
+                    ========================================== -->
 
                     <div class="gl-checkout-security">
 
@@ -691,8 +802,8 @@
 
     </div>
 
-</main>
 
+</main>
 
 
 <!-- =====================================================

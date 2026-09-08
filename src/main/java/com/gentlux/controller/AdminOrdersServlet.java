@@ -1,11 +1,16 @@
 package com.gentlux.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.gentlux.dao.OrderDAO;
+import com.gentlux.dao.OrderItemDAO;
 import com.gentlux.dao.impl.OrderDAOImpl;
+import com.gentlux.dao.impl.OrderItemDAOImpl;
 import com.gentlux.model.Order;
+import com.gentlux.model.OrderItemView;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -20,6 +25,7 @@ public class AdminOrdersServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private OrderDAO orderDAO;
+    private OrderItemDAO orderItemDAO;
 
 
     @Override
@@ -27,6 +33,9 @@ public class AdminOrdersServlet extends HttpServlet {
 
         orderDAO =
                 new OrderDAOImpl();
+
+        orderItemDAO =
+                new OrderItemDAOImpl();
     }
 
 
@@ -47,12 +56,43 @@ public class AdminOrdersServlet extends HttpServlet {
 
 
             // =====================================================
+            // GET ITEMS FOR EACH ORDER
+            // =====================================================
+
+            Map<Integer, List<OrderItemView>> orderItemsMap =
+                    new HashMap<>();
+
+
+            if (orders != null) {
+
+                for (Order order : orders) {
+
+                    List<OrderItemView> orderItems =
+                            orderItemDAO
+                                    .getOrderItemViewsByOrderId(
+                                            order.getOrderId()
+                                    );
+
+                    orderItemsMap.put(
+                            order.getOrderId(),
+                            orderItems
+                    );
+                }
+            }
+
+
+            // =====================================================
             // SEND TO JSP
             // =====================================================
 
             request.setAttribute(
                     "orders",
                     orders
+            );
+
+            request.setAttribute(
+                    "orderItemsMap",
+                    orderItemsMap
             );
 
 

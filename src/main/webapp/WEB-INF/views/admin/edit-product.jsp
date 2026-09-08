@@ -1,8 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.gentlux.model.Product" %>
 <%@ page import="com.gentlux.model.Category" %>
 
 <%
+    Product product =
+            (Product) request.getAttribute("product");
+
     List<Category> categories =
             (List<Category>) request.getAttribute("categories");
 
@@ -22,7 +26,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0">
 
-    <title>Add Product | GentLux Admin</title>
+    <title>Edit Product | GentLux Admin</title>
 
 
     <style>
@@ -36,7 +40,6 @@
 
         body {
             font-family: Arial, sans-serif;
-
             background: #f7f5f2;
             color: #2e2723;
         }
@@ -56,9 +59,7 @@
             color: white;
 
             display: flex;
-
             align-items: center;
-
             justify-content: space-between;
         }
 
@@ -66,9 +67,7 @@
         .admin-logo {
 
             font-size: 22px;
-
             font-weight: 600;
-
             letter-spacing: 3px;
         }
 
@@ -76,9 +75,7 @@
         .header-links {
 
             display: flex;
-
             align-items: center;
-
             gap: 25px;
         }
 
@@ -86,13 +83,10 @@
         .header-links a {
 
             color: white;
-
             text-decoration: none;
 
             font-size: 10px;
-
             letter-spacing: 1.5px;
-
             text-transform: uppercase;
         }
 
@@ -124,7 +118,6 @@
         .page-heading h1 {
 
             font-size: 30px;
-
             font-weight: 500;
 
             margin-bottom: 8px;
@@ -165,11 +158,11 @@
 
         .product-form {
 
+            padding: 35px;
+
             background: white;
 
             border: 1px solid #e2dad5;
-
-            padding: 35px;
         }
 
 
@@ -224,8 +217,6 @@
 
             border: 1px solid #d9d0ca;
 
-            outline: none;
-
             background: white;
 
             color: #2e2723;
@@ -233,6 +224,8 @@
             font-family: Arial, sans-serif;
 
             font-size: 13px;
+
+            outline: none;
         }
 
 
@@ -260,21 +253,21 @@
 
         .form-note {
 
-            margin-top: 4px;
+            margin-top: 5px;
 
             font-size: 10px;
 
-            color: #948780;
-
             line-height: 1.5;
+
+            color: #948780;
         }
 
 
         /* =========================================
-           IMAGE UPLOAD
+           IMAGE SECTION
            ========================================= */
 
-        .image-upload-box {
+        .image-section {
 
             padding: 20px;
 
@@ -284,11 +277,73 @@
         }
 
 
-        .image-upload-box input[type="file"] {
+        .current-image-title {
 
-            background: white;
+            margin-bottom: 10px;
 
-            cursor: pointer;
+            font-size: 10px;
+
+            font-weight: 600;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+
+            color: #665a54;
+        }
+
+
+        .current-image {
+
+            display: block;
+
+            width: 180px;
+
+            height: 220px;
+
+            object-fit: cover;
+
+            background: #eee9e5;
+
+            border: 1px solid #ddd4ce;
+
+            margin-bottom: 18px;
+        }
+
+
+        .no-current-image {
+
+            width: 180px;
+
+            height: 120px;
+
+            margin-bottom: 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #eee9e5;
+
+            border: 1px solid #ddd4ce;
+
+            color: #968a83;
+
+            font-size: 10px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+        }
+
+
+        .replace-image-label {
+
+            display: block;
+
+            margin-bottom: 8px;
         }
 
 
@@ -300,7 +355,7 @@
         }
 
 
-        .image-preview-title {
+        .new-image-title {
 
             margin-bottom: 8px;
 
@@ -316,7 +371,7 @@
         }
 
 
-        .image-preview {
+        .new-image-preview {
 
             width: 180px;
 
@@ -328,7 +383,7 @@
 
             border: 1px solid #ddd4ce;
 
-            background: #f3efec;
+            background: #eee9e5;
         }
 
 
@@ -370,7 +425,7 @@
 
         .submit-button:hover {
 
-            opacity: 0.88;
+            opacity: 0.85;
         }
 
 
@@ -380,9 +435,9 @@
 
             border: 1px solid #2e2723;
 
-            background: white;
-
             color: #2e2723;
+
+            background: white;
 
             text-decoration: none;
 
@@ -502,14 +557,14 @@
 
         <h1>
 
-            Add Product
+            Edit Product
 
         </h1>
 
 
         <p>
 
-            Add a new product to the GentLux catalogue.
+            Update product information and product image.
 
         </p>
 
@@ -533,14 +588,21 @@
 
 
     <!-- IMPORTANT:
-         enctype is required for file upload
+         multipart/form-data is required for image upload
     -->
 
     <form
-        action="${pageContext.request.contextPath}/admin/add-product"
+        action="${pageContext.request.contextPath}/admin/edit-product"
         method="post"
         enctype="multipart/form-data"
         class="product-form">
+
+
+        <input
+            type="hidden"
+            name="productId"
+            value="<%= product.getProductId() %>">
+
 
 
         <div class="form-grid">
@@ -571,24 +633,22 @@
                     required>
 
 
-                    <option value="">
-
-                        Select Category
-
-                    </option>
-
-
                     <%
 
                         if (categories != null) {
 
                             for (Category category : categories) {
 
+                                boolean selected =
+                                        category.getCategoryId()
+                                        == product.getCategoryId();
+
                     %>
 
 
                         <option
-                            value="<%= category.getCategoryId() %>">
+                            value="<%= category.getCategoryId() %>"
+                            <%= selected ? "selected" : "" %>>
 
                             <%= category.getCategoryName() %>
 
@@ -634,6 +694,9 @@
                     id="productName"
                     name="productName"
                     maxlength="150"
+                    value="<%= product.getProductName() != null
+                            ? product.getProductName()
+                            : "" %>"
                     required>
 
 
@@ -659,7 +722,10 @@
                     type="text"
                     id="brand"
                     name="brand"
-                    maxlength="100">
+                    maxlength="100"
+                    value="<%= product.getBrand() != null
+                            ? product.getBrand()
+                            : "" %>">
 
 
             </div>
@@ -684,7 +750,10 @@
                     type="text"
                     id="color"
                     name="color"
-                    maxlength="50">
+                    maxlength="50"
+                    value="<%= product.getColor() != null
+                            ? product.getColor()
+                            : "" %>">
 
 
             </div>
@@ -715,6 +784,7 @@
                     name="price"
                     min="0"
                     step="0.01"
+                    value="<%= product.getPrice() %>"
                     required>
 
 
@@ -746,6 +816,7 @@
                     name="mrp"
                     min="0"
                     step="0.01"
+                    value="<%= product.getMrp() %>"
                     required>
 
 
@@ -774,7 +845,7 @@
                     min="0"
                     max="100"
                     step="0.01"
-                    value="0">
+                    value="<%= product.getDiscount() %>">
 
 
             </div>
@@ -788,33 +859,86 @@
             <div class="form-group">
 
 
-                <label for="productImage">
+                <label>
 
                     Product Image
-
-                    <span class="required">
-                        *
-                    </span>
 
                 </label>
 
 
-                <div class="image-upload-box">
+                <div class="image-section">
+
+
+                    <div class="current-image-title">
+
+                        Current Image
+
+                    </div>
+
+
+
+                    <%
+
+                        String currentImage =
+                                product.getImageUrl();
+
+                        if (currentImage != null
+                                && !currentImage.isBlank()) {
+
+                    %>
+
+
+                        <img
+                            src="<%= request.getContextPath() %>/<%= currentImage %>"
+                            class="current-image"
+                            alt="Current product image">
+
+
+                    <%
+
+                        } else {
+
+                    %>
+
+
+                        <div class="no-current-image">
+
+                            No Image
+
+                        </div>
+
+
+                    <%
+
+                        }
+
+                    %>
+
+
+
+                    <label
+                        for="productImage"
+                        class="replace-image-label">
+
+                        Replace Image
+
+                    </label>
 
 
                     <input
                         type="file"
                         id="productImage"
                         name="productImage"
-                        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-                        required>
+                        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
 
 
                     <div class="form-note">
 
+                        Leave this empty to keep the current image.
                         JPG, JPEG, PNG or WEBP. Maximum size: 5 MB.
 
                     </div>
+
 
 
                     <div
@@ -822,17 +946,17 @@
                         class="image-preview-wrapper">
 
 
-                        <div class="image-preview-title">
+                        <div class="new-image-title">
 
-                            Preview
+                            New Image Preview
 
                         </div>
 
 
                         <img
                             id="imagePreview"
-                            class="image-preview"
-                            alt="Product image preview">
+                            class="new-image-preview"
+                            alt="New product image preview">
 
 
                     </div>
@@ -862,7 +986,9 @@
                 <textarea
                     id="description"
                     name="description"
-                    maxlength="2000"></textarea>
+                    maxlength="2000"><%= product.getDescription() != null
+                            ? product.getDescription()
+                            : "" %></textarea>
 
 
             </div>
@@ -883,7 +1009,7 @@
                 type="submit"
                 class="submit-button">
 
-                ADD PRODUCT
+                UPDATE PRODUCT
 
             </button>
 
@@ -908,7 +1034,7 @@
 
 
 <!-- =============================================
-     IMAGE PREVIEW
+     NEW IMAGE PREVIEW
      ============================================= -->
 
 <script>
@@ -926,6 +1052,7 @@
     productImage.addEventListener(
         "change",
         function () {
+
 
             const file =
                 this.files[0];

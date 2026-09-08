@@ -18,6 +18,7 @@
 %>
 
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -33,6 +34,124 @@
           type="text/css"
           href="<%= request.getContextPath() %>/assets/css/style.css">
 
+
+    <style>
+
+        /* =========================================
+           SEARCH PRODUCT IMAGE
+        ========================================= */
+
+        .search-product-image {
+
+            width: 100%;
+            height: 330px;
+
+            background: #f4f0ed;
+
+            overflow: hidden;
+
+            position: relative;
+        }
+
+
+        .search-product-image img {
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            display: block;
+
+            transition:
+                transform 0.35s ease;
+        }
+
+
+        .search-product-card:hover
+        .search-product-image img {
+
+            transform: scale(1.03);
+        }
+
+
+        /* =========================================
+           IMAGE PLACEHOLDER
+        ========================================= */
+
+        .search-image-placeholder {
+
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: #f1ece8;
+
+            color: #38251e;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            letter-spacing: 3px;
+        }
+
+
+        /* =========================================
+           RESPONSIVE SEARCH GRID
+        ========================================= */
+
+        .search-product-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 30px 20px;
+        }
+
+
+        @media (max-width: 1000px) {
+
+            .search-product-grid {
+
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+        }
+
+
+        @media (max-width: 760px) {
+
+            .search-product-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+        }
+
+
+        @media (max-width: 500px) {
+
+            .search-product-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .search-product-image {
+
+                height: 400px;
+            }
+        }
+
+    </style>
+
 </head>
 
 
@@ -41,7 +160,7 @@
 
 <!-- =========================================================
      NAVBAR
-     ========================================================= -->
+========================================================= -->
 
 <jsp:include page="partials/nav.jsp" />
 
@@ -51,7 +170,7 @@
 
     <!-- =========================================================
          SEARCH HEADER
-         ========================================================= -->
+    ========================================================= -->
 
     <section style="
         padding: 70px 20px 45px;
@@ -59,13 +178,16 @@
         text-align: center;
     ">
 
+
         <p style="
             margin: 0 0 10px;
             color: #9b7a68;
             font-size: 10px;
             letter-spacing: 4px;
         ">
+
             FIND YOUR STYLE
+
         </p>
 
 
@@ -76,19 +198,23 @@
             font-size: 42px;
             font-weight: 400;
         ">
+
             Search GENTLUX
+
         </h1>
 
 
         <!-- SEARCH FORM -->
 
-        <form action="<%= request.getContextPath() %>/search"
-              method="get"
-              style="
-                  max-width: 650px;
-                  margin: 0 auto;
-                  display: flex;
-              ">
+        <form
+            action="<%= request.getContextPath() %>/search"
+            method="get"
+            style="
+                max-width: 650px;
+                margin: 0 auto;
+                display: flex;
+            ">
+
 
             <input
                 type="text"
@@ -125,15 +251,16 @@
 
             </button>
 
+
         </form>
+
 
     </section>
 
 
-
     <!-- =========================================================
          SEARCH RESULTS
-         ========================================================= -->
+    ========================================================= -->
 
     <section style="
         padding: 55px 20px 80px;
@@ -147,13 +274,17 @@
         ">
 
 
-            <!-- RESULT HEADING -->
+            <!-- =================================================
+                 RESULT HEADING
+            ================================================== -->
 
             <div style="
                 margin-bottom: 35px;
             ">
 
+
                 <% if (!keyword.isEmpty()) { %>
+
 
                     <h2 style="
                         margin: 0 0 8px;
@@ -175,7 +306,10 @@
                         font-size: 13px;
                     ">
 
-                        <%= products != null ? products.size() : 0 %>
+                        <%= products != null
+                                ? products.size()
+                                : 0 %>
+
                         product(s) found
 
                     </p>
@@ -199,16 +333,19 @@
 
                 <% } %>
 
-            </div>
 
+            </div>
 
 
             <!-- =================================================
                  NO PRODUCTS FOUND
-                 ================================================= -->
+            ================================================== -->
 
             <%
-                if (products == null || products.isEmpty()) {
+
+                if (products == null
+                        || products.isEmpty()) {
+
             %>
 
 
@@ -223,7 +360,9 @@
                         margin-bottom: 20px;
                         font-size: 42px;
                     ">
+
                         🔍
+
                     </div>
 
 
@@ -258,17 +397,18 @@
                     </p>
 
 
-                    <a href="<%= request.getContextPath() %>/products"
-                       style="
-                           display: inline-block;
-                           padding: 14px 28px;
-                           background: #38251e;
-                           color: #ffffff;
-                           text-decoration: none;
-                           font-size: 10px;
-                           font-weight: 600;
-                           letter-spacing: 2px;
-                       ">
+                    <a
+                        href="<%= request.getContextPath() %>/products"
+                        style="
+                            display: inline-block;
+                            padding: 14px 28px;
+                            background: #38251e;
+                            color: #ffffff;
+                            text-decoration: none;
+                            font-size: 10px;
+                            font-weight: 600;
+                            letter-spacing: 2px;
+                        ">
 
                         VIEW ALL PRODUCTS
 
@@ -279,217 +419,319 @@
 
 
             <%
-                } else {
-            %>
 
+                } else {
+
+            %>
 
 
                 <!-- =================================================
                      PRODUCT GRID
-                     ================================================= -->
+                ================================================== -->
 
-                <div style="
-                    display: grid;
-                    grid-template-columns: repeat(4, 1fr);
-                    gap: 30px 20px;
-                ">
+                <div class="search-product-grid">
 
 
                     <%
+
                         for (Product product : products) {
+
+
+                            /*
+                             * =========================================
+                             * PRODUCT IMAGE
+                             * =========================================
+                             */
+
+                            String searchImageUrl =
+                                    product.getImageUrl();
+
+
+                            boolean hasSearchImage =
+                                    searchImageUrl != null
+                                    && !searchImageUrl
+                                            .trim()
+                                            .isEmpty();
+
+
+                            String finalSearchImageUrl =
+                                    null;
+
+
+                            if (hasSearchImage) {
+
+
+                                searchImageUrl =
+                                        searchImageUrl.trim();
+
+
+                                /*
+                                 * External image
+                                 */
+
+                                if (searchImageUrl
+                                        .startsWith("http://")
+                                        || searchImageUrl
+                                        .startsWith("https://")) {
+
+
+                                    finalSearchImageUrl =
+                                            searchImageUrl;
+
+
+                                } else {
+
+
+                                    /*
+                                     * Local uploaded image
+                                     */
+
+                                    if (searchImageUrl
+                                            .startsWith("/")) {
+
+
+                                        searchImageUrl =
+                                                searchImageUrl
+                                                        .substring(1);
+                                    }
+
+
+                                    finalSearchImageUrl =
+                                            request.getContextPath()
+                                            + "/"
+                                            + searchImageUrl;
+
+                                }
+                            }
+
                     %>
 
 
-                        <!-- PRODUCT CARD -->
+                    <!-- =================================================
+                         PRODUCT CARD
+                    ================================================== -->
 
-                        <div style="
+                    <div
+                        class="search-product-card"
+                        style="
                             background: #ffffff;
                             border: 1px solid #eee7e2;
                             overflow: hidden;
                         ">
 
 
-                            <!-- PRODUCT IMAGE -->
+                        <!-- =============================================
+                             PRODUCT IMAGE
+                        ============================================== -->
 
-                            <a href="<%= request.getContextPath() %>/product-details?id=<%= product.getProductId() %>"
-                               style="
-                                   display: block;
-                                   text-decoration: none;
-                               ">
+                        <a
+                            href="<%= request.getContextPath() %>/product-details?id=<%= product.getProductId() %>"
+                            style="
+                                display: block;
+                                text-decoration: none;
+                            ">
 
 
-                                <div style="
-                                    width: 100%;
-                                    height: 330px;
-                                    background: #f4f0ed;
-                                    overflow: hidden;
+                            <div class="search-product-image">
+
+
+                                <%
+
+                                    if (hasSearchImage
+                                            && finalSearchImageUrl != null) {
+
+                                %>
+
+
+                                    <img
+                                        src="<%= finalSearchImageUrl %>"
+                                        alt="<%= product.getProductName() %>"
+                                        loading="lazy"
+
+                                        onerror="
+                                            this.style.display='none';
+                                            this.nextElementSibling.style.display='flex';
+                                        ">
+
+
+                                    <!-- BROKEN IMAGE FALLBACK -->
+
+                                    <div
+                                        class="search-image-placeholder"
+                                        style="display:none;">
+
+                                        GENTLUX
+
+                                    </div>
+
+
+                                <%
+
+                                    } else {
+
+                                %>
+
+
+                                    <!-- NO IMAGE FALLBACK -->
+
+                                    <div
+                                        class="search-image-placeholder">
+
+                                        GENTLUX
+
+                                    </div>
+
+
+                                <%
+
+                                    }
+
+                                %>
+
+
+                            </div>
+
+
+                        </a>
+
+
+                        <!-- =============================================
+                             PRODUCT INFORMATION
+                        ============================================== -->
+
+                        <div style="
+                            padding: 18px 15px 20px;
+                        ">
+
+
+                            <!-- BRAND -->
+
+                            <p style="
+                                margin: 0 0 7px;
+                                color: #9b7a68;
+                                font-size: 10px;
+                                font-weight: 600;
+                                letter-spacing: 1.5px;
+                                text-transform: uppercase;
+                            ">
+
+                                <%= product.getBrand() != null
+                                        && !product.getBrand()
+                                                .trim()
+                                                .isEmpty()
+
+                                        ? product.getBrand()
+                                        : "GENTLUX" %>
+
+                            </p>
+
+
+                            <!-- PRODUCT NAME -->
+
+                            <a
+                                href="<%= request.getContextPath() %>/product-details?id=<%= product.getProductId() %>"
+                                style="
+                                    color: #38251e;
+                                    text-decoration: none;
                                 ">
 
 
-                                    <%
-                                        if (product.getImageUrl() != null
-                                                && !product.getImageUrl().trim().isEmpty()) {
-                                    %>
+                                <h3 style="
+                                    margin: 0 0 10px;
+                                    font-size: 14px;
+                                    font-weight: 500;
+                                    line-height: 1.5;
+                                ">
 
+                                    <%= product.getProductName() %>
 
-                                        <img
-                                            src="<%= request.getContextPath() %>/<%= product.getImageUrl() %>"
-                                            alt="<%= product.getProductName() %>"
-                                            style="
-                                                width: 100%;
-                                                height: 100%;
-                                                object-fit: cover;
-                                            ">
-
-
-                                    <%
-                                        } else {
-                                    %>
-
-
-                                        <div style="
-                                            width: 100%;
-                                            height: 100%;
-                                            display: flex;
-                                            align-items: center;
-                                            justify-content: center;
-                                            color: #a49389;
-                                            font-size: 11px;
-                                            letter-spacing: 2px;
-                                        ">
-
-                                            PRODUCT IMAGE
-
-                                        </div>
-
-
-                                    <%
-                                        }
-                                    %>
-
-
-                                </div>
+                                </h3>
 
 
                             </a>
 
 
-
-                            <!-- PRODUCT INFORMATION -->
+                            <!-- =========================================
+                                 PRICE
+                            ========================================== -->
 
                             <div style="
-                                padding: 18px 15px 20px;
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+                                flex-wrap: wrap;
                             ">
 
 
-                                <!-- BRAND -->
-
-                                <p style="
-                                    margin: 0 0 7px;
-                                    color: #9b7a68;
-                                    font-size: 10px;
+                                <span style="
+                                    color: #38251e;
+                                    font-size: 15px;
                                     font-weight: 600;
-                                    letter-spacing: 1.5px;
-                                    text-transform: uppercase;
                                 ">
 
-                                    <%= product.getBrand() %>
+                                    ₹<%= String.format(
+                                            "%.2f",
+                                            product.getPrice()
+                                    ) %>
 
-                                </p>
-
-
-
-                                <!-- PRODUCT NAME -->
-
-                                <a href="<%= request.getContextPath() %>/product-details?id=<%= product.getProductId() %>"
-                                   style="
-                                       color: #38251e;
-                                       text-decoration: none;
-                                   ">
+                                </span>
 
 
-                                    <h3 style="
-                                        margin: 0 0 10px;
-                                        font-size: 14px;
-                                        font-weight: 500;
-                                        line-height: 1.5;
-                                    ">
+                                <%
 
-                                        <%= product.getProductName() %>
+                                    if (product.getMrp()
+                                            > product.getPrice()) {
 
-                                    </h3>
-
-
-                                </a>
-
-
-
-                                <!-- PRICE -->
-
-                                <div style="
-                                    display: flex;
-                                    align-items: center;
-                                    gap: 8px;
-                                    flex-wrap: wrap;
-                                ">
+                                %>
 
 
                                     <span style="
-                                        color: #38251e;
-                                        font-size: 15px;
-                                        font-weight: 600;
+                                        color: #a79c96;
+                                        font-size: 12px;
+                                        text-decoration: line-through;
                                     ">
 
-                                        ₹<%= String.format("%.2f", product.getPrice()) %>
+                                        ₹<%= String.format(
+                                                "%.2f",
+                                                product.getMrp()
+                                        ) %>
 
                                     </span>
 
 
+                                <%
 
-                                    <%
-                                        if (product.getMrp() > product.getPrice()) {
-                                    %>
+                                    }
 
-
-                                        <span style="
-                                            color: #a79c96;
-                                            font-size: 12px;
-                                            text-decoration: line-through;
-                                        ">
-
-                                            ₹<%= String.format("%.2f", product.getMrp()) %>
-
-                                        </span>
+                                %>
 
 
-                                    <%
-                                        }
-                                    %>
+                                <%
+
+                                    if (product.getDiscount() > 0) {
+
+                                %>
 
 
+                                    <span style="
+                                        color: #9b7a68;
+                                        font-size: 11px;
+                                        font-weight: 600;
+                                    ">
 
-                                    <%
-                                        if (product.getDiscount() > 0) {
-                                    %>
+                                        <%= String.format(
+                                                "%.0f",
+                                                product.getDiscount()
+                                        ) %>% OFF
 
-
-                                        <span style="
-                                            color: #9b7a68;
-                                            font-size: 11px;
-                                            font-weight: 600;
-                                        ">
-
-                                            <%= String.format("%.0f", product.getDiscount()) %>% OFF
-
-                                        </span>
+                                    </span>
 
 
-                                    <%
-                                        }
-                                    %>
+                                <%
 
+                                    }
 
-                                </div>
+                                %>
 
 
                             </div>
@@ -498,8 +740,13 @@
                         </div>
 
 
+                    </div>
+
+
                     <%
+
                         }
+
                     %>
 
 
@@ -507,7 +754,9 @@
 
 
             <%
+
                 }
+
             %>
 
 
@@ -520,10 +769,9 @@
 </main>
 
 
-
 <!-- =========================================================
      FOOTER
-     ========================================================= -->
+========================================================= -->
 
 <jsp:include page="partials/footer.jsp" />
 

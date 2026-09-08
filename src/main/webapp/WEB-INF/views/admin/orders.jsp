@@ -1,15 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
 <%@ page import="com.gentlux.model.Order" %>
+<%@ page import="com.gentlux.model.OrderItemView" %>
 
 <%
     List<Order> orders =
             (List<Order>) request.getAttribute("orders");
+
+    Map<Integer, List<OrderItemView>> orderItemsMap =
+            (Map<Integer, List<OrderItemView>>)
+                    request.getAttribute("orderItemsMap");
 %>
 
 <!DOCTYPE html>
-
 <html>
 
 <head>
@@ -41,7 +45,6 @@
             padding: 0 40px;
             background: #2e2723;
             color: white;
-
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -68,7 +71,7 @@
         }
 
         .container {
-            width: min(1250px, 94%);
+            width: min(1450px, 96%);
             margin: 40px auto;
         }
 
@@ -121,6 +124,7 @@
             letter-spacing: 1px;
             text-transform: uppercase;
             color: #6d625c;
+            white-space: nowrap;
         }
 
         td {
@@ -130,16 +134,104 @@
             vertical-align: middle;
         }
 
+        /* ==========================================
+           ORDER PRODUCTS
+           ========================================== */
+
+        .order-products {
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .order-product {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .order-product + .order-product {
+            padding-top: 12px;
+            border-top: 1px solid #eee8e4;
+        }
+
+        .product-image-box {
+            width: 65px;
+            height: 82px;
+            flex-shrink: 0;
+            overflow: hidden;
+            background: #f1ece8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .product-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1ece8;
+            color: #38251e;
+            font-size: 8px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .product-details {
+            min-width: 0;
+        }
+
+        .product-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #2e2723;
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .product-brand {
+            font-size: 10px;
+            color: #8a7d76;
+            margin-bottom: 5px;
+        }
+
+        .product-meta {
+            font-size: 10px;
+            color: #746861;
+            line-height: 1.6;
+        }
+
+        .product-meta strong {
+            color: #2e2723;
+        }
+
+        .no-products {
+            color: #8a7d76;
+            font-size: 11px;
+        }
+
+        /* ==========================================
+           STATUS
+           ========================================== */
+
         .status {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-
             min-width: 90px;
             padding: 7px 12px;
-
             border-radius: 20px;
-
             font-size: 9px;
             font-weight: 600;
             letter-spacing: 1px;
@@ -181,28 +273,16 @@
             gap: 8px;
         }
 
-        .status-form select {
-            min-width: 125px;
-            padding: 9px 10px;
-
-            border: 1px solid #d7cec8;
-            background: white;
-            color: #2e2723;
-
-            font-size: 11px;
-        }
-
         .status-form button {
             padding: 9px 13px;
             border: none;
             background: #2e2723;
             color: white;
-
             font-size: 9px;
             font-weight: 600;
             letter-spacing: 1px;
-
             cursor: pointer;
+            white-space: nowrap;
         }
 
         .status-form button:hover {
@@ -220,20 +300,38 @@
             color: #8a7d76;
         }
 
+        @media (max-width: 768px) {
+
+            .admin-header {
+                padding: 0 20px;
+            }
+
+            .container {
+                width: 94%;
+                margin: 25px auto;
+            }
+
+            .order-products {
+                min-width: 250px;
+            }
+
+            .product-image-box {
+                width: 55px;
+                height: 70px;
+            }
+        }
+
     </style>
 
 </head>
 
-
 <body>
-
 
 <header class="admin-header">
 
     <div class="admin-logo">
         GENTLUX
     </div>
-
 
     <div class="header-links">
 
@@ -252,7 +350,6 @@
 
 <main class="container">
 
-
     <section class="page-header">
 
         <h1>
@@ -260,7 +357,7 @@
         </h1>
 
         <p>
-            View and update customer order statuses.
+            View ordered products and update customer order statuses.
         </p>
 
     </section>
@@ -301,21 +398,14 @@
             <thead>
 
                 <tr>
-
                     <th>Order ID</th>
-
+                    <th>Products</th>
                     <th>User ID</th>
-
                     <th>Date</th>
-
                     <th>Total</th>
-
                     <th>Payment</th>
-
                     <th>Status</th>
-
                     <th>Update</th>
-
                 </tr>
 
             </thead>
@@ -369,21 +459,187 @@
                                     "status-cancelled";
                         }
                     }
-            %>
 
+
+                    List<OrderItemView> orderItems = null;
+
+                    if (orderItemsMap != null) {
+
+                        orderItems =
+                                orderItemsMap.get(
+                                        order.getOrderId()
+                                );
+                    }
+            %>
 
                 <tr>
 
+                    <!-- ORDER ID -->
                     <td>
                         #<%= order.getOrderId() %>
                     </td>
 
 
+                    <!-- PRODUCTS -->
+                    <td>
+
+                        <div class="order-products">
+
+                        <%
+                            if (orderItems != null &&
+                                    !orderItems.isEmpty()) {
+
+                                for (OrderItemView item : orderItems) {
+
+                                    String imageUrl =
+                                            item.getImageUrl();
+
+                                    boolean hasImage =
+                                            imageUrl != null &&
+                                            !imageUrl.trim().isEmpty();
+
+                                    String finalImageUrl = null;
+
+                                    if (hasImage) {
+
+                                        imageUrl =
+                                                imageUrl.trim();
+
+                                        if (
+                                            imageUrl.startsWith("http://") ||
+                                            imageUrl.startsWith("https://")
+                                        ) {
+
+                                            finalImageUrl =
+                                                    imageUrl;
+
+                                        } else {
+
+                                            if (
+                                                imageUrl.startsWith("/")
+                                            ) {
+
+                                                imageUrl =
+                                                    imageUrl.substring(1);
+                                            }
+
+                                            finalImageUrl =
+                                                request.getContextPath()
+                                                + "/"
+                                                + imageUrl;
+                                        }
+                                    }
+                        %>
+
+                            <div class="order-product">
+
+                                <!-- PRODUCT IMAGE -->
+                                <div class="product-image-box">
+
+                                    <%
+                                        if (hasImage) {
+                                    %>
+
+                                        <img
+                                            src="<%= finalImageUrl %>"
+                                            alt="<%= item.getProductName() %>"
+                                            loading="lazy"
+                                            onerror="
+                                                this.style.display='none';
+                                                this.nextElementSibling.style.display='flex';
+                                            ">
+
+                                        <div
+                                            class="product-image-placeholder"
+                                            style="display:none;">
+                                            GENTLUX
+                                        </div>
+
+                                    <%
+                                        } else {
+                                    %>
+
+                                        <div class="product-image-placeholder">
+                                            GENTLUX
+                                        </div>
+
+                                    <%
+                                        }
+                                    %>
+
+                                </div>
+
+
+                                <!-- PRODUCT INFORMATION -->
+                                <div class="product-details">
+
+                                    <div class="product-name">
+                                        <%= item.getProductName() != null
+                                                ? item.getProductName()
+                                                : "Product" %>
+                                    </div>
+
+                                    <div class="product-brand">
+                                        <%= item.getBrand() != null
+                                                ? item.getBrand()
+                                                : "GENTLUX" %>
+                                    </div>
+
+                                    <div class="product-meta">
+
+                                        Size:
+                                        <strong>
+                                            <%= item.getSize() != null
+                                                    ? item.getSize()
+                                                    : "-" %>
+                                        </strong>
+
+                                        <br>
+
+                                        Qty:
+                                        <strong>
+                                            <%= item.getQuantity() %>
+                                        </strong>
+
+                                        <br>
+
+                                        ₹<%= String.format(
+                                                "%.2f",
+                                                item.getPrice()
+                                        ) %>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        <%
+                                }
+
+                            } else {
+                        %>
+
+                            <div class="no-products">
+                                No product details
+                            </div>
+
+                        <%
+                            }
+                        %>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- USER ID -->
                     <td>
                         <%= order.getUserId() %>
                     </td>
 
 
+                    <!-- ORDER DATE -->
                     <td>
 
                         <%= order.getOrderDate() != null
@@ -393,14 +649,18 @@
                     </td>
 
 
+                    <!-- TOTAL -->
                     <td>
+
                         ₹<%= String.format(
                                 "%.2f",
                                 order.getTotalAmount()
                         ) %>
+
                     </td>
 
 
+                    <!-- PAYMENT -->
                     <td>
 
                         <%= order.getPaymentMethod() != null
@@ -410,6 +670,7 @@
                     </td>
 
 
+                    <!-- STATUS -->
                     <td>
 
                         <span class="status <%= statusClass %>">
@@ -423,108 +684,106 @@
                     </td>
 
 
+                    <!-- UPDATE STATUS -->
                     <td>
 
-                        <%
-                            if ("PLACED".equalsIgnoreCase(status)) {
-                        %>
+                    <%
+                        if ("PLACED".equalsIgnoreCase(status)) {
+                    %>
 
-                            <form
-                                class="status-form"
-                                action="${pageContext.request.contextPath}/admin/update-order-status"
-                                method="post">
+                        <form
+                            class="status-form"
+                            action="${pageContext.request.contextPath}/admin/update-order-status"
+                            method="post">
 
-                                <input
-                                    type="hidden"
-                                    name="orderId"
-                                    value="<%= order.getOrderId() %>">
+                            <input
+                                type="hidden"
+                                name="orderId"
+                                value="<%= order.getOrderId() %>">
 
-                                <input
-                                    type="hidden"
-                                    name="status"
-                                    value="CONFIRMED">
+                            <input
+                                type="hidden"
+                                name="status"
+                                value="CONFIRMED">
 
-                                <button type="submit">
-                                    CONFIRM
-                                </button>
+                            <button type="submit">
+                                CONFIRM
+                            </button>
 
-                            </form>
-
-
-                        <%
-                            } else if (
-                                    "CONFIRMED".equalsIgnoreCase(status)
-                            ) {
-                        %>
-
-                            <form
-                                class="status-form"
-                                action="${pageContext.request.contextPath}/admin/update-order-status"
-                                method="post">
-
-                                <input
-                                    type="hidden"
-                                    name="orderId"
-                                    value="<%= order.getOrderId() %>">
-
-                                <input
-                                    type="hidden"
-                                    name="status"
-                                    value="SHIPPED">
-
-                                <button type="submit">
-                                    MARK SHIPPED
-                                </button>
-
-                            </form>
+                        </form>
 
 
-                        <%
-                            } else if (
-                                    "SHIPPED".equalsIgnoreCase(status)
-                            ) {
-                        %>
+                    <%
+                        } else if (
+                                "CONFIRMED".equalsIgnoreCase(status)
+                        ) {
+                    %>
 
-                            <form
-                                class="status-form"
-                                action="${pageContext.request.contextPath}/admin/update-order-status"
-                                method="post">
+                        <form
+                            class="status-form"
+                            action="${pageContext.request.contextPath}/admin/update-order-status"
+                            method="post">
 
-                                <input
-                                    type="hidden"
-                                    name="orderId"
-                                    value="<%= order.getOrderId() %>">
+                            <input
+                                type="hidden"
+                                name="orderId"
+                                value="<%= order.getOrderId() %>">
 
-                                <input
-                                    type="hidden"
-                                    name="status"
-                                    value="DELIVERED">
+                            <input
+                                type="hidden"
+                                name="status"
+                                value="SHIPPED">
 
-                                <button type="submit">
-                                    MARK DELIVERED
-                                </button>
+                            <button type="submit">
+                                MARK SHIPPED
+                            </button>
 
-                            </form>
+                        </form>
 
 
-                        <%
-                            } else {
-                        %>
+                    <%
+                        } else if (
+                                "SHIPPED".equalsIgnoreCase(status)
+                        ) {
+                    %>
 
-                            <span class="final-status">
+                        <form
+                            class="status-form"
+                            action="${pageContext.request.contextPath}/admin/update-order-status"
+                            method="post">
 
-                                No action
+                            <input
+                                type="hidden"
+                                name="orderId"
+                                value="<%= order.getOrderId() %>">
 
-                            </span>
+                            <input
+                                type="hidden"
+                                name="status"
+                                value="DELIVERED">
 
-                        <%
-                            }
-                        %>
+                            <button type="submit">
+                                MARK DELIVERED
+                            </button>
+
+                        </form>
+
+
+                    <%
+                        } else {
+                    %>
+
+                        <span class="final-status">
+                            No action
+                        </span>
+
+                    <%
+                        }
+                    %>
 
                     </td>
 
                 </tr>
-
 
             <%
                 }
@@ -542,18 +801,14 @@
     %>
 
         <div class="empty">
-
             No orders found.
-
         </div>
 
     <%
         }
     %>
 
-
 </main>
-
 
 </body>
 

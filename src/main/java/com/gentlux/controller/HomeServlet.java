@@ -1,12 +1,16 @@
 package com.gentlux.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.gentlux.dao.ProductDAO;
 import com.gentlux.dao.WishlistDAO;
+import com.gentlux.dao.impl.ProductDAOImpl;
 import com.gentlux.dao.impl.WishlistDAOImpl;
+import com.gentlux.model.Product;
 import com.gentlux.model.Wishlist;
 
 import jakarta.servlet.ServletException;
@@ -22,12 +26,16 @@ public class HomeServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private WishlistDAO wishlistDAO;
+    private ProductDAO productDAO;
 
     @Override
     public void init() {
 
         wishlistDAO =
                 new WishlistDAOImpl();
+
+        productDAO =
+                new ProductDAOImpl();
     }
 
     @Override
@@ -35,6 +43,62 @@ public class HomeServlet extends HttpServlet {
             HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
+
+
+        /*
+         * =========================================
+         * FEATURED PRODUCTS
+         * =========================================
+         *
+         * Currently the Home page uses
+         * Product IDs 1, 2, 3 and 4.
+         *
+         * Instead of hardcoding their product
+         * information inside JSP, we now load
+         * those products directly from database.
+         */
+
+        List<Product> featuredProducts =
+                new ArrayList<>();
+
+
+        int[] featuredProductIds = {
+                1, 2, 3, 4
+        };
+
+
+        for (int productId : featuredProductIds) {
+
+            Product product =
+                    productDAO.getProductById(
+                            productId
+                    );
+
+
+            if (product != null) {
+
+                featuredProducts.add(
+                        product
+                );
+            }
+        }
+
+
+        /*
+         * Send featured products to home.jsp
+         */
+
+        request.setAttribute(
+                "featuredProducts",
+                featuredProducts
+        );
+
+
+        /*
+         * =========================================
+         * USER WISHLIST PRODUCTS
+         * =========================================
+         */
 
         Set<Integer> wishlistProductIds =
                 new HashSet<>();
@@ -47,15 +111,19 @@ public class HomeServlet extends HttpServlet {
         if (session != null
                 && session.getAttribute("userId") != null) {
 
+
             int userId =
                     (Integer)
-                    session.getAttribute("userId");
+                    session.getAttribute(
+                            "userId"
+                    );
 
 
             List<Wishlist> wishlistItems =
-                    wishlistDAO.getWishlistByUserId(
-                            userId
-                    );
+                    wishlistDAO
+                            .getWishlistByUserId(
+                                    userId
+                            );
 
 
             if (wishlistItems != null) {
@@ -63,13 +131,19 @@ public class HomeServlet extends HttpServlet {
                 for (Wishlist wishlist
                         : wishlistItems) {
 
+
                     wishlistProductIds.add(
                             wishlist.getProductId()
                     );
+
                 }
             }
         }
 
+
+        /*
+         * Send wishlist IDs to home.jsp
+         */
 
         request.setAttribute(
                 "wishlistProductIds",
@@ -77,8 +151,17 @@ public class HomeServlet extends HttpServlet {
         );
 
 
+        /*
+         * =========================================
+         * OPEN HOME PAGE
+         * =========================================
+         */
+
         request.getRequestDispatcher(
                 "/WEB-INF/views/home.jsp"
-        ).forward(request, response);
+        ).forward(
+                request,
+                response
+        );
     }
 }
