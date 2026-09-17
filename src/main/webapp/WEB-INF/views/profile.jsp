@@ -3,6 +3,7 @@
     pageEncoding="UTF-8"%>
 
 <%@ page import="com.gentlux.model.User" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 
 <!DOCTYPE html>
 
@@ -305,15 +306,21 @@
                                 </span>
 
 
-                                <strong>
-
-                                    <%= user.getCreatedAt() != null
-
-                                            ? user.getCreatedAt()
-
-                                            : "-" %>
-
-                                </strong>
+					<strong>
+					    <%
+					        if (user.getCreatedAt() != null) {
+					            SimpleDateFormat memberSinceFormat =
+					            		new SimpleDateFormat("dd MMM yyyy, hh:mm a");
+					    %>
+					        <%= memberSinceFormat.format(user.getCreatedAt()) %>
+					    <%
+					        } else {
+					    %>
+					        -
+					    <%
+					        }
+					    %>
+					</strong>
 
                             </div>
 

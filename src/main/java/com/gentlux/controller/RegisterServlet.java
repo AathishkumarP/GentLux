@@ -11,6 +11,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 
 @WebServlet("/register")
@@ -41,6 +42,34 @@ public class RegisterServlet extends HttpServlet {
             HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
+
+        // If already logged in, do not show register page
+        HttpSession session =
+                request.getSession(false);
+
+        if (session != null
+                && session.getAttribute("userId") != null) {
+
+            String role =
+                    (String) session.getAttribute("role");
+
+            if ("ADMIN".equalsIgnoreCase(role)) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/admin/dashboard"
+                );
+
+            } else {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/home"
+                );
+            }
+
+            return;
+        }
 
         request.getRequestDispatcher(
                 "/WEB-INF/views/register.jsp"

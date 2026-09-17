@@ -29,7 +29,6 @@ public class CheckoutServlet extends HttpServlet {
     private CartItemDAO cartItemDAO;
     private UserDAO userDAO;
 
-
     @Override
     public void init() {
 
@@ -47,7 +46,6 @@ public class CheckoutServlet extends HttpServlet {
         );
     }
 
-
     @Override
     protected void doGet(
             HttpServletRequest request,
@@ -56,17 +54,8 @@ public class CheckoutServlet extends HttpServlet {
 
         try {
 
-            // =====================================================
-            // GET EXISTING SESSION
-            // =====================================================
-
             HttpSession session =
                     request.getSession(false);
-
-
-            // =====================================================
-            // CHECK LOGIN
-            // =====================================================
 
             if (session == null
                     || session.getAttribute("userId") == null) {
@@ -79,26 +68,15 @@ public class CheckoutServlet extends HttpServlet {
                 return;
             }
 
-
-            // =====================================================
-            // GET LOGGED-IN USER ID
-            // =====================================================
-
             int userId =
                     (Integer) session.getAttribute(
                             "userId"
                     );
 
-
-            // =====================================================
-            // GET USER PROFILE
-            // =====================================================
-
             User user =
                     userDAO.getUserById(
                             userId
                     );
-
 
             if (user == null) {
 
@@ -112,16 +90,10 @@ public class CheckoutServlet extends HttpServlet {
                 return;
             }
 
-
-            // =====================================================
-            // GET OR CREATE USER CART
-            // =====================================================
-
             Cart cart =
                     cartDAO.getOrCreateCart(
                             userId
                     );
-
 
             if (cart == null) {
 
@@ -134,25 +106,14 @@ public class CheckoutServlet extends HttpServlet {
                 return;
             }
 
-
             int cartId =
                     cart.getCartId();
-
-
-            // =====================================================
-            // GET CART ITEMS
-            // =====================================================
 
             List<CartItemView> cartItems =
                     cartItemDAO
                             .getCartItemViewsByCartId(
                                     cartId
                             );
-
-
-            // =====================================================
-            // EMPTY CART CHECK
-            // =====================================================
 
             if (cartItems == null
                     || cartItems.isEmpty()) {
@@ -165,15 +126,8 @@ public class CheckoutServlet extends HttpServlet {
                 return;
             }
 
-
-            // =====================================================
-            // CALCULATE TOTAL
-            // =====================================================
-
             double cartTotal = 0.0;
-
             int totalQuantity = 0;
-
 
             for (CartItemView item : cartItems) {
 
@@ -183,11 +137,6 @@ public class CheckoutServlet extends HttpServlet {
                 totalQuantity +=
                         item.getQuantity();
             }
-
-
-            // =====================================================
-            // SEND DATA TO JSP
-            // =====================================================
 
             request.setAttribute(
                     "user",
@@ -214,48 +163,10 @@ public class CheckoutServlet extends HttpServlet {
                     cartId
             );
 
-
-            // =====================================================
-            // DEBUG
-            // =====================================================
-
-            System.out.println(
-                    "========== CHECKOUT =========="
+            request.setAttribute(
+                    "checkoutType",
+                    "CART"
             );
-
-            System.out.println(
-                    "User ID = "
-                    + userId
-            );
-
-            System.out.println(
-                    "Cart ID = "
-                    + cartId
-            );
-
-            System.out.println(
-                    "Cart Items = "
-                    + cartItems.size()
-            );
-
-            System.out.println(
-                    "Total Quantity = "
-                    + totalQuantity
-            );
-
-            System.out.println(
-                    "Cart Total = "
-                    + cartTotal
-            );
-
-            System.out.println(
-                    "=============================="
-            );
-
-
-            // =====================================================
-            // OPEN CHECKOUT PAGE
-            // =====================================================
 
             request.getRequestDispatcher(
                     "/WEB-INF/views/checkout.jsp"
@@ -263,7 +174,6 @@ public class CheckoutServlet extends HttpServlet {
                     request,
                     response
             );
-
 
         } catch (Exception e) {
 

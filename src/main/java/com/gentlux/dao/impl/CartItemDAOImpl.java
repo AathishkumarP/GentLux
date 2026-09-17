@@ -13,7 +13,6 @@ import java.util.List;
 
 public class CartItemDAOImpl implements CartItemDAO {
 
-
     // =========================================================
     // ADD CART ITEM
     // =========================================================
@@ -48,7 +47,6 @@ public class CartItemDAOImpl implements CartItemDAO {
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 
@@ -80,13 +78,11 @@ public class CartItemDAOImpl implements CartItemDAO {
                          statement.executeQuery()) {
 
                 if (resultSet.next()) {
-
                     return mapCartItem(resultSet);
                 }
             }
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 
@@ -126,13 +122,11 @@ public class CartItemDAOImpl implements CartItemDAO {
                          statement.executeQuery()) {
 
                 if (resultSet.next()) {
-
                     return mapCartItem(resultSet);
                 }
             }
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 
@@ -176,7 +170,6 @@ public class CartItemDAOImpl implements CartItemDAO {
             }
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 
@@ -268,7 +261,7 @@ public class CartItemDAOImpl implements CartItemDAO {
                                     "size"
                             )
                     );
-                    
+
                     item.setStock(
                             resultSet.getInt(
                                     "stock"
@@ -304,7 +297,6 @@ public class CartItemDAOImpl implements CartItemDAO {
             }
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 
@@ -343,7 +335,6 @@ public class CartItemDAOImpl implements CartItemDAO {
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 
@@ -374,7 +365,6 @@ public class CartItemDAOImpl implements CartItemDAO {
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 
@@ -413,7 +403,6 @@ public class CartItemDAOImpl implements CartItemDAO {
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 
@@ -444,7 +433,6 @@ public class CartItemDAOImpl implements CartItemDAO {
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 
@@ -487,7 +475,6 @@ public class CartItemDAOImpl implements CartItemDAO {
             }
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 
@@ -497,12 +484,14 @@ public class CartItemDAOImpl implements CartItemDAO {
 
     // =========================================================
     // GET CART ITEM COUNT
+    // Counts number of different cart items, not total quantity
     // =========================================================
+
     @Override
     public int getCartItemCount(int cartId) {
 
         String sql =
-                "SELECT COALESCE(SUM(quantity), 0) "
+                "SELECT COUNT(*) "
               + "FROM cart_items "
               + "WHERE cart_id = ?";
 
@@ -521,18 +510,18 @@ public class CartItemDAOImpl implements CartItemDAO {
                          statement.executeQuery()) {
 
                 if (resultSet.next()) {
-
                     return resultSet.getInt(1);
                 }
             }
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 
         return 0;
     }
+
+
     // =========================================================
     // GET QUANTITY OF PARTICULAR VARIANT
     // =========================================================
@@ -574,7 +563,6 @@ public class CartItemDAOImpl implements CartItemDAO {
             }
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 

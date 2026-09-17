@@ -3,6 +3,7 @@
     pageEncoding="UTF-8"%>
 
 <%@ page import="java.util.List" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="com.gentlux.model.Order" %>
 <%@ page import="com.gentlux.model.OrderItemView" %>
 
@@ -31,16 +32,18 @@
            ORDER PRODUCT IMAGE
         ========================================================== */
 
-        .order-product-image {
-            overflow: hidden;
-        }
+		.order-product-image {
+		    background: #ffffff;
+		    overflow: hidden;
+		}
 
-        .order-product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
+		.order-product-image img {
+		    width: 100%;
+		    height: 100%;
+		    display: block;
+		    object-fit: contain;
+		    object-position: center;
+		}
 
         .order-image-placeholder {
             width: 100%;
@@ -655,13 +658,21 @@
                         </span>
 
 
-                        <strong class="order-date-value">
-
-                            <%= order.getOrderDate() != null
-                                    ? order.getOrderDate()
-                                    : "-" %>
-
-                        </strong>
+				<strong class="order-date-value">
+				    <%
+				        if (order.getOrderDate() != null) {
+				            SimpleDateFormat orderDateFormat =
+				                    new SimpleDateFormat("dd MMM yyyy, hh:mm a");
+				    %>
+				        <%= orderDateFormat.format(order.getOrderDate()) %>
+				    <%
+				        } else {
+				    %>
+				        -
+				    <%
+				        }
+				    %>
+				</strong>
 
 
                     </div>

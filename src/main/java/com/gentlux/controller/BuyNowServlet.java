@@ -6,21 +6,21 @@ import java.util.List;
 
 import com.gentlux.dao.ProductDAO;
 import com.gentlux.dao.ProductVariantDAO;
-
+import com.gentlux.dao.UserDAO;
 import com.gentlux.dao.impl.ProductDAOImpl;
 import com.gentlux.dao.impl.ProductVariantDAOImpl;
-
+import com.gentlux.dao.impl.UserDAOImpl;
 import com.gentlux.model.CartItemView;
 import com.gentlux.model.Product;
 import com.gentlux.model.ProductVariant;
+import com.gentlux.model.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/buy-now")
 public class BuyNowServlet extends HttpServlet {
@@ -29,7 +29,7 @@ public class BuyNowServlet extends HttpServlet {
 
     private ProductVariantDAO productVariantDAO;
     private ProductDAO productDAO;
-
+    private UserDAO userDAO;
 
     @Override
     public void init() {
@@ -40,11 +40,13 @@ public class BuyNowServlet extends HttpServlet {
         productDAO =
                 new ProductDAOImpl();
 
+        userDAO =
+                new UserDAOImpl();
+
         System.out.println(
                 "BuyNowServlet initialized"
         );
     }
-
 
     @Override
     protected void doPost(
@@ -54,9 +56,41 @@ public class BuyNowServlet extends HttpServlet {
 
         try {
 
-            // =================================================
-            // GET FORM VALUES
-            // =================================================
+            HttpSession session =
+                    request.getSession(false);
+
+            if (session == null
+                    || session.getAttribute("userId") == null) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/login"
+                );
+
+                return;
+            }
+
+            int userId =
+                    (Integer) session.getAttribute(
+                            "userId"
+                    );
+
+            User user =
+                    userDAO.getUserById(
+                            userId
+                    );
+
+            if (user == null) {
+
+                session.invalidate();
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/login"
+                );
+
+                return;
+            }
 
             int variantId =
                     Integer.parseInt(
@@ -68,11 +102,6 @@ public class BuyNowServlet extends HttpServlet {
                             request.getParameter("quantity")
                     );
 
-
-            // =================================================
-            // QUANTITY VALIDATION
-            // =================================================
-
             if (quantity < 1) {
 
                 response.sendError(
@@ -83,16 +112,10 @@ public class BuyNowServlet extends HttpServlet {
                 return;
             }
 
-
-            // =================================================
-            // GET VARIANT
-            // =================================================
-
             ProductVariant variant =
                     productVariantDAO.getVariantById(
                             variantId
                     );
-
 
             if (variant == null) {
 
@@ -104,11 +127,6 @@ public class BuyNowServlet extends HttpServlet {
                 return;
             }
 
-
-            // =================================================
-            // STOCK CHECK
-            // =================================================
-
             if (variant.getStockQuantity() < quantity) {
 
                 response.sendError(
@@ -119,16 +137,10 @@ public class BuyNowServlet extends HttpServlet {
                 return;
             }
 
-
-            // =================================================
-            // GET PRODUCT
-            // =================================================
-
             Product product =
                     productDAO.getProductById(
                             variant.getProductId()
                     );
-
 
             if (product == null) {
 
@@ -139,11 +151,6 @@ public class BuyNowServlet extends HttpServlet {
 
                 return;
             }
-
-
-            // =================================================
-            // BUILD TEMPORARY CHECKOUT ITEM
-            // =================================================
 
             CartItemView buyNowItem =
                     new CartItemView();
@@ -180,11 +187,6 @@ public class BuyNowServlet extends HttpServlet {
                     product.getImageUrl()
             );
 
-
-            // =================================================
-            // CREATE LIST FOR EXISTING CHECKOUT JSP
-            // =================================================
-
             List<CartItemView> cartItems =
                     new ArrayList<>();
 
@@ -192,21 +194,16 @@ public class BuyNowServlet extends HttpServlet {
                     buyNowItem
             );
 
-
-            // =================================================
-            // TOTALS
-            // =================================================
-
             double cartTotal =
                     buyNowItem.getSubtotal();
 
             int totalQuantity =
                     quantity;
 
-
-            // =================================================
-            // SEND DATA TO CHECKOUT JSP
-            // =================================================
+            request.setAttribute(
+                    "user",
+                    user
+            );
 
             request.setAttribute(
                     "cartItems",
@@ -223,8 +220,6 @@ public class BuyNowServlet extends HttpServlet {
                     totalQuantity
             );
 
-
-            // Buy Now does not use normal cart.
             request.setAttribute(
                     "cartId",
                     0
@@ -245,40 +240,6 @@ public class BuyNowServlet extends HttpServlet {
                     quantity
             );
 
-
-            System.out.println(
-                    "========== BUY NOW =========="
-            );
-
-            System.out.println(
-                    "Variant ID = "
-                    + variantId
-            );
-
-            System.out.println(
-                    "Product ID = "
-                    + product.getProductId()
-            );
-
-            System.out.println(
-                    "Quantity = "
-                    + quantity
-            );
-
-            System.out.println(
-                    "Total = "
-                    + cartTotal
-            );
-
-            System.out.println(
-                    "============================="
-            );
-
-
-            // =================================================
-            // OPEN EXISTING CHECKOUT PAGE
-            // =================================================
-
             request.getRequestDispatcher(
                     "/WEB-INF/views/checkout.jsp"
             ).forward(
@@ -286,14 +247,12 @@ public class BuyNowServlet extends HttpServlet {
                     response
             );
 
-
         } catch (NumberFormatException e) {
 
             response.sendError(
                     HttpServletResponse.SC_BAD_REQUEST,
                     "Invalid Buy Now data."
             );
-
 
         } catch (Exception e) {
 

@@ -44,6 +44,34 @@ public class LoginServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
+        // If already logged in, do not show login page
+        HttpSession session =
+                request.getSession(false);
+
+        if (session != null
+                && session.getAttribute("userId") != null) {
+
+            String role =
+                    (String) session.getAttribute("role");
+
+            if ("ADMIN".equalsIgnoreCase(role)) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/admin/dashboard"
+                );
+
+            } else {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/home"
+                );
+            }
+
+            return;
+        }
+
         request.getRequestDispatcher(
                 "/WEB-INF/views/login.jsp"
         ).forward(request, response);
