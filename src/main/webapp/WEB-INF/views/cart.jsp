@@ -251,6 +251,7 @@
 
 
                 <%
+                @SuppressWarnings("unchecked")
 
                     List<CartItemView> cartItems =
 

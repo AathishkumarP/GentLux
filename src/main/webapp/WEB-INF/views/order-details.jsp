@@ -82,7 +82,7 @@
                 (Order)
                 request.getAttribute("order");
 
-
+    @SuppressWarnings("unchecked")
         List<OrderItemView> orderItems =
                 (List<OrderItemView>)
                 request.getAttribute("orderItems");

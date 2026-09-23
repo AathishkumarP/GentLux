@@ -12,6 +12,8 @@
 
 <%
 
+@SuppressWarnings("unchecked")
+
     List<CartItemView> cartItems =
 
             (List<CartItemView>) request.getAttribute("cartItems");
@@ -701,22 +703,17 @@
 
 
 
-                        <div class="gl-checkout-payment-text">
-
-                            <strong>
-
-                                Cash on Delivery
-
-                            </strong>
-
-                            <span>
-
-                                Pay when your order is delivered
-
-                            </span>
-
-                        </div>
-
+			<span class="gl-checkout-payment-text">
+			
+			    <strong>
+			        Cash on Delivery
+			    </strong>
+			
+			    <span>
+			        Pay when your order is delivered
+			    </span>
+			
+			</span>
                     </label>
 
 

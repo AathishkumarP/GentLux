@@ -8,6 +8,7 @@
     Product product =
             (Product) request.getAttribute("product");
 
+@SuppressWarnings("unchecked")
     List<ProductVariant> variants =
             (List<ProductVariant>) request.getAttribute("variants");
 

@@ -11,4 +11,7 @@
     <welcome-file>default.jsp</welcome-file>
     <welcome-file>default.xhtml</welcome-file>
   </welcome-file-list>
+  <welcome-file-list>
+    <welcome-file>home</welcome-file>
+</welcome-file-list>
 </web-app>

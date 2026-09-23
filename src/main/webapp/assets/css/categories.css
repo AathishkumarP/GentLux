@@ -274,3 +274,15 @@
         height: 350px;
     }
 }
+
+
+.categories-page-card {
+    position: relative;
+}
+
+.categories-page-card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: block;
+}

@@ -33,6 +33,8 @@
 
 
     <%
+    
+    @SuppressWarnings("unchecked")
         List<Category> categories =
                 (List<Category>)
                 request.getAttribute("categories");
@@ -135,43 +137,31 @@
                 %>
 
 
-                <a
-                    href="<%= request.getContextPath() %>/products?categoryId=<%= category.getCategoryId() %>"
-                    class="categories-page-card">
+<div class="categories-page-card">
 
+    <div class="categories-page-image <%= categoryClass %>">
+        <div class="categories-page-overlay">
+            <span>EXPLORE</span>
+        </div>
+    </div>
 
-                    <div class="categories-page-image <%= categoryClass %>">
+    <div class="categories-page-info">
+        <p>COLLECTION</p>
 
-                        <div class="categories-page-overlay">
+        <h3>
+            <%= category.getCategoryName() %>
+        </h3>
 
-                            <span>
-                                EXPLORE
-                            </span>
+        <span>SHOP NOW →</span>
+    </div>
 
-                        </div>
+    <a
+        href="<%= request.getContextPath() %>/products?categoryId=<%= category.getCategoryId() %>"
+        class="categories-page-card-link"
+        aria-label="Shop <%= category.getCategoryName() %>">
+    </a>
 
-                    </div>
-
-
-                    <div class="categories-page-info">
-
-                        <p>
-                            COLLECTION
-                        </p>
-
-                        <h3>
-                            <%= category.getCategoryName() %>
-                        </h3>
-
-                        <span>
-                            SHOP NOW →
-                        </span>
-
-                    </div>
-
-
-                </a>
-
+</div>
 
                 <%
                         }

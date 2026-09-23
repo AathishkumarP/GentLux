@@ -7,6 +7,8 @@
     Product product =
             (Product) request.getAttribute("product");
 
+
+@SuppressWarnings("unchecked")
     List<Category> categories =
             (List<Category>) request.getAttribute("categories");
 

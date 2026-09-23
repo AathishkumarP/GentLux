@@ -4,9 +4,12 @@
 <%@ page import="com.gentlux.model.Category" %>
 
 <%
+
+@SuppressWarnings("unchecked")
     List<Category> categories =
             (List<Category>) request.getAttribute("categories");
 
+@SuppressWarnings("unchecked")
     Map<Integer, Integer> productCounts =
             (Map<Integer, Integer>) request.getAttribute("productCounts");
 

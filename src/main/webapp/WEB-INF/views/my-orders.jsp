@@ -8,10 +8,14 @@
 <%@ page import="com.gentlux.model.OrderItemView" %>
 
 <%
+
+@SuppressWarnings("unchecked")
     List<Order> orders =
             (List<Order>)
             request.getAttribute("orders");
 
+
+@SuppressWarnings("unchecked")
     Map<Integer, List<OrderItemView>> orderItemsMap =
             (Map<Integer, List<OrderItemView>>)
             request.getAttribute("orderItemsMap");

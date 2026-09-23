@@ -3,6 +3,7 @@
 <%@ page import="com.gentlux.model.User" %>
 
 <%
+@SuppressWarnings("unchecked")
     List<User> users =
             (List<User>) request.getAttribute("users");
 

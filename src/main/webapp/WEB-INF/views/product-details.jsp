@@ -601,6 +601,7 @@
 
 <%
 
+@SuppressWarnings("unchecked")
     List<ProductVariant> variants =
             (List<ProductVariant>)
             request.getAttribute("variants");
@@ -803,27 +804,24 @@
                             : "Add to wishlist" %>">
 
 
-                    <svg
-                        class="product-wishlist-heart"
-                        viewBox="0 0 24 24"
-                        aria-hidden="true">
-
-
-                        <path
-                            d="M20.84 4.61
-                               a5.5 5.5 0 0 0-7.78 0
-                               L12 5.67
-                               l-1.06-1.06
-                               a5.5 5.5 0 0 0-7.78 7.78
-                               L12 21.23
-                               l8.84-8.84
-                               a5.5 5.5 0 0 0 0-7.78z">
-
-                        </path>
-
-
-                    </svg>
-
+		<svg
+		    xmlns="http://www.w3.org/2000/svg"
+		    class="product-wishlist-heart"
+		    viewBox="0 0 24 24"
+		    aria-hidden="true">
+		
+		    <path
+		        d="M20.84 4.61
+		           a5.5 5.5 0 0 0-7.78 0
+		           L12 5.67
+		           l-1.06-1.06
+		           a5.5 5.5 0 0 0-7.78 7.78
+		           L12 21.23
+		           l8.84-8.84
+		           a5.5 5.5 0 0 0 0-7.78z">
+		    </path>
+		
+		</svg>
 
                     <span class="wishlist-text">
 

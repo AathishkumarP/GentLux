@@ -4,6 +4,8 @@
 <%@ page import="com.gentlux.model.Product" %>
 
 <%
+
+@SuppressWarnings("unchecked")
     List<Product> products =
             (List<Product>) request.getAttribute("products");
 %>

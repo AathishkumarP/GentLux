@@ -680,7 +680,7 @@
 
 
 <%
-
+@SuppressWarnings("unchecked")
     List<WishlistItemView> wishlistItems =
             (List<WishlistItemView>)
             request.getAttribute("wishlistItems");
@@ -1008,7 +1008,7 @@
 %>
 
 
-                        <div class="product-image-placeholder">
+                        <span class="product-image-placeholder">
 
                             <span>
 
@@ -1016,7 +1016,7 @@
 
                             </span>
 
-                        </div>
+                        </span>
 
 
 <%

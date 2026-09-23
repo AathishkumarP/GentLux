@@ -3,6 +3,8 @@
 <%@ page import="com.gentlux.model.Category" %>
 
 <%
+
+@SuppressWarnings("unchecked")
     List<Category> categories =
             (List<Category>) request.getAttribute("categories");
 
