@@ -5125,3 +5125,158 @@
     align-items: center;
     justify-content: center;
 }
+
+/* =========================================================
+   GENTLUX PRODUCTS PAGE
+   FINAL MOBILE PRODUCT GRID FIX
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .modern-products-grid {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 14px 10px !important;
+        box-sizing: border-box;
+    }
+
+    .modern-product-card {
+        width: 100%;
+        max-width: none !important;
+        min-width: 0;
+        margin: 0 !important;
+        border-radius: 10px;
+    }
+
+    .modern-product-image-wrapper {
+        width: 100%;
+        height: auto !important;
+        aspect-ratio: 3 / 4;
+    }
+
+    .modern-product-image {
+        width: 100%;
+        height: 100%;
+    }
+
+    .modern-product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+    }
+
+    .modern-product-content {
+        padding: 12px 10px 13px;
+    }
+
+    .modern-product-brand {
+        margin-bottom: 5px;
+        font-size: 7px;
+        letter-spacing: 1px;
+    }
+
+    .modern-product-content h3 {
+        margin-bottom: 9px;
+        font-size: 12px;
+        line-height: 1.35;
+    }
+
+    .modern-product-price {
+        gap: 5px;
+        margin-bottom: 11px;
+        flex-wrap: wrap;
+    }
+
+    .modern-current-price {
+        font-size: 13px;
+    }
+
+    .modern-original-price {
+        font-size: 9px;
+    }
+
+    .modern-view-product {
+        padding-top: 10px;
+        font-size: 7px;
+        letter-spacing: 0.7px;
+    }
+
+    .modern-product-badge {
+        top: 8px;
+        left: 8px;
+        padding: 5px 6px;
+        font-size: 7px;
+    }
+
+    .modern-wishlist {
+        top: 7px;
+        right: 7px;
+        width: 30px;
+        height: 30px;
+    }
+
+    .modern-wishlist-heart {
+        width: 21px;
+        height: 21px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE - 360px / 320px
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .modern-products-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px 7px !important;
+    }
+
+    .modern-product-content {
+        padding: 10px 7px 11px;
+    }
+
+    .modern-product-brand {
+        font-size: 6.5px;
+    }
+
+    .modern-product-content h3 {
+        font-size: 11px;
+        line-height: 1.3;
+    }
+
+    .modern-current-price {
+        font-size: 12px;
+    }
+
+    .modern-original-price {
+        font-size: 8px;
+    }
+
+    .modern-view-product {
+        font-size: 6px;
+        letter-spacing: 0.5px;
+    }
+
+    .modern-product-badge {
+        top: 6px;
+        left: 6px;
+        padding: 4px 5px;
+        font-size: 6px;
+    }
+
+    .modern-wishlist {
+        top: 5px;
+        right: 5px;
+        width: 28px;
+        height: 28px;
+    }
+
+    .modern-wishlist-heart {
+        width: 20px;
+        height: 20px;
+    }
+}

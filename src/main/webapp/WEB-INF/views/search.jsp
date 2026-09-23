@@ -115,6 +115,116 @@
                 height: 400px;
             }
         }
+        
+/* =========================================================
+   GENTLUX SEARCH PAGE - FINAL RESPONSIVE OVERRIDES
+========================================================= */
+
+
+/* =========================================================
+   PRODUCT IMAGE - RESPONSIVE BASE
+========================================================= */
+
+.search-product-image {
+    width: 100%;
+    height: auto !important;
+    aspect-ratio: 3 / 4;
+    background: #f4f0ed;
+}
+
+.search-product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1024px) {
+
+    .search-product-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 25px 18px;
+    }
+}
+
+
+/* =========================================================
+   SMALL TABLET
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .search-product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px 14px;
+    }
+
+    .search-product-card {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .search-product-image {
+        height: auto !important;
+        aspect-ratio: 3 / 4;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   IMPORTANT: KEEP 2 PRODUCT CARDS PER ROW
+========================================================= */
+
+@media (max-width: 500px) {
+
+    .search-product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 12px 8px !important;
+    }
+
+    .search-product-card {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .search-product-image {
+        width: 100%;
+        height: auto !important;
+        aspect-ratio: 3 / 4;
+    }
+
+    .search-product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE - 360px / 320px
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .search-product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px 7px !important;
+    }
+
+    .search-product-image {
+        height: auto !important;
+        aspect-ratio: 3 / 4;
+    }
+}
 
     </style>
 

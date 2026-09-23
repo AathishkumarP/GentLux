@@ -5,12 +5,11 @@
 <%@ page import="com.gentlux.model.OrderItemView" %>
 
 <%
-
-@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     List<Order> orders =
             (List<Order>) request.getAttribute("orders");
 
-@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     Map<Integer, List<OrderItemView>> orderItemsMap =
             (Map<Integer, List<OrderItemView>>)
                     request.getAttribute("orderItemsMap");
@@ -18,7 +17,6 @@
 
 <!DOCTYPE html>
 <html>
-
 <head>
 
     <meta charset="UTF-8">
@@ -37,17 +35,29 @@
             padding: 0;
         }
 
+        html,
+        body {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background: #f7f5f2;
             color: #2e2723;
         }
 
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
+
         .admin-header {
             min-height: 72px;
             padding: 0 40px;
             background: #2e2723;
             color: white;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -73,6 +83,15 @@
             text-transform: uppercase;
         }
 
+        .header-links a:hover {
+            opacity: 0.75;
+        }
+
+
+        /* =========================================================
+           PAGE
+        ========================================================= */
+
         .container {
             width: min(1450px, 96%);
             margin: 40px auto;
@@ -93,12 +112,20 @@
             font-size: 13px;
         }
 
+
+        /* =========================================================
+           MESSAGES
+        ========================================================= */
+
         .message {
             padding: 13px 16px;
             margin-bottom: 20px;
+
             background: #e7efe8;
             color: #41624a;
+
             border: 1px solid #ccdccc;
+
             font-size: 12px;
         }
 
@@ -108,8 +135,17 @@
             border-color: #e4caca;
         }
 
+
+        /* =========================================================
+           DESKTOP TABLE
+        ========================================================= */
+
+        .desktop-orders {
+            display: block;
+        }
+
         .table-wrapper {
-            overflow-x: auto;
+            width: 100%;
             background: white;
             border: 1px solid #e2dad5;
         }
@@ -122,35 +158,44 @@
         th {
             background: #f1ece8;
             padding: 15px 14px;
+
             text-align: left;
+
             font-size: 10px;
             letter-spacing: 1px;
             text-transform: uppercase;
+
             color: #6d625c;
+
             white-space: nowrap;
         }
 
         td {
             padding: 16px 14px;
             border-top: 1px solid #eee8e4;
+
             font-size: 12px;
             vertical-align: middle;
         }
 
-        /* ==========================================
-           ORDER PRODUCTS
-           ========================================== */
+
+        /* =========================================================
+           PRODUCTS
+        ========================================================= */
 
         .order-products {
             min-width: 300px;
+
             display: flex;
             flex-direction: column;
+
             gap: 12px;
         }
 
         .order-product {
             display: flex;
             align-items: center;
+
             gap: 12px;
         }
 
@@ -162,9 +207,13 @@
         .product-image-box {
             width: 65px;
             height: 82px;
+
             flex-shrink: 0;
+
             overflow: hidden;
+
             background: #f1ece8;
+
             display: flex;
             align-items: center;
             justify-content: center;
@@ -173,21 +222,27 @@
         .product-image-box img {
             width: 100%;
             height: 100%;
+
             object-fit: cover;
+
             display: block;
         }
 
         .product-image-placeholder {
             width: 100%;
             height: 100%;
+
             display: flex;
             align-items: center;
             justify-content: center;
+
             background: #f1ece8;
             color: #38251e;
+
             font-size: 8px;
             font-weight: 600;
             letter-spacing: 1px;
+
             text-align: center;
         }
 
@@ -198,20 +253,27 @@
         .product-name {
             font-size: 12px;
             font-weight: 600;
+
             color: #2e2723;
+
             margin-bottom: 5px;
+
             line-height: 1.4;
         }
 
         .product-brand {
             font-size: 10px;
+
             color: #8a7d76;
+
             margin-bottom: 5px;
         }
 
         .product-meta {
             font-size: 10px;
+
             color: #746861;
+
             line-height: 1.6;
         }
 
@@ -224,17 +286,22 @@
             font-size: 11px;
         }
 
-        /* ==========================================
+
+        /* =========================================================
            STATUS
-           ========================================== */
+        ========================================================= */
 
         .status {
             display: inline-flex;
             align-items: center;
             justify-content: center;
+
             min-width: 90px;
+
             padding: 7px 12px;
+
             border-radius: 20px;
+
             font-size: 9px;
             font-weight: 600;
             letter-spacing: 1px;
@@ -270,21 +337,32 @@
             color: #666666;
         }
 
+
+        /* =========================================================
+           STATUS ACTION
+        ========================================================= */
+
         .status-form {
             display: flex;
             align-items: center;
+
             gap: 8px;
         }
 
         .status-form button {
             padding: 9px 13px;
+
             border: none;
+
             background: #2e2723;
             color: white;
+
             font-size: 9px;
             font-weight: 600;
             letter-spacing: 1px;
+
             cursor: pointer;
+
             white-space: nowrap;
         }
 
@@ -297,21 +375,171 @@
             font-size: 11px;
         }
 
+
+        /* =========================================================
+           MOBILE ORDERS
+        ========================================================= */
+
+        .mobile-orders {
+            display: none;
+        }
+
+        .mobile-order-card {
+            background: #ffffff;
+
+            border: 1px solid #e2dad5;
+
+            margin-bottom: 18px;
+        }
+
+        .mobile-order-header {
+            padding: 16px;
+
+            background: #f1ece8;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 12px;
+        }
+
+        .mobile-order-number {
+            font-size: 13px;
+            font-weight: 600;
+
+            letter-spacing: 0.6px;
+
+            color: #2e2723;
+        }
+
+        .mobile-products {
+            padding: 16px;
+        }
+
+        .mobile-products .order-products {
+            min-width: 0;
+            width: 100%;
+        }
+
+        .mobile-order-information {
+            padding: 0 16px 16px;
+        }
+
+        .mobile-info-grid {
+            border-top: 1px solid #eee8e4;
+            border-bottom: 1px solid #eee8e4;
+
+            padding: 14px 0;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            gap: 14px 18px;
+        }
+
+        .mobile-info-item {
+            min-width: 0;
+        }
+
+        .mobile-info-label {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #8a7d76;
+
+            font-size: 8px;
+            font-weight: 600;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+        }
+
+        .mobile-info-value {
+            display: block;
+
+            color: #2e2723;
+
+            font-size: 11px;
+            line-height: 1.45;
+
+            overflow-wrap: anywhere;
+        }
+
+        .mobile-total-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .mobile-order-action {
+            padding: 0 16px 16px;
+        }
+
+        .mobile-order-action .status-form {
+            width: 100%;
+        }
+
+        .mobile-order-action .status-form button {
+            width: 100%;
+
+            padding: 13px 15px;
+        }
+
+        .mobile-final-status {
+            width: 100%;
+
+            padding: 12px;
+
+            background: #f7f5f2;
+
+            text-align: center;
+
+            color: #8b7d76;
+
+            font-size: 10px;
+
+            letter-spacing: 0.5px;
+        }
+
+
+        /* =========================================================
+           EMPTY
+        ========================================================= */
+
         .empty {
             padding: 40px;
+
             text-align: center;
+
             color: #8a7d76;
         }
 
-        @media (max-width: 768px) {
+
+        /* =========================================================
+           TABLET
+        ========================================================= */
+
+        @media (max-width: 1024px) {
 
             .admin-header {
-                padding: 0 20px;
+                padding: 0 28px;
             }
 
             .container {
                 width: 94%;
-                margin: 25px auto;
+                margin: 32px auto;
+            }
+
+            th {
+                padding: 13px 10px;
+                font-size: 9px;
+            }
+
+            td {
+                padding: 14px 10px;
+                font-size: 11px;
             }
 
             .order-products {
@@ -322,6 +550,281 @@
                 width: 55px;
                 height: 70px;
             }
+
+            .status {
+                min-width: 78px;
+                padding: 6px 9px;
+
+                font-size: 8px;
+            }
+
+            .status-form button {
+                padding: 8px 9px;
+
+                font-size: 8px;
+                letter-spacing: 0.5px;
+            }
+        }
+
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 768px) {
+
+            .admin-header {
+                min-height: 64px;
+
+                padding: 0 18px;
+            }
+
+            .admin-logo {
+                font-size: 19px;
+                letter-spacing: 2.5px;
+            }
+
+            .header-links {
+                gap: 14px;
+            }
+
+            .header-links a {
+                font-size: 8px;
+                letter-spacing: 1px;
+            }
+
+            .container {
+                width: auto;
+
+                margin: 27px 14px 40px;
+            }
+
+            .page-header {
+                margin-bottom: 22px;
+            }
+
+            .page-header h1 {
+                font-size: 25px;
+
+                margin-bottom: 7px;
+            }
+
+            .page-header p {
+                font-size: 12px;
+
+                line-height: 1.5;
+            }
+
+            .message {
+                padding: 11px 13px;
+
+                margin-bottom: 16px;
+
+                font-size: 11px;
+
+                line-height: 1.5;
+            }
+
+            /*
+             * Desktop table disappears.
+             * Mobile cards appear.
+             */
+            .desktop-orders {
+                display: none;
+            }
+
+            .mobile-orders {
+                display: block;
+            }
+
+            .product-image-box {
+                width: 58px;
+                height: 74px;
+            }
+
+            .product-name {
+                font-size: 11px;
+            }
+
+            .product-brand {
+                font-size: 9px;
+            }
+
+            .product-meta {
+                font-size: 9px;
+            }
+
+            .status {
+                min-width: 76px;
+
+                padding: 6px 9px;
+
+                font-size: 7px;
+                letter-spacing: 0.6px;
+            }
+
+            .empty {
+                padding: 40px 15px;
+
+                font-size: 12px;
+            }
+        }
+
+
+        /* =========================================================
+           SMALL MOBILE
+        ========================================================= */
+
+        @media (max-width: 480px) {
+
+            .admin-header {
+                min-height: 60px;
+
+                padding: 0 13px;
+            }
+
+            .admin-logo {
+                font-size: 17px;
+                letter-spacing: 2px;
+            }
+
+            .header-links {
+                gap: 10px;
+            }
+
+            .header-links a {
+                font-size: 7px;
+                letter-spacing: 0.7px;
+            }
+
+            .container {
+                margin: 22px 10px 35px;
+            }
+
+            .page-header {
+                margin-bottom: 18px;
+            }
+
+            .page-header h1 {
+                font-size: 22px;
+            }
+
+            .page-header p {
+                font-size: 11px;
+            }
+
+            .mobile-order-card {
+                margin-bottom: 14px;
+            }
+
+            .mobile-order-header {
+                padding: 13px 12px;
+            }
+
+            .mobile-order-number {
+                font-size: 11px;
+            }
+
+            .mobile-products {
+                padding: 13px 12px;
+            }
+
+            .mobile-order-information {
+                padding: 0 12px 13px;
+            }
+
+            .mobile-order-action {
+                padding: 0 12px 13px;
+            }
+
+            .mobile-info-grid {
+                gap: 12px 14px;
+            }
+
+            .mobile-info-label {
+                font-size: 7px;
+            }
+
+            .mobile-info-value {
+                font-size: 10px;
+            }
+
+            .mobile-total-value {
+                font-size: 13px;
+            }
+
+            .product-image-box {
+                width: 54px;
+                height: 69px;
+            }
+
+            .product-name {
+                font-size: 10px;
+            }
+
+            .product-brand {
+                font-size: 8px;
+            }
+
+            .product-meta {
+                font-size: 8px;
+            }
+
+            .mobile-order-action .status-form button {
+                padding: 12px;
+
+                font-size: 8px;
+            }
+        }
+
+
+        /* =========================================================
+           VERY SMALL MOBILE
+        ========================================================= */
+
+        @media (max-width: 360px) {
+
+            .admin-header {
+                padding: 0 10px;
+            }
+
+            .admin-logo {
+                font-size: 16px;
+            }
+
+            .header-links {
+                gap: 8px;
+            }
+
+            .container {
+                margin-left: 8px;
+                margin-right: 8px;
+            }
+
+            .mobile-order-header {
+                padding: 12px 10px;
+            }
+
+            .mobile-products {
+                padding: 12px 10px;
+            }
+
+            .mobile-order-information {
+                padding: 0 10px 12px;
+            }
+
+            .mobile-order-action {
+                padding: 0 10px 12px;
+            }
+
+            .mobile-info-grid {
+                gap: 11px 10px;
+            }
+
+            .product-image-box {
+                width: 50px;
+                height: 64px;
+            }
         }
 
     </style>
@@ -329,6 +832,7 @@
 </head>
 
 <body>
+
 
 <header class="admin-header">
 
@@ -394,150 +898,159 @@
         if (orders != null && !orders.isEmpty()) {
     %>
 
-    <div class="table-wrapper">
 
-        <table>
+    <!-- =========================================================
+         DESKTOP / TABLET ORDERS TABLE
+    ========================================================== -->
 
-            <thead>
+    <div class="desktop-orders">
 
-                <tr>
-                    <th>Order ID</th>
-                    <th>Products</th>
-                    <th>User ID</th>
-                    <th>Date</th>
-                    <th>Total</th>
-                    <th>Payment</th>
-                    <th>Status</th>
-                    <th>Update</th>
-                </tr>
+        <div class="table-wrapper">
 
-            </thead>
+            <table>
 
+                <thead>
 
-            <tbody>
+                    <tr>
 
-            <%
-                for (Order order : orders) {
+                        <th>Order ID</th>
+                        <th>Products</th>
+                        <th>User ID</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th>Update</th>
 
-                    String status =
-                            order.getOrderStatus();
+                    </tr>
 
-                    String statusClass =
-                            "status-default";
+                </thead>
 
+                <tbody>
 
-                    if (status != null) {
+                <%
+                    for (Order order : orders) {
 
-                        if (status.equalsIgnoreCase("PLACED")) {
+                        String status =
+                                order.getOrderStatus();
 
-                            statusClass =
-                                    "status-placed";
+                        String statusClass =
+                                "status-default";
 
-                        } else if (
-                                status.equalsIgnoreCase("CONFIRMED")
-                        ) {
+                        if (status != null) {
 
-                            statusClass =
-                                    "status-confirmed";
+                            if (status.equalsIgnoreCase("PLACED")) {
 
-                        } else if (
-                                status.equalsIgnoreCase("SHIPPED")
-                        ) {
+                                statusClass =
+                                        "status-placed";
 
-                            statusClass =
-                                    "status-shipped";
+                            } else if (
+                                    status.equalsIgnoreCase("CONFIRMED")
+                            ) {
 
-                        } else if (
-                                status.equalsIgnoreCase("DELIVERED")
-                        ) {
+                                statusClass =
+                                        "status-confirmed";
 
-                            statusClass =
-                                    "status-delivered";
+                            } else if (
+                                    status.equalsIgnoreCase("SHIPPED")
+                            ) {
 
-                        } else if (
-                                status.equalsIgnoreCase("CANCELLED")
-                        ) {
+                                statusClass =
+                                        "status-shipped";
 
-                            statusClass =
-                                    "status-cancelled";
+                            } else if (
+                                    status.equalsIgnoreCase("DELIVERED")
+                            ) {
+
+                                statusClass =
+                                        "status-delivered";
+
+                            } else if (
+                                    status.equalsIgnoreCase("CANCELLED")
+                            ) {
+
+                                statusClass =
+                                        "status-cancelled";
+                            }
                         }
-                    }
+
+                        List<OrderItemView> orderItems = null;
+
+                        if (orderItemsMap != null) {
+
+                            orderItems =
+                                    orderItemsMap.get(
+                                            order.getOrderId()
+                                    );
+                        }
+                %>
+
+                    <tr>
+
+                        <!-- ORDER ID -->
+
+                        <td>
+                            #<%= order.getOrderId() %>
+                        </td>
 
 
-                    List<OrderItemView> orderItems = null;
+                        <!-- PRODUCTS -->
 
-                    if (orderItemsMap != null) {
+                        <td>
 
-                        orderItems =
-                                orderItemsMap.get(
-                                        order.getOrderId()
-                                );
-                    }
-            %>
+                            <div class="order-products">
 
-                <tr>
+                            <%
+                                if (
+                                        orderItems != null &&
+                                        !orderItems.isEmpty()
+                                ) {
 
-                    <!-- ORDER ID -->
-                    <td>
-                        #<%= order.getOrderId() %>
-                    </td>
+                                    for (OrderItemView item : orderItems) {
 
+                                        String imageUrl =
+                                                item.getImageUrl();
 
-                    <!-- PRODUCTS -->
-                    <td>
+                                        boolean hasImage =
+                                                imageUrl != null &&
+                                                !imageUrl.trim().isEmpty();
 
-                        <div class="order-products">
+                                        String finalImageUrl = null;
 
-                        <%
-                            if (orderItems != null &&
-                                    !orderItems.isEmpty()) {
+                                        if (hasImage) {
 
-                                for (OrderItemView item : orderItems) {
-
-                                    String imageUrl =
-                                            item.getImageUrl();
-
-                                    boolean hasImage =
-                                            imageUrl != null &&
-                                            !imageUrl.trim().isEmpty();
-
-                                    String finalImageUrl = null;
-
-                                    if (hasImage) {
-
-                                        imageUrl =
-                                                imageUrl.trim();
-
-                                        if (
-                                            imageUrl.startsWith("http://") ||
-                                            imageUrl.startsWith("https://")
-                                        ) {
-
-                                            finalImageUrl =
-                                                    imageUrl;
-
-                                        } else {
+                                            imageUrl =
+                                                    imageUrl.trim();
 
                                             if (
-                                                imageUrl.startsWith("/")
+                                                imageUrl.startsWith("http://") ||
+                                                imageUrl.startsWith("https://")
                                             ) {
 
-                                                imageUrl =
-                                                    imageUrl.substring(1);
+                                                finalImageUrl =
+                                                        imageUrl;
+
+                                            } else {
+
+                                                if (
+                                                    imageUrl.startsWith("/")
+                                                ) {
+
+                                                    imageUrl =
+                                                        imageUrl.substring(1);
+                                                }
+
+                                                finalImageUrl =
+                                                        request.getContextPath()
+                                                        + "/"
+                                                        + imageUrl;
                                             }
-
-                                            finalImageUrl =
-                                                request.getContextPath()
-                                                + "/"
-                                                + imageUrl;
                                         }
-                                    }
-                        %>
+                            %>
 
-                            <div class="order-product">
+                                <div class="order-product">
 
-                                <!-- PRODUCT IMAGE -->
-                                <div class="product-image-box">
+                                    <div class="product-image-box">
 
                                     <%
                                         if (hasImage) {
@@ -570,61 +1083,412 @@
                                         }
                                     %>
 
+                                    </div>
+
+
+                                    <div class="product-details">
+
+                                        <div class="product-name">
+
+                                            <%= item.getProductName() != null
+                                                    ? item.getProductName()
+                                                    : "Product" %>
+
+                                        </div>
+
+                                        <div class="product-brand">
+
+                                            <%= item.getBrand() != null
+                                                    ? item.getBrand()
+                                                    : "GENTLUX" %>
+
+                                        </div>
+
+                                        <div class="product-meta">
+
+                                            Size:
+                                            <strong>
+                                                <%= item.getSize() != null
+                                                        ? item.getSize()
+                                                        : "-" %>
+                                            </strong>
+
+                                            <br>
+
+                                            Qty:
+                                            <strong>
+                                                <%= item.getQuantity() %>
+                                            </strong>
+
+                                            <br>
+
+                                            ₹<%= String.format(
+                                                    "%.2f",
+                                                    item.getPrice()
+                                            ) %>
+
+                                        </div>
+
+                                    </div>
+
                                 </div>
 
+                            <%
+                                    }
 
-                                <!-- PRODUCT INFORMATION -->
-                                <div class="product-details">
+                                } else {
+                            %>
 
-                                    <div class="product-name">
-                                        <%= item.getProductName() != null
-                                                ? item.getProductName()
-                                                : "Product" %>
-                                    </div>
-
-                                    <div class="product-brand">
-                                        <%= item.getBrand() != null
-                                                ? item.getBrand()
-                                                : "GENTLUX" %>
-                                    </div>
-
-                                    <div class="product-meta">
-
-                                        Size:
-                                        <strong>
-                                            <%= item.getSize() != null
-                                                    ? item.getSize()
-                                                    : "-" %>
-                                        </strong>
-
-                                        <br>
-
-                                        Qty:
-                                        <strong>
-                                            <%= item.getQuantity() %>
-                                        </strong>
-
-                                        <br>
-
-                                        ₹<%= String.format(
-                                                "%.2f",
-                                                item.getPrice()
-                                        ) %>
-
-                                    </div>
-
+                                <div class="no-products">
+                                    No product details
                                 </div>
+
+                            <%
+                                }
+                            %>
 
                             </div>
 
-                        <%
-                                }
+                        </td>
 
+
+                        <!-- USER -->
+
+                        <td>
+                            <%= order.getUserId() %>
+                        </td>
+
+
+                        <!-- DATE -->
+
+                        <td>
+
+                            <%= order.getOrderDate() != null
+                                    ? order.getOrderDate()
+                                    : "-" %>
+
+                        </td>
+
+
+                        <!-- TOTAL -->
+
+                        <td>
+
+                            ₹<%= String.format(
+                                    "%.2f",
+                                    order.getTotalAmount()
+                            ) %>
+
+                        </td>
+
+
+                        <!-- PAYMENT -->
+
+                        <td>
+
+                            <%= order.getPaymentMethod() != null
+                                    ? order.getPaymentMethod()
+                                    : "-" %>
+
+                        </td>
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            <span class="status <%= statusClass %>">
+
+                                <%= status != null
+                                        ? status
+                                        : "-" %>
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- ACTION -->
+
+                        <td>
+
+                        <%
+                            if ("PLACED".equalsIgnoreCase(status)) {
+                        %>
+
+                            <form
+                                class="status-form"
+                                action="${pageContext.request.contextPath}/admin/update-order-status"
+                                method="post">
+
+                                <input
+                                    type="hidden"
+                                    name="orderId"
+                                    value="<%= order.getOrderId() %>">
+
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value="CONFIRMED">
+
+                                <button type="submit">
+                                    CONFIRM
+                                </button>
+
+                            </form>
+
+                        <%
+                            } else if (
+                                    "CONFIRMED".equalsIgnoreCase(status)
+                            ) {
+                        %>
+
+                            <form
+                                class="status-form"
+                                action="${pageContext.request.contextPath}/admin/update-order-status"
+                                method="post">
+
+                                <input
+                                    type="hidden"
+                                    name="orderId"
+                                    value="<%= order.getOrderId() %>">
+
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value="SHIPPED">
+
+                                <button type="submit">
+                                    MARK SHIPPED
+                                </button>
+
+                            </form>
+
+                        <%
+                            } else if (
+                                    "SHIPPED".equalsIgnoreCase(status)
+                            ) {
+                        %>
+
+                            <form
+                                class="status-form"
+                                action="${pageContext.request.contextPath}/admin/update-order-status"
+                                method="post">
+
+                                <input
+                                    type="hidden"
+                                    name="orderId"
+                                    value="<%= order.getOrderId() %>">
+
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value="DELIVERED">
+
+                                <button type="submit">
+                                    MARK DELIVERED
+                                </button>
+
+                            </form>
+
+                        <%
                             } else {
                         %>
 
-                            <div class="no-products">
-                                No product details
+                            <span class="final-status">
+                                No action
+                            </span>
+
+                        <%
+                            }
+                        %>
+
+                        </td>
+
+                    </tr>
+
+                <%
+                    }
+                %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         MOBILE ORDERS
+    ========================================================== -->
+
+    <div class="mobile-orders">
+
+    <%
+        for (Order order : orders) {
+
+            String status =
+                    order.getOrderStatus();
+
+            String statusClass =
+                    "status-default";
+
+            if (status != null) {
+
+                if (status.equalsIgnoreCase("PLACED")) {
+
+                    statusClass =
+                            "status-placed";
+
+                } else if (
+                        status.equalsIgnoreCase("CONFIRMED")
+                ) {
+
+                    statusClass =
+                            "status-confirmed";
+
+                } else if (
+                        status.equalsIgnoreCase("SHIPPED")
+                ) {
+
+                    statusClass =
+                            "status-shipped";
+
+                } else if (
+                        status.equalsIgnoreCase("DELIVERED")
+                ) {
+
+                    statusClass =
+                            "status-delivered";
+
+                } else if (
+                        status.equalsIgnoreCase("CANCELLED")
+                ) {
+
+                    statusClass =
+                            "status-cancelled";
+                }
+            }
+
+            List<OrderItemView> orderItems = null;
+
+            if (orderItemsMap != null) {
+
+                orderItems =
+                        orderItemsMap.get(
+                                order.getOrderId()
+                        );
+            }
+    %>
+
+        <article class="mobile-order-card">
+
+
+            <!-- MOBILE ORDER HEADER -->
+
+            <div class="mobile-order-header">
+
+                <div class="mobile-order-number">
+                    ORDER #<%= order.getOrderId() %>
+                </div>
+
+                <span class="status <%= statusClass %>">
+
+                    <%= status != null
+                            ? status
+                            : "-" %>
+
+                </span>
+
+            </div>
+
+
+            <!-- MOBILE PRODUCTS -->
+
+            <div class="mobile-products">
+
+                <div class="order-products">
+
+                <%
+                    if (
+                            orderItems != null &&
+                            !orderItems.isEmpty()
+                    ) {
+
+                        for (OrderItemView item : orderItems) {
+
+                            String imageUrl =
+                                    item.getImageUrl();
+
+                            boolean hasImage =
+                                    imageUrl != null &&
+                                    !imageUrl.trim().isEmpty();
+
+                            String finalImageUrl = null;
+
+                            if (hasImage) {
+
+                                imageUrl =
+                                        imageUrl.trim();
+
+                                if (
+                                    imageUrl.startsWith("http://") ||
+                                    imageUrl.startsWith("https://")
+                                ) {
+
+                                    finalImageUrl =
+                                            imageUrl;
+
+                                } else {
+
+                                    if (
+                                        imageUrl.startsWith("/")
+                                    ) {
+
+                                        imageUrl =
+                                                imageUrl.substring(1);
+                                    }
+
+                                    finalImageUrl =
+                                            request.getContextPath()
+                                            + "/"
+                                            + imageUrl;
+                                }
+                            }
+                %>
+
+                    <div class="order-product">
+
+                        <div class="product-image-box">
+
+                        <%
+                            if (hasImage) {
+                        %>
+
+                            <img
+                                src="<%= finalImageUrl %>"
+                                alt="<%= item.getProductName() %>"
+                                loading="lazy"
+                                onerror="
+                                    this.style.display='none';
+                                    this.nextElementSibling.style.display='flex';
+                                ">
+
+                            <div
+                                class="product-image-placeholder"
+                                style="display:none;">
+                                GENTLUX
+                            </div>
+
+                        <%
+                            } else {
+                        %>
+
+                            <div class="product-image-placeholder">
+                                GENTLUX
                             </div>
 
                         <%
@@ -633,168 +1497,253 @@
 
                         </div>
 
-                    </td>
+
+                        <div class="product-details">
+
+                            <div class="product-name">
+
+                                <%= item.getProductName() != null
+                                        ? item.getProductName()
+                                        : "Product" %>
+
+                            </div>
+
+                            <div class="product-brand">
+
+                                <%= item.getBrand() != null
+                                        ? item.getBrand()
+                                        : "GENTLUX" %>
+
+                            </div>
+
+                            <div class="product-meta">
+
+                                Size:
+                                <strong>
+                                    <%= item.getSize() != null
+                                            ? item.getSize()
+                                            : "-" %>
+                                </strong>
+
+                                &nbsp; | &nbsp;
+
+                                Qty:
+                                <strong>
+                                    <%= item.getQuantity() %>
+                                </strong>
+
+                                <br>
+
+                                ₹<%= String.format(
+                                        "%.2f",
+                                        item.getPrice()
+                                ) %>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                <%
+                        }
+
+                    } else {
+                %>
+
+                    <div class="no-products">
+                        No product details
+                    </div>
+
+                <%
+                    }
+                %>
+
+                </div>
+
+            </div>
 
 
-                    <!-- USER ID -->
-                    <td>
-                        <%= order.getUserId() %>
-                    </td>
+            <!-- MOBILE ORDER INFORMATION -->
+
+            <div class="mobile-order-information">
+
+                <div class="mobile-info-grid">
 
 
-                    <!-- ORDER DATE -->
-                    <td>
+                    <div class="mobile-info-item">
 
-                        <%= order.getOrderDate() != null
-                                ? order.getOrderDate()
-                                : "-" %>
+                        <span class="mobile-info-label">
+                            User ID
+                        </span>
 
-                    </td>
+                        <span class="mobile-info-value">
+                            <%= order.getUserId() %>
+                        </span>
 
-
-                    <!-- TOTAL -->
-                    <td>
-
-                        ₹<%= String.format(
-                                "%.2f",
-                                order.getTotalAmount()
-                        ) %>
-
-                    </td>
+                    </div>
 
 
-                    <!-- PAYMENT -->
-                    <td>
+                    <div class="mobile-info-item">
 
-                        <%= order.getPaymentMethod() != null
-                                ? order.getPaymentMethod()
-                                : "-" %>
+                        <span class="mobile-info-label">
+                            Payment
+                        </span>
 
-                    </td>
+                        <span class="mobile-info-value">
 
-
-                    <!-- STATUS -->
-                    <td>
-
-                        <span class="status <%= statusClass %>">
-
-                            <%= status != null
-                                    ? status
+                            <%= order.getPaymentMethod() != null
+                                    ? order.getPaymentMethod()
                                     : "-" %>
 
                         </span>
 
-                    </td>
+                    </div>
 
 
-                    <!-- UPDATE STATUS -->
-                    <td>
+                    <div class="mobile-info-item">
 
-                    <%
-                        if ("PLACED".equalsIgnoreCase(status)) {
-                    %>
-
-                        <form
-                            class="status-form"
-                            action="${pageContext.request.contextPath}/admin/update-order-status"
-                            method="post">
-
-                            <input
-                                type="hidden"
-                                name="orderId"
-                                value="<%= order.getOrderId() %>">
-
-                            <input
-                                type="hidden"
-                                name="status"
-                                value="CONFIRMED">
-
-                            <button type="submit">
-                                CONFIRM
-                            </button>
-
-                        </form>
-
-
-                    <%
-                        } else if (
-                                "CONFIRMED".equalsIgnoreCase(status)
-                        ) {
-                    %>
-
-                        <form
-                            class="status-form"
-                            action="${pageContext.request.contextPath}/admin/update-order-status"
-                            method="post">
-
-                            <input
-                                type="hidden"
-                                name="orderId"
-                                value="<%= order.getOrderId() %>">
-
-                            <input
-                                type="hidden"
-                                name="status"
-                                value="SHIPPED">
-
-                            <button type="submit">
-                                MARK SHIPPED
-                            </button>
-
-                        </form>
-
-
-                    <%
-                        } else if (
-                                "SHIPPED".equalsIgnoreCase(status)
-                        ) {
-                    %>
-
-                        <form
-                            class="status-form"
-                            action="${pageContext.request.contextPath}/admin/update-order-status"
-                            method="post">
-
-                            <input
-                                type="hidden"
-                                name="orderId"
-                                value="<%= order.getOrderId() %>">
-
-                            <input
-                                type="hidden"
-                                name="status"
-                                value="DELIVERED">
-
-                            <button type="submit">
-                                MARK DELIVERED
-                            </button>
-
-                        </form>
-
-
-                    <%
-                        } else {
-                    %>
-
-                        <span class="final-status">
-                            No action
+                        <span class="mobile-info-label">
+                            Date
                         </span>
 
-                    <%
-                        }
-                    %>
+                        <span class="mobile-info-value">
 
-                    </td>
+                            <%= order.getOrderDate() != null
+                                    ? order.getOrderDate()
+                                    : "-" %>
 
-                </tr>
+                        </span>
+
+                    </div>
+
+
+                    <div class="mobile-info-item">
+
+                        <span class="mobile-info-label">
+                            Total
+                        </span>
+
+                        <span class="mobile-info-value mobile-total-value">
+
+                            ₹<%= String.format(
+                                    "%.2f",
+                                    order.getTotalAmount()
+                            ) %>
+
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- MOBILE STATUS ACTION -->
+
+            <div class="mobile-order-action">
+
+            <%
+                if ("PLACED".equalsIgnoreCase(status)) {
+            %>
+
+                <form
+                    class="status-form"
+                    action="${pageContext.request.contextPath}/admin/update-order-status"
+                    method="post">
+
+                    <input
+                        type="hidden"
+                        name="orderId"
+                        value="<%= order.getOrderId() %>">
+
+                    <input
+                        type="hidden"
+                        name="status"
+                        value="CONFIRMED">
+
+                    <button type="submit">
+                        CONFIRM ORDER
+                    </button>
+
+                </form>
+
+            <%
+                } else if (
+                        "CONFIRMED".equalsIgnoreCase(status)
+                ) {
+            %>
+
+                <form
+                    class="status-form"
+                    action="${pageContext.request.contextPath}/admin/update-order-status"
+                    method="post">
+
+                    <input
+                        type="hidden"
+                        name="orderId"
+                        value="<%= order.getOrderId() %>">
+
+                    <input
+                        type="hidden"
+                        name="status"
+                        value="SHIPPED">
+
+                    <button type="submit">
+                        MARK AS SHIPPED
+                    </button>
+
+                </form>
+
+            <%
+                } else if (
+                        "SHIPPED".equalsIgnoreCase(status)
+                ) {
+            %>
+
+                <form
+                    class="status-form"
+                    action="${pageContext.request.contextPath}/admin/update-order-status"
+                    method="post">
+
+                    <input
+                        type="hidden"
+                        name="orderId"
+                        value="<%= order.getOrderId() %>">
+
+                    <input
+                        type="hidden"
+                        name="status"
+                        value="DELIVERED">
+
+                    <button type="submit">
+                        MARK AS DELIVERED
+                    </button>
+
+                </form>
+
+            <%
+                } else {
+            %>
+
+                <div class="mobile-final-status">
+                    No further action required
+                </div>
 
             <%
                 }
             %>
 
-            </tbody>
+            </div>
 
-        </table>
+
+        </article>
+
+    <%
+        }
+    %>
 
     </div>
 
@@ -811,8 +1760,8 @@
         }
     %>
 
+
 </main>
 
 </body>
-
 </html>

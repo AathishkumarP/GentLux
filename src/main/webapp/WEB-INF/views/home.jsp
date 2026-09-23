@@ -167,15 +167,111 @@
             }
         }
 
-        @media (max-width: 600px) {
-            .featured-products {
-                padding: 60px 20px;
-            }
+@media (max-width: 600px) {
 
-            .featured-products .product-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+    .featured-products {
+        padding: 45px 12px;
+    }
+
+    .featured-products .section-heading {
+        margin-bottom: 28px;
+    }
+
+    .featured-products .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 12px 8px;
+    }
+
+    .featured-products .modern-product-card {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .featured-products .modern-product-image-wrapper {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 3 / 4;
+    }
+
+    .featured-products .modern-product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+    }
+
+    .featured-products .home-wishlist-button {
+        top: 7px;
+        right: 7px;
+        width: 30px;
+        height: 30px;
+    }
+
+    .featured-products .home-wishlist-button .gentlux-heart {
+        width: 21px;
+        height: 21px;
+    }
+
+    .featured-products .modern-product-content {
+        padding: 12px 8px 14px;
+    }
+
+    .featured-products .modern-product-brand {
+        font-size: 7px;
+        letter-spacing: 1px;
+    }
+
+    .featured-products .modern-product-content h3 {
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .featured-products .modern-product-price {
+        gap: 5px;
+    }
+
+    .featured-products .modern-current-price {
+        font-size: 13px;
+    }
+
+    .featured-products .modern-original-price {
+        font-size: 9px;
+    }
+
+    .featured-products .modern-view-product {
+        font-size: 7px;
+        letter-spacing: 0.7px;
+    }
+}
+
+
+@media (max-width: 400px) {
+
+    .featured-products {
+        padding: 40px 10px;
+    }
+
+    .featured-products .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px 7px;
+    }
+
+    .featured-products .modern-product-content {
+        padding: 10px 7px 12px;
+    }
+
+    .featured-products .modern-product-content h3 {
+        font-size: 11px;
+    }
+
+    .featured-products .modern-current-price {
+        font-size: 12px;
+    }
+
+    .featured-products .modern-original-price {
+        font-size: 8px;
+    }
+}
     </style>
 
 

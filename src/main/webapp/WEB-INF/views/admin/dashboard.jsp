@@ -181,6 +181,257 @@
         .logout-link:hover {
             opacity: 0.7;
         }
+        
+        
+/* =========================================================
+   ADMIN DASHBOARD - RESPONSIVE
+========================================================= */
+
+/* Prevent accidental horizontal overflow */
+html,
+body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   TABLET - 1024px
+========================================================= */
+
+@media (max-width: 1024px) {
+
+    .admin-header {
+        padding: 0 28px;
+    }
+
+    .admin-container {
+        width: 94%;
+        margin: 35px auto;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .dashboard-card {
+        padding: 24px;
+        min-height: 125px;
+    }
+
+    .admin-menu-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+/* =========================================================
+   MOBILE - 768px
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .admin-header {
+        min-height: 64px;
+        padding: 0 18px;
+    }
+
+    .admin-logo {
+        font-size: 19px;
+        letter-spacing: 2.5px;
+    }
+
+    .admin-label {
+        margin-top: 2px;
+        font-size: 9px;
+        letter-spacing: 1.5px;
+    }
+
+    .logout-link {
+        font-size: 9px;
+        letter-spacing: 1px;
+    }
+
+    .admin-container {
+        width: auto;
+        margin: 28px 16px 40px;
+    }
+
+    .dashboard-heading {
+        margin-bottom: 24px;
+    }
+
+    .dashboard-heading h1 {
+        font-size: 25px;
+        margin-bottom: 7px;
+    }
+
+    .dashboard-heading p {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    /* 2 statistics per row */
+    .dashboard-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .dashboard-card {
+        min-width: 0;
+        min-height: 110px;
+        padding: 18px;
+    }
+
+    .dashboard-card-title {
+        margin-bottom: 14px;
+        font-size: 9px;
+        line-height: 1.4;
+        letter-spacing: 1px;
+    }
+
+    .dashboard-card-value {
+        font-size: 27px;
+    }
+
+    .admin-menu {
+        margin-top: 35px;
+    }
+
+    .admin-menu h2 {
+        margin-bottom: 16px;
+        font-size: 18px;
+    }
+
+    .admin-menu-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .admin-menu-link {
+        min-width: 0;
+        padding: 17px 14px;
+        font-size: 10px;
+        line-height: 1.4;
+        letter-spacing: 0.8px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE - 480px
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .admin-header {
+        min-height: 60px;
+        padding: 0 14px;
+    }
+
+    .admin-logo {
+        font-size: 17px;
+        letter-spacing: 2px;
+    }
+
+    .admin-label {
+        font-size: 8px;
+        letter-spacing: 1.2px;
+    }
+
+    .logout-link {
+        font-size: 8px;
+    }
+
+    .admin-container {
+        margin: 24px 12px 35px;
+    }
+
+    .dashboard-heading {
+        margin-bottom: 20px;
+    }
+
+    .dashboard-heading h1 {
+        font-size: 22px;
+    }
+
+    .dashboard-heading p {
+        font-size: 12px;
+    }
+
+    /* Keep 2 cards side-by-side */
+    .dashboard-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .dashboard-card {
+        min-height: 95px;
+        padding: 14px 12px;
+    }
+
+    .dashboard-card-title {
+        margin-bottom: 11px;
+        font-size: 8px;
+        letter-spacing: 0.7px;
+        line-height: 1.35;
+    }
+
+    .dashboard-card-value {
+        font-size: 24px;
+    }
+
+    .admin-menu {
+        margin-top: 30px;
+    }
+
+    .admin-menu h2 {
+        font-size: 17px;
+    }
+
+    /* Management actions are easier to tap full-width */
+    .admin-menu-grid {
+        grid-template-columns: 1fr;
+        gap: 9px;
+    }
+
+    .admin-menu-link {
+        padding: 15px 14px;
+        font-size: 9px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE - 360px
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .admin-container {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .dashboard-grid {
+        gap: 7px;
+    }
+
+    .dashboard-card {
+        padding: 12px 10px;
+        min-height: 90px;
+    }
+
+    .dashboard-card-title {
+        font-size: 7.5px;
+        letter-spacing: 0.5px;
+    }
+
+    .dashboard-card-value {
+        font-size: 22px;
+    }
+}
 
     </style>
 

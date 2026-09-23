@@ -286,3 +286,221 @@
     z-index: 10;
     display: block;
 }
+
+/* =========================================================
+   GENTLUX CATEGORIES - FINAL RESPONSIVE OVERRIDES
+   Keep this at the VERY BOTTOM of categories.css
+========================================================= */
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1024px) {
+
+    .categories-page-section {
+        padding: 65px 35px 85px;
+    }
+
+    .categories-page-section .section-heading {
+        margin-bottom: 40px;
+    }
+
+    .categories-page-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .categories-page-image {
+        height: auto !important;
+        aspect-ratio: 4 / 5;
+    }
+}
+
+
+/* =========================================================
+   SMALL TABLET
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .categories-page-section {
+        padding: 50px 20px 70px;
+    }
+
+    .categories-page-section .section-heading {
+        margin-bottom: 32px;
+    }
+
+    .categories-page-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 15px;
+    }
+
+    .categories-page-card {
+        min-width: 0;
+    }
+
+    .categories-page-image {
+        width: 100%;
+        height: auto !important;
+        aspect-ratio: 4 / 5;
+    }
+
+    .categories-page-info {
+        padding: 18px 12px 20px;
+    }
+
+    .categories-page-info h3 {
+        margin-bottom: 11px;
+        font-size: 17px;
+    }
+
+    .categories-page-info p {
+        font-size: 8px;
+    }
+
+    .categories-page-info span {
+        font-size: 9px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   IMPORTANT: KEEP 2 CARDS PER ROW
+========================================================= */
+
+@media (max-width: 500px) {
+
+    .categories-page-section {
+        padding: 38px 12px 55px;
+        overflow-x: hidden;
+    }
+
+    .categories-page-section .section-heading {
+        margin-bottom: 26px;
+    }
+
+
+    /* 2 CARDS PER ROW */
+
+    .categories-page-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+
+    .categories-page-card {
+        width: 100%;
+        min-width: 0;
+    }
+
+
+    /* IMAGE */
+
+    .categories-page-image {
+        width: 100%;
+        height: auto !important;
+        aspect-ratio: 4 / 5;
+
+        background-size: cover;
+        background-position: center;
+    }
+
+
+    /* INFO */
+
+    .categories-page-info {
+        padding: 13px 7px 15px;
+    }
+
+    .categories-page-info p {
+        margin-bottom: 5px;
+
+        font-size: 6px;
+        letter-spacing: 1.2px;
+    }
+
+    .categories-page-info h3 {
+        margin-bottom: 9px;
+
+        font-size: 13px;
+        line-height: 1.25;
+
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    .categories-page-info span {
+        font-size: 7px;
+        letter-spacing: 0.8px;
+    }
+
+
+    /* OVERLAY */
+
+    .categories-page-overlay span {
+        font-size: 8px;
+        letter-spacing: 1.2px;
+    }
+
+
+    /* EMPTY CATEGORY */
+
+    .categories-empty {
+        padding: 45px 15px;
+    }
+
+    .categories-empty h3 {
+        font-size: 21px;
+    }
+
+    .categories-empty p {
+        font-size: 12px;
+        line-height: 1.6;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE - 360px / 320px
+   STILL KEEP 2 CARDS PER ROW
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .categories-page-section {
+        padding: 34px 10px 48px;
+    }
+
+    .categories-page-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+    }
+
+    .categories-page-image {
+        height: auto !important;
+        aspect-ratio: 4 / 5;
+    }
+
+    .categories-page-info {
+        padding: 11px 6px 13px;
+    }
+
+    .categories-page-info p {
+        font-size: 5.5px;
+        letter-spacing: 1px;
+    }
+
+    .categories-page-info h3 {
+        margin-bottom: 7px;
+
+        font-size: 11px;
+    }
+
+    .categories-page-info span {
+        font-size: 6px;
+        letter-spacing: 0.6px;
+    }
+}
