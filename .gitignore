@@ -22,3 +22,6 @@ application-local.properties
 # Operating system files
 .DS_Store
 Thumbs.db
+
+# Ignore manually added JAR files
+/src/main/webapp/WEB-INF/lib/*.jar
