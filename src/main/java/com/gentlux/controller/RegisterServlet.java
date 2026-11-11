@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.gentlux.dao.UserDAO;
 import com.gentlux.dao.impl.UserDAOImpl;
 import com.gentlux.model.User;
+import com.gentlux.util.PasswordUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -397,8 +398,17 @@ public class RegisterServlet extends HttpServlet {
                     phone
             );
 
+            // =====================================================
+            // HASH PASSWORD SECURELY WITH BCRYPT
+            // =====================================================
+
+            String hashedPassword =
+                    PasswordUtil.hashPassword(
+                            password
+                    );
+
             user.setPassword(
-                    password
+                    hashedPassword
             );
 
             user.setAddress(

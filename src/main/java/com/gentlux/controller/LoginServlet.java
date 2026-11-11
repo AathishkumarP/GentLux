@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.gentlux.dao.UserDAO;
 import com.gentlux.dao.impl.UserDAOImpl;
 import com.gentlux.model.User;
+import com.gentlux.util.PasswordUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -180,10 +181,11 @@ public class LoginServlet extends HttpServlet {
 
 
             // =====================================================
-            // CHECK PASSWORD
+            // CHECK PASSWORD (BCRYPT + LEGACY PLAINTEXT FALLBACK)
             // =====================================================
 
-            if (!password.equals(
+            if (!PasswordUtil.checkPassword(
+                    password,
                     user.getPassword()
             )) {
 
@@ -204,11 +206,59 @@ public class LoginServlet extends HttpServlet {
 
 
             // =====================================================
-            // CREATE LOGIN SESSION
+            // PROGRESSIVE BCRYPT MIGRATION FOR LEGACY PASSWORDS
+            // =====================================================
+
+            if (!PasswordUtil.isBCryptHash(
+                    user.getPassword()
+            )) {
+
+                try {
+
+                    String newHash =
+                            PasswordUtil.hashPassword(
+                                    password
+                            );
+
+                    boolean migrated =
+                            userDAO.updatePassword(
+                                    user.getUserId(),
+                                    newHash
+                            );
+
+                    if (!migrated) {
+
+                        System.err.println(
+                                "Warning: Unable to update migrated password in database for user ID: "
+                                + user.getUserId()
+                        );
+                    }
+
+                } catch (Exception migrationException) {
+
+                    System.err.println(
+                            "Warning: Error during password migration for user ID: "
+                            + user.getUserId()
+                    );
+                }
+            }
+
+
+            // =====================================================
+            // CREATE & ROTATE LOGIN SESSION (SESSION FIXATION DEFENSE)
             // =====================================================
 
             HttpSession session =
                     request.getSession();
+
+            request.changeSessionId();
+
+
+            // =====================================================
+            // SANITIZE USER OBJECT BEFORE STORING IN SESSION
+            // =====================================================
+
+            user.setPassword(null);
 
 
             session.setAttribute(
